@@ -22,14 +22,12 @@ Each topic follows a structured workflow:
 
 ## 📂 Repository Structure
 
-├── notes/ # Theory + derivations (Jupyter notebooks)
-├── codes/ # Reusable physics solvers and utilities
-├── visualizations/ # Plots, figures, and animations
-├── problems/ # Solved Jackson problems
-├── requirements.txt
-└── README.md
 
 
+- `notes/` — Theory & derivations  
+- `codes/` — Solvers & utilities  
+- `visualizations/` — Figures & animations  
+- `problems/` — Solved problems  
 
 ---
 
