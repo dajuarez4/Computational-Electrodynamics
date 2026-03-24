@@ -50,6 +50,13 @@ Each topic follows a structured workflow:
 - LaTeX (for mathematical derivations)
 
 ---
+## 📓 Notebooks
+
+- [Delta Function Theory](./notebooks/delta_function.ipynb)
+- [Poisson Equation](./notebooks/poisson.ipynb)
+- [Method of Images](./notebooks/images_method.ipynb)
+
+---
 
 ## 🚀 Goal
 
