@@ -62,15 +62,6 @@ Each topic follows a structured workflow:
 
 ## Problem Sets
 
-- [Dirac delta test (LaTeX)](./problems/dirac_delta_test.tex)
-- [Poisson's equation test (LaTeX)](./problems/poisson_equation_test.tex)
-- [Laplace's equation test (LaTeX)](./problems/laplace_equation_test.tex)
-- [Green's functions test (LaTeX)](./problems/greens_functions_test.tex)
-- [Method of images test (LaTeX)](./problems/method_of_images_test.tex)
-- [Multipole expansion test (LaTeX)](./problems/multipole_expansion_test.tex)
-- [Dielectrics test (LaTeX)](./problems/dielectrics_test.tex)
-- [Electromagnetic radiation test (LaTeX)](./problems/electromagnetic_radiation_test.tex)
-
 - [Dirac delta problems (PDF)](./problems/Dirac_Delta_problems.pdf)
 - [Poisson's equation problems (PDF)](./problems/Poisson_equation.pdf)
 - [Laplace's equation problems (PDF)](./problems/Laplace_equation.pdf)
@@ -83,15 +74,6 @@ Each topic follows a structured workflow:
 ---
 
 ## Formula Sheets
-
-- [Dirac delta formula sheet (LaTeX)](./Formula%20Sheet/dirac_delta_formula_sheet.tex)
-- [Poisson's equation formula sheet (LaTeX)](./Formula%20Sheet/poisson_formula_sheet.tex)
-- [Laplace's equation formula sheet (LaTeX)](./Formula%20Sheet/laplace_formula_sheet.tex)
-- [Green's functions formula sheet (LaTeX)](./Formula%20Sheet/greens_functions_formula_sheet.tex)
-- [Method of images formula sheet (LaTeX)](./Formula%20Sheet/method_of_images_formula_sheet.tex)
-- [Multipole expansion formula sheet (LaTeX)](./Formula%20Sheet/multipole_formula_sheet.tex)
-- [Dielectrics formula sheet (LaTeX)](./Formula%20Sheet/dielectrics_formula_sheet.tex)
-- [Electromagnetic radiation formula sheet (LaTeX)](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.tex)
 
 - [Dirac delta formula sheet (PDF)](./Formula%20Sheet/dirac_delta_formula_sheet.pdf)
 - [Poisson's equation formula sheet (PDF)](./Formula%20Sheet/poisson_formula_sheet.pdf)
