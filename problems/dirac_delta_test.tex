@@ -1,0 +1,252 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  showstringspaces=false
+}
+\usetikzlibrary{angles,calc,decorations.pathreplacing}
+
+\definecolor{carminered}{rgb}{1.0, 0.0, 0.22}
+\definecolor{capri}{rgb}{0.0, 0.75, 1.0}
+\definecolor{brightlavender}{rgb}{0.75, 0.58, 0.89}
+\definecolor{softgray}{rgb}{0.82, 0.82, 0.82}
+
+\title{\textbf{Dirac Delta Function Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Dirac Delta Function Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Instructions}
+This document is a practice test on the Dirac delta function at the level used in graduate electrodynamics. Unless explicitly requested, do not use tables or computer algebra. Show the main analytical steps clearly and state any identities you use.
+
+\begin{itemize}[label=--]
+\item Write all delta-function manipulations in distributional form.
+\item When changing coordinates, include Jacobian factors explicitly.
+\item For electrodynamics questions, check units of the charge density.
+\end{itemize}
+
+\section{Core Properties}
+
+\subsection{Problem 1: Sifting Property}
+Let
+\[
+f(x)=e^{-x^2}\cos(3x)+x^3.
+\]
+Evaluate the following integrals:
+\begin{align*}
+I_1 &= \int_{-\infty}^{\infty} f(x)\,\delta(x-2)\,dx,\\
+I_2 &= \int_{-\infty}^{\infty} (x^2-4x+1)\,\delta(x+3)\,dx,\\
+I_3 &= \int_{0}^{5} \sin(\pi x)\,\delta(x-4)\,dx.
+\end{align*}
+State clearly why the answer to each integral follows from the defining property of the delta distribution.
+
+\subsection{Problem 2: Translation and Symmetry}
+For a smooth test function $\phi(x)$, prove the identity
+\[
+\int_{-\infty}^{\infty} \phi(x)\,\delta(x-a)\,dx = \phi(a).
+\]
+Then use the same reasoning to show that
+\[
+\delta(-x)=\delta(x).
+\]
+
+\subsection{Problem 3: Scaling}
+Show that for $a\neq 0$,
+\[
+\delta(ax)=\frac{1}{|a|}\delta(x).
+\]
+Use this result to evaluate
+\begin{align*}
+I_4 &= \int_{-\infty}^{\infty} \delta(5x)\,g(x)\,dx,\\
+I_5 &= \int_{-\infty}^{\infty} \delta(3x-6)\,g(x)\,dx,
+\end{align*}
+where $g(x)$ is an arbitrary smooth function.
+
+\section{Composite Arguments}
+
+\subsection{Problem 4: Delta of a Function}
+Let
+\[
+g(x)=x^2-9.
+\]
+\begin{enumerate}[label=\alph*)]
+\item Find all simple zeros of $g(x)$.
+\item Use the identity
+\[
+\delta(g(x))=\sum_i \frac{\delta(x-x_i)}{|g'(x_i)|}
+\]
+to express $\delta(x^2-9)$ as a sum of ordinary delta distributions.
+\item Evaluate
+\[
+I_6=\int_{-\infty}^{\infty} (2x+1)\,\delta(x^2-9)\,dx.
+\]
+\end{enumerate}
+
+\subsection{Problem 5: Trigonometric Argument}
+Evaluate
+\[
+I_7=\int_{0}^{2\pi} h(x)\,\delta(\cos x)\,dx,
+\]
+where $h(x)$ is smooth. Write the final answer in terms of sampled values of $h$ only.
+
+\section{Higher Dimensions}
+
+\subsection{Problem 6: Two-Dimensional Delta Function}
+Consider
+\[
+\delta^{(2)}(\mathbf{r}-\mathbf{r}_0)=\delta(x-x_0)\delta(y-y_0).
+\]
+\begin{enumerate}[label=\alph*)]
+\item Prove that
+\[
+\iint f(x,y)\,\delta(x-x_0)\delta(y-y_0)\,dx\,dy=f(x_0,y_0).
+\]
+\item Evaluate
+\[
+I_8=\iint_{\mathbb{R}^2} (x^2+3y)\,\delta(x-1)\delta(y+2)\,dx\,dy.
+\]
+\item State the physical dimensions of $\delta^{(2)}(\mathbf{r}-\mathbf{r}_0)$.
+\end{enumerate}
+
+\subsection{Problem 7: Three-Dimensional Form}
+Write the three-dimensional delta distribution
+\[
+\delta^{(3)}(\mathbf{r}-\mathbf{r}_0)
+\]
+in Cartesian coordinates and explain why it has dimensions of inverse volume.
+
+Then evaluate
+\[
+I_9=\iiint_{\mathbb{R}^3} (x+y+z)\,\delta(x-1)\delta(y-2)\delta(z+4)\,d^3r.
+\]
+
+\section{Curvilinear Coordinates}
+
+\subsection{Problem 8: Cylindrical Coordinates}
+In cylindrical coordinates $(s,\phi,z)$ the volume element is
+\[
+d^3r=s\,ds\,d\phi\,dz.
+\]
+\begin{enumerate}[label=\alph*)]
+\item Show that the three-dimensional delta distribution centered at $(s_0,\phi_0,z_0)$ can be written as
+\[
+\delta^{(3)}(\mathbf{r}-\mathbf{r}_0)=\frac{1}{s}\,\delta(s-s_0)\delta(\phi-\phi_0)\delta(z-z_0).
+\]
+\item Explain why the factor $1/s$ is required.
+\item Verify the formula by integrating against a smooth test function.
+\end{enumerate}
+
+\subsection{Problem 9: Spherical Coordinates}
+In spherical coordinates $(r,\theta,\phi)$,
+\[
+d^3r=r^2\sin\theta\,dr\,d\theta\,d\phi.
+\]
+Show that
+\[
+\delta^{(3)}(\mathbf{r}-\mathbf{r}_0)=
+\frac{1}{r^2\sin\theta}\delta(r-r_0)\delta(\theta-\theta_0)\delta(\phi-\phi_0),
+\]
+and use it to evaluate
+\[
+I_{10}=\iiint F(r,\theta,\phi)\,\delta^{(3)}(\mathbf{r}-\mathbf{r}_0)\,d^3r.
+\]
+
+\section{Electrodynamics Applications}
+
+\subsection{Problem 10: Point Charge}
+A point charge $q$ is located at $\mathbf{r}_0=(1,-2,3)$.
+\begin{enumerate}[label=\alph*)]
+\item Write the volume charge density $\rho(\mathbf{r})$.
+\item Show by direct integration that the total charge is $q$.
+\item Write Poisson's equation for the electrostatic potential generated by this source.
+\end{enumerate}
+
+\subsection{Problem 11: Infinite Line Charge}
+An infinite line charge of constant linear density $\lambda$ lies along the $z$-axis.
+\begin{enumerate}[label=\alph*)]
+\item Write the corresponding three-dimensional charge density $\rho(x,y,z)$.
+\item Integrate $\rho$ over a cylinder of length $L$ and arbitrary radius $R$ centered on the $z$-axis.
+\item Explain why the answer is independent of $R$.
+\end{enumerate}
+
+\subsection{Problem 12: Infinite Plane Charge}
+An infinite charged plane with surface charge density $\sigma$ lies at $z=0$.
+\begin{enumerate}[label=\alph*)]
+\item Write the associated volume charge density.
+\item Integrate the density through a pillbox of cross-sectional area $A$ and finite thickness.
+\item State the SI units of $\sigma\,\delta(z)$ and verify that they match a volume charge density.
+\end{enumerate}
+
+\section{Challenge Problems}
+
+\subsection{Problem 13: Derivative of the Delta Distribution}
+Using integration by parts in distributional form, show that
+\[
+\int_{-\infty}^{\infty} f(x)\,\delta'(x-a)\,dx=-f'(a).
+\]
+Then evaluate
+\[
+I_{11}=\int_{-\infty}^{\infty} (x^3-2x)\,\delta'(x-1)\,dx.
+\]
+
+\subsection{Problem 14: Gaussian Delta Sequence}
+Consider the normalized Gaussian approximation
+\[
+\delta_\varepsilon(x)=\frac{1}{\sqrt{\pi}\,\varepsilon}e^{-x^2/\varepsilon^2}.
+\]
+\begin{enumerate}[label=\alph*)]
+\item Show that
+\[
+\int_{-\infty}^{\infty}\delta_\varepsilon(x)\,dx=1.
+\]
+\item Explain why $\delta_\varepsilon(x)$ does not converge pointwise to an ordinary function.
+\item Show, in the distributional sense, that
+\[
+\lim_{\varepsilon\to 0}\int_{-\infty}^{\infty} f(x)\delta_\varepsilon(x-a)\,dx=f(a).
+\]
+\end{enumerate}
+
+\section{Submission Space}
+Use this space to organize rough work, extra identities, or corrections:
+
+\vspace{1cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\vspace{2cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\vspace{2cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\end{document}
