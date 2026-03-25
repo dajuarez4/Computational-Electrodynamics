@@ -52,9 +52,12 @@ Each topic follows a structured workflow:
 ---
 ## 📓 Notebooks
 
-- [Delta Function Theory](./notebooks/delta_function.ipynb)
-- [Poisson Equation](./notebooks/poisson.ipynb)
-- [Method of Images](./notebooks/images_method.ipynb)
+- [Dirac delta functions](./notebooks/Dirac%20delta%20functions.ipynb)
+- [Poisson's equation](./notebooks/Poisson%27s%20equation.ipynb)
+- [Laplace's equation](./notebooks/Laplace%27s%20equation.ipynb)
+- [Green's functions in electrostatics](./notebooks/Green%27s%20functions%20in%20electrostatics.ipynb)
+- [Method of images in electrostatics](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb)
+- [Multipole expansion in electrostatics](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb)
 
 ---
 
