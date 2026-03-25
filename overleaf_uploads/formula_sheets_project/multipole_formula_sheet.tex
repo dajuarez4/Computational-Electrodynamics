@@ -1,0 +1,115 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=11in,paperheight=8.5in,margin=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\hyphenpenalty=8000
+\exhyphenpenalty=8000
+\emergencystretch=2em
+\definecolor{QCBlue}{HTML}{1F4E79}
+\definecolor{QCGreen}{HTML}{2E6B5F}
+\definecolor{QCOrange}{HTML}{B65B2A}
+\definecolor{QCPurple}{HTML}{4B3F72}
+\definecolor{QCLight}{HTML}{F4F6F8}
+\definecolor{QCBorder}{HTML}{D0D6DC}
+\definecolor{QCText}{HTML}{111111}
+\newlength{\Margin} \setlength{\Margin}{0.25in}
+\newlength{\Gap} \setlength{\Gap}{0.1in}
+\newlength{\TitleH} \setlength{\TitleH}{0.8in}
+\newlength{\HeaderH} \setlength{\HeaderH}{0.38in}
+\newlength{\Pad} \setlength{\Pad}{0.1in}
+\newlength{\UsableW}
+\newlength{\CellW}
+\newlength{\CellH}
+\setlength{\UsableW}{\dimexpr\paperwidth-2\Margin\relax}
+\setlength{\CellW}{5.2in}
+\setlength{\CellH}{3.5in}
+\newcommand{\QuadBox}[4]{%
+  \node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=10pt, fill=white, minimum width=\CellW, minimum height=\CellH, inner sep=0pt] (B) at #1 {};
+  \fill[#2, rounded corners=10pt] ([xshift=0pt,yshift=0pt]B.north west) rectangle ([xshift=0pt,yshift=-\HeaderH]B.north east);
+  \node[anchor=west, text=white, font=\bfseries] at ([xshift=0.18in,yshift=-0.22in]B.north west) {#3};
+  \node[anchor=north west, text=QCText] at ([xshift=\Pad,yshift=-\HeaderH-\Pad]B.north west) {\begin{minipage}[t]{\dimexpr\CellW-2\Pad\relax}\raggedright\small #4\end{minipage}};
+}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at ([xshift=\Margin,yshift=-\Margin]current page.north west);
+\node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=12pt, fill=QCLight, minimum width=\UsableW, minimum height=\TitleH, inner sep=0pt] (T) at (NW) {};
+\node[anchor=north west] at ([xshift=0.22in,yshift=-0.22in]T.north west) {\begin{minipage}[t]{\dimexpr\UsableW-0.44in\relax}{\Huge\bfseries \textcolor{QCBlue}{Multipole Expansion Formula Sheet}}\par\vspace{2pt}{\normalsize \textbf{Diego Juarez}\hfill \textbf{Computational Electrodynamics}\hfill \textbf{\today}}\end{minipage}};
+\coordinate (GridNW) at ([yshift=-0.15in]T.south west);
+\coordinate (TL) at (GridNW);
+\coordinate (TR) at ([xshift=\CellW+\Gap]GridNW);
+\coordinate (BL) at ([yshift=-\CellH-\Gap]GridNW);
+\coordinate (BR) at ([xshift=\CellW+\Gap,yshift=-\CellH-\Gap]GridNW);
+\QuadBox{(TL)}{QCBlue}{1) Expansion Structure}{
+For $r\gg r'$:
+\[
+\Phi(\mathbf r)=\frac{1}{4\pi\varepsilon_0}\int \frac{\rho(\mathbf r')}{|\mathbf r-\mathbf r'|}\,d^3r'
+\]
+\[
+\Phi=\Phi_{\text{mono}}+\Phi_{\text{dip}}+\Phi_{\text{quad}}+\cdots
+\]
+Small parameter:
+\[
+\frac{r'}{r}\ll 1
+\]
+Monopole scales as $1/r$, dipole as $1/r^2$, quadrupole as $1/r^3$.
+}
+\QuadBox{(TR)}{QCGreen}{2) Moments}{
+Total charge:
+\[
+Q=\int \rho(\mathbf r')\,d^3r'
+\]
+Dipole moment:
+\[
+\mathbf p=\int \mathbf r'\rho(\mathbf r')\,d^3r'
+\]
+Dipole potential:
+\[
+\Phi_{\text{dip}}=\frac{1}{4\pi\varepsilon_0}\frac{\mathbf p\cdot \hat{\mathbf r}}{r^2}
+\]
+Quadrupole tensor:
+\[
+Q_{ij}=\int \rho(\mathbf r')\left(3x_i'x_j'-r'^2\delta_{ij}\right)d^3r'
+\]
+}
+\QuadBox{(BL)}{QCOrange}{3) Symmetry Rules}{
+Spherical symmetry:
+
+Only monopole survives outside.
+
+Neutral distribution:
+\[
+Q=0 \Longrightarrow \text{monopole vanishes}
+\]
+Inversion symmetry often kills odd moments.
+
+Reflection symmetry can force components of $\mathbf p$ to vanish.
+
+Axial symmetry usually leads to Legendre-polynomial angular structure.
+}
+\QuadBox{(BR)}{QCPurple}{4) Useful Results and Checks}{
+Ideal dipole potential:
+\[
+\Phi=\frac{1}{4\pi\varepsilon_0}\frac{\mathbf p\cdot \mathbf r}{r^3}
+\]
+Ideal dipole field:
+\[
+\mathbf E=\frac{1}{4\pi\varepsilon_0}\frac{1}{r^3}\left[3(\mathbf p\cdot \hat{\mathbf r})\hat{\mathbf r}-\mathbf p\right]
+\]
+\textbf{Checks}
+
+1. Keep origin dependence in mind.
+
+2. If $Q\neq0$, dipole moment depends on chosen origin.
+
+3. Multipole truncations fail near or inside the source region.
+}
+\end{tikzpicture}
+\end{document}

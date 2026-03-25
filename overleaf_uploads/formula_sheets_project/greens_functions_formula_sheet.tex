@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=11in,paperheight=8.5in,margin=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\hyphenpenalty=8000
+\exhyphenpenalty=8000
+\emergencystretch=2em
+\definecolor{QCBlue}{HTML}{1F4E79}
+\definecolor{QCGreen}{HTML}{2E6B5F}
+\definecolor{QCOrange}{HTML}{B65B2A}
+\definecolor{QCPurple}{HTML}{4B3F72}
+\definecolor{QCLight}{HTML}{F4F6F8}
+\definecolor{QCBorder}{HTML}{D0D6DC}
+\definecolor{QCText}{HTML}{111111}
+\newlength{\Margin} \setlength{\Margin}{0.25in}
+\newlength{\Gap} \setlength{\Gap}{0.1in}
+\newlength{\TitleH} \setlength{\TitleH}{0.8in}
+\newlength{\HeaderH} \setlength{\HeaderH}{0.38in}
+\newlength{\Pad} \setlength{\Pad}{0.1in}
+\newlength{\UsableW}
+\newlength{\CellW}
+\newlength{\CellH}
+\setlength{\UsableW}{\dimexpr\paperwidth-2\Margin\relax}
+\setlength{\CellW}{5.2in}
+\setlength{\CellH}{3.5in}
+\newcommand{\QuadBox}[4]{%
+  \node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=10pt, fill=white, minimum width=\CellW, minimum height=\CellH, inner sep=0pt] (B) at #1 {};
+  \fill[#2, rounded corners=10pt] ([xshift=0pt,yshift=0pt]B.north west) rectangle ([xshift=0pt,yshift=-\HeaderH]B.north east);
+  \node[anchor=west, text=white, font=\bfseries] at ([xshift=0.18in,yshift=-0.22in]B.north west) {#3};
+  \node[anchor=north west, text=QCText] at ([xshift=\Pad,yshift=-\HeaderH-\Pad]B.north west) {\begin{minipage}[t]{\dimexpr\CellW-2\Pad\relax}\raggedright\small #4\end{minipage}};
+}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at ([xshift=\Margin,yshift=-\Margin]current page.north west);
+\node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=12pt, fill=QCLight, minimum width=\UsableW, minimum height=\TitleH, inner sep=0pt] (T) at (NW) {};
+\node[anchor=north west] at ([xshift=0.22in,yshift=-0.22in]T.north west) {\begin{minipage}[t]{\dimexpr\UsableW-0.44in\relax}{\Huge\bfseries \textcolor{QCBlue}{Green's Functions Formula Sheet}}\par\vspace{2pt}{\normalsize \textbf{Diego Juarez}\hfill \textbf{Computational Electrodynamics}\hfill \textbf{\today}}\end{minipage}};
+\coordinate (GridNW) at ([yshift=-0.15in]T.south west);
+\coordinate (TL) at (GridNW);
+\coordinate (TR) at ([xshift=\CellW+\Gap]GridNW);
+\coordinate (BL) at ([yshift=-\CellH-\Gap]GridNW);
+\coordinate (BR) at ([xshift=\CellW+\Gap,yshift=-\CellH-\Gap]GridNW);
+\QuadBox{(TL)}{QCBlue}{1) Definitions}{
+Free-space convention:
+\[
+\boxed{\nabla^2 G(\mathbf r,\mathbf r')=-4\pi\delta^{(3)}(\mathbf r-\mathbf r')}
+\]
+Field point: $\mathbf r$
+
+Source point: $\mathbf r'$
+
+Free-space Green function:
+\[
+G(\mathbf r,\mathbf r')=\frac{1}{|\mathbf r-\mathbf r'|}
+\]
+It is singular as $\mathbf r\to\mathbf r'$.
+}
+\QuadBox{(TR)}{QCGreen}{2) Representation Formula}{
+Using Green's second identity:
+\[
+\Phi(\mathbf r)=\frac{1}{4\pi\varepsilon_0}\int_V \rho(\mathbf r')G(\mathbf r,\mathbf r')\,d^3r'
+\]
+\[
+-\frac{1}{4\pi}\oint_S\left[
+G\frac{\partial \Phi}{\partial n'}-\Phi\frac{\partial G}{\partial n'}
+\right] da'
+\]
+Dirichlet Green function:
+\[
+G_D|_S=0
+\]
+Neumann Green function:
+\[
+\frac{\partial G_N}{\partial n'}\Big|_S=\text{specified}
+\]
+}
+\QuadBox{(BL)}{QCOrange}{3) Symmetry and Examples}{
+Reciprocity:
+\[
+G(\mathbf r,\mathbf r')=G(\mathbf r',\mathbf r)
+\]
+Grounded plane $z=0$:
+\[
+G_D=\frac{1}{|\mathbf r-\mathbf r'|}-\frac{1}{|\mathbf r-\mathbf r'^*|}
+\]
+where $\mathbf r'^*$ is the mirrored source.
+
+Point charge near grounded plane:
+\[
+\Phi(\mathbf r)=\frac{q}{4\pi\varepsilon_0}\left(
+\frac{1}{|\mathbf r-\mathbf r_0|}-\frac{1}{|\mathbf r-\mathbf r_0^*|}
+\right)
+\]
+}
+\QuadBox{(BR)}{QCPurple}{4) Practical Checks}{
+\textbf{Always verify}
+
+1. Correct delta-source equation.
+
+2. Correct boundary condition on $S$.
+
+3. Correct singularity near $\mathbf r=\mathbf r'$.
+
+4. Reciprocity when applicable.
+
+\textbf{Interpretation}
+
+Green's function is the response kernel to a unit point source.
+
+Different boundaries imply different Green's functions even for the same differential operator.
+}
+\end{tikzpicture}
+\end{document}

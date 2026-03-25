@@ -1,0 +1,179 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+\usetikzlibrary{angles,calc,decorations.pathreplacing}
+
+\definecolor{carminered}{rgb}{1.0, 0.0, 0.22}
+\definecolor{capri}{rgb}{0.0, 0.75, 1.0}
+\definecolor{brightlavender}{rgb}{0.75, 0.58, 0.89}
+
+\title{\textbf{Poisson's Equation Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Poisson's Equation Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Poisson's equation.ipynb}
+and focuses on electrostatic source problems, boundary conditions, and symmetry reductions.
+
+\section{Core Theory}
+\subsection{Problem 1: From Maxwell to Poisson}
+Starting from Gauss's law in differential form,
+\[
+\nabla\cdot \mathbf{E}=\frac{\rho}{\varepsilon_0},
+\]
+and using $\mathbf{E}=-\nabla \Phi$, derive Poisson's equation. State clearly when it reduces to Laplace's equation.
+
+\subsection{Problem 2: Linearity}
+Suppose $\Phi_1$ and $\Phi_2$ satisfy
+\[
+\nabla^2\Phi_1=-\frac{\rho_1}{\varepsilon_0}, \qquad
+\nabla^2\Phi_2=-\frac{\rho_2}{\varepsilon_0}.
+\]
+Show that any linear combination $a\Phi_1+b\Phi_2$ satisfies a corresponding Poisson equation. Explain the physical meaning of this result.
+
+\subsection{Problem 3: Units}
+Check the SI units of each term in
+\[
+\nabla^2\Phi=-\frac{\rho}{\varepsilon_0}.
+\]
+Confirm that the equation is dimensionally consistent.
+
+\section{Canonical Examples}
+\subsection{Problem 4: Uniform Charge Density in a Slab}
+An infinite slab occupies $-a<z<a$ and has constant volume charge density $\rho_0$.
+\begin{enumerate}[label=\alph*)]
+\item Derive the one-dimensional Poisson equation for $\Phi(z)$.
+\item Solve for the electric field inside and outside the slab using symmetry.
+\item Obtain the potential, taking $\Phi(0)=0$.
+\item Check continuity conditions at $z=\pm a$.
+\end{enumerate}
+
+\subsection{Problem 5: Point Charge in Three Dimensions}
+Show that for a point charge $q$ at the origin,
+\[
+\rho(\mathbf{r})=q\,\delta^{(3)}(\mathbf{r}),
+\]
+Poisson's equation becomes
+\[
+\nabla^2\Phi(\mathbf{r})=-\frac{q}{\varepsilon_0}\delta^{(3)}(\mathbf{r}).
+\]
+Verify that
+\[
+\Phi(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\frac{q}{r}
+\]
+solves the equation away from the origin, and explain the role of the singularity at $r=0$.
+
+\subsection{Problem 6: Spherical Symmetry}
+Assume a spherically symmetric potential $\Phi(r)$.
+\begin{enumerate}[label=\alph*)]
+\item Write Poisson's equation in spherical symmetry.
+\item Solve it for a general radial charge density $\rho(r)$ in integral form.
+\item State what simplification occurs in regions where $\rho(r)=0$.
+\end{enumerate}
+
+\subsection{Problem 7: Uniformly Charged Solid Sphere}
+A sphere of radius $R$ has uniform charge density $\rho_0$.
+\begin{enumerate}[label=\alph*)]
+\item Find the electric field inside and outside the sphere.
+\item Derive the potential everywhere, imposing $\Phi(\infty)=0$.
+\item Check continuity of $\Phi$ and $E_r$ at $r=R$.
+\end{enumerate}
+
+\subsection{Problem 8: Piecewise One-Dimensional Source}
+Consider
+\[
+\rho(x)=
+\begin{cases}
+\rho_0, & |x|<a,\\
+0, & |x|>a.
+\end{cases}
+\]
+Solve the one-dimensional Poisson equation for $\Phi(x)$ piecewise. Determine the integration constants from continuity and symmetry assumptions.
+
+\section{Boundary Value Viewpoint}
+\subsection{Problem 9: Uniqueness}
+State and prove a uniqueness theorem for Poisson's equation with Dirichlet boundary conditions. Your proof may use the energy method.
+
+\subsection{Problem 10: Boundary Conditions}
+At an interface between two regions with different charge densities, state the continuity properties required of $\Phi$ and of the normal derivative of $\Phi$. Explain how a surface charge modifies the normal derivative condition.
+
+\subsection{Problem 11: Region with Zero Charge}
+Suppose $\rho=0$ in a region $V$, but $\rho\neq 0$ elsewhere. Explain why the potential inside $V$ still depends on charges outside the region. Give a concrete electrostatic example.
+
+\section{Green-Function Preview}
+\subsection{Problem 12: Integral Representation}
+Assuming free space and suitable decay at infinity, show formally that the solution of Poisson's equation can be written as
+\[
+\Phi(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\int \frac{\rho(\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|}\,d^3r'.
+\]
+Explain how this connects Poisson's equation with Coulomb's law.
+
+\section{Computational Interpretation}
+\subsection{Problem 13: Curvature and Charge}
+In one dimension,
+\[
+\frac{d^2\Phi}{dx^2}=-\frac{\rho(x)}{\varepsilon_0}.
+\]
+Explain the geometric relation between the sign of $\rho(x)$ and the curvature of $\Phi(x)$. What does a localized positive charge do to the graph of the potential?
+
+\subsection{Problem 14: Finite-Difference Form}
+On a uniform one-dimensional grid with spacing $h$, derive the finite-difference approximation
+\[
+\frac{\Phi_{i+1}-2\Phi_i+\Phi_{i-1}}{h^2}=-\frac{\rho_i}{\varepsilon_0}.
+\]
+State the order of the truncation error and explain how boundary conditions enter the discrete system.
+
+\section{Challenge Problems}
+\subsection{Problem 15: Mean-Zero Compatibility on a Finite Interval}
+Consider
+\[
+\Phi''(x)=-f(x), \qquad 0<x<L,
+\]
+with Neumann conditions $\Phi'(0)=\Phi'(L)=0$.
+\begin{enumerate}[label=\alph*)]
+\item Show that a solution can exist only if
+\[
+\int_0^L f(x)\,dx=0.
+\]
+\item Interpret this condition physically.
+\end{enumerate}
+
+\subsection{Problem 16: Delta-Function Source in 1D}
+Solve
+\[
+\Phi''(x)=-\frac{q}{\varepsilon_0}\delta(x-a)
+\]
+on the interval $0<x<L$ with boundary conditions $\Phi(0)=\Phi(L)=0$.
+State the continuity condition on $\Phi$ and the jump condition on $\Phi'$ at $x=a$.
+
+\end{document}

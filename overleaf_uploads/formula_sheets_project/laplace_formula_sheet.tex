@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=11in,paperheight=8.5in,margin=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\hyphenpenalty=8000
+\exhyphenpenalty=8000
+\emergencystretch=2em
+\definecolor{QCBlue}{HTML}{1F4E79}
+\definecolor{QCGreen}{HTML}{2E6B5F}
+\definecolor{QCOrange}{HTML}{B65B2A}
+\definecolor{QCPurple}{HTML}{4B3F72}
+\definecolor{QCLight}{HTML}{F4F6F8}
+\definecolor{QCBorder}{HTML}{D0D6DC}
+\definecolor{QCText}{HTML}{111111}
+\newlength{\Margin} \setlength{\Margin}{0.25in}
+\newlength{\Gap} \setlength{\Gap}{0.1in}
+\newlength{\TitleH} \setlength{\TitleH}{0.8in}
+\newlength{\HeaderH} \setlength{\HeaderH}{0.38in}
+\newlength{\Pad} \setlength{\Pad}{0.1in}
+\newlength{\UsableW}
+\newlength{\UsableH}
+\newlength{\CellW}
+\newlength{\CellH}
+\setlength{\UsableW}{\dimexpr\paperwidth-2\Margin\relax}
+\setlength{\UsableH}{\dimexpr\paperheight-2\Margin\relax}
+\setlength{\CellW}{5.2in}
+\setlength{\CellH}{3.5in}
+\newcommand{\QuadBox}[4]{%
+  \node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=10pt,
+        fill=white, minimum width=\CellW, minimum height=\CellH, inner sep=0pt] (B) at #1 {};
+  \fill[#2, rounded corners=10pt] ([xshift=0pt,yshift=0pt]B.north west) rectangle ([xshift=0pt,yshift=-\HeaderH]B.north east);
+  \node[anchor=west, text=white, font=\bfseries] at ([xshift=0.18in,yshift=-0.22in]B.north west) {#3};
+  \node[anchor=north west, text=QCText] at ([xshift=\Pad,yshift=-\HeaderH-\Pad]B.north west) {\begin{minipage}[t]{\dimexpr\CellW-2\Pad\relax}\raggedright\small #4\end{minipage}};
+}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at ([xshift=\Margin,yshift=-\Margin]current page.north west);
+\node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=12pt, fill=QCLight, minimum width=\UsableW, minimum height=\TitleH, inner sep=0pt] (T) at (NW) {};
+\node[anchor=north west] at ([xshift=0.22in,yshift=-0.22in]T.north west) {\begin{minipage}[t]{\dimexpr\UsableW-0.44in\relax}{\Huge\bfseries \textcolor{QCBlue}{Laplace's Equation Formula Sheet}}\par\vspace{2pt}{\normalsize \textbf{Diego Juarez}\hfill \textbf{Computational Electrodynamics}\hfill \textbf{\today}}\end{minipage}};
+\coordinate (GridNW) at ([yshift=-0.15in]T.south west);
+\coordinate (TL) at (GridNW);
+\coordinate (TR) at ([xshift=\CellW+\Gap]GridNW);
+\coordinate (BL) at ([yshift=-\CellH-\Gap]GridNW);
+\coordinate (BR) at ([xshift=\CellW+\Gap,yshift=-\CellH-\Gap]GridNW);
+\QuadBox{(TL)}{QCBlue}{1) Harmonic Functions}{
+\[
+\boxed{\nabla^2\Phi=0}
+\]
+Charge-free electrostatic region:
+\[
+\rho=0,\qquad \mathbf E=-\nabla\Phi
+\]
+Cartesian Laplacian:
+\[
+\nabla^2=\partial_x^2+\partial_y^2+\partial_z^2
+\]
+Cylindrical radial form:
+\[
+\frac{1}{s}\frac{d}{ds}\left(s\frac{d\Phi}{ds}\right)=0
+\]
+Spherical radial form:
+\[
+\frac{1}{r^2}\frac{d}{dr}\left(r^2\frac{d\Phi}{dr}\right)=0
+\]
+1D solution:
+\[
+\Phi(x)=Ax+B
+\]
+}
+\QuadBox{(TR)}{QCGreen}{2) Core Properties}{
+\textbf{Mean value property:}
+
+Value at a point equals the average over any sphere centered there.
+
+\textbf{Maximum principle:}
+
+No strict interior maxima or minima unless $\Phi$ is constant.
+
+\textbf{Uniqueness:}
+
+Dirichlet boundary data determine a unique solution.
+
+\textbf{Conductor fact:}
+
+In electrostatic equilibrium, $\Phi=\text{constant}$ inside a conductor.
+
+\textbf{Separation ansatz:}
+\[
+\Phi(x,y)=X(x)Y(y), \qquad \Phi(r,\theta)=R(r)\Theta(\theta)
+\]
+}
+\QuadBox{(BL)}{QCOrange}{3) Canonical Solutions}{
+Parallel plates:
+\[
+\Phi(x)=V_0\frac{x}{d}, \qquad \mathbf E=-\frac{V_0}{d}\hat{\mathbf x}
+\]
+Exterior of conducting sphere:
+\[
+\Phi(r)=V_0\frac{R}{r}, \qquad r\ge R
+\]
+General spherical source-free radial solution:
+\[
+\Phi(r)=A+\frac{B}{r}
+\]
+General cylindrical radial solution:
+\[
+\Phi(s)=A\ln s+B
+\]
+Rectangle with zero side walls:
+\[
+\Phi(x,y)=\sum_{n=1}^{\infty} A_n \sin\left(\frac{n\pi x}{a}\right)\sinh\left(\frac{n\pi y}{a}\right)
+\]
+}
+\QuadBox{(BR)}{QCPurple}{4) Boundary Data and Checks}{
+Dirichlet:
+\[
+\Phi|_S=f
+\]
+Neumann:
+\[
+\frac{\partial \Phi}{\partial n}\Big|_S=g
+\]
+Mixed conditions are possible on different boundary segments.
+
+\textbf{Check list}
+
+1. Verify $\nabla^2\Phi=0$ in the domain.
+
+2. Verify all boundary conditions.
+
+3. Check uniqueness before trusting an image or series solution.
+
+4. In a bounded region, interior extrema usually signal an error.
+}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,106 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Method of Images Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Method of Images Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Method of images in electrostatics.ipynb}
+and focuses on image constructions for planes and spheres.
+
+\section{Conceptual Foundations}
+\subsection{Problem 1: Why the Method Works}
+Explain the logic of the method of images. Why is it sufficient to find any potential that satisfies both Poisson's equation in the physical region and the correct boundary conditions on the conductor?
+
+\subsection{Problem 2: Uniqueness Principle}
+State the uniqueness theorem that justifies the method of images. Explain carefully why the image charges are not physically present in the region of interest.
+
+\section{Grounded Infinite Plane}
+\subsection{Problem 3: Potential of a Point Charge Near a Grounded Plane}
+A point charge $q$ is located at $(0,0,a)$ with $a>0$ above a grounded conducting plane at $z=0$.
+\begin{enumerate}[label=\alph*)]
+\item Write the image configuration.
+\item Write the electrostatic potential in the region $z>0$.
+\item Verify that $\Phi=0$ on the plane.
+\end{enumerate}
+
+\subsection{Problem 4: Electric Field and Force}
+For the same geometry:
+\begin{enumerate}[label=\alph*)]
+\item Compute the force on the real charge.
+\item Explain why the force is attractive.
+\item Compare the result with Coulomb's law between the real and image charges.
+\end{enumerate}
+
+\subsection{Problem 5: Induced Surface Charge}
+Determine the induced surface charge density $\sigma(x,y)$ on the grounded plane for the point charge problem. Then integrate $\sigma$ over the plane and show that the total induced charge equals $-q$.
+
+\section{Grounded Conducting Sphere}
+\subsection{Problem 6: Image Construction for a Sphere}
+A point charge $q$ is placed outside a grounded conducting sphere of radius $R$ at distance $a>R$ from the center.
+\begin{enumerate}[label=\alph*)]
+\item State the magnitude and position of the image charge.
+\item Write the potential outside the sphere.
+\item Verify that the potential vanishes on the surface $r=R$.
+\end{enumerate}
+
+\subsection{Problem 7: Force on the External Charge}
+Using the image construction for the grounded sphere, derive the force on the external point charge. Discuss the limiting behavior as $a\to \infty$ and as $a\to R^+$.
+
+\subsection{Problem 8: Induced Charge on the Sphere}
+Describe how one would compute the induced surface charge density on the sphere from the normal electric field at the surface. You do not need the final closed-form expression, but you must give the correct procedure.
+
+\section{Comparison and Interpretation}
+\subsection{Problem 9: Plane Versus Sphere}
+Compare the image solutions for a grounded plane and a grounded sphere. Which features are similar, and which arise from the curvature of the boundary?
+
+\subsection{Problem 10: Relation to Green's Functions}
+Explain how the image solution for a grounded plane can be interpreted as a Dirichlet Green's function for the half-space.
+
+\section{Worked-Result Style Problems}
+\subsection{Problem 11: Two Charges Near a Plane}
+Two point charges $q_1$ and $q_2$ are located above a grounded conducting plane. Describe the image configuration and write the total potential in the physical half-space.
+
+\subsection{Problem 12: Neutral Conductor Question}
+Explain the difference between a grounded conductor and an isolated neutral conductor in the context of image methods. Why does grounding matter?
+
+\section{Challenge Problems}
+\subsection{Problem 13: Energy Interpretation}
+Show that the interaction energy of a charge with a grounded plane is not simply the full Coulomb energy between the charge and its image. Explain the factor of one-half that appears in electrostatic energy arguments.
+
+\subsection{Problem 14: Conducting Wedge Discussion}
+Under what special geometric conditions can image methods be generalized to wedges? Explain why generic geometries usually do not admit a finite image construction.
+
+\end{document}
