@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=11in,paperheight=8.5in,margin=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\hyphenpenalty=8000
+\exhyphenpenalty=8000
+\emergencystretch=2em
+\definecolor{QCBlue}{HTML}{1F4E79}
+\definecolor{QCGreen}{HTML}{2E6B5F}
+\definecolor{QCOrange}{HTML}{B65B2A}
+\definecolor{QCPurple}{HTML}{4B3F72}
+\definecolor{QCLight}{HTML}{F4F6F8}
+\definecolor{QCBorder}{HTML}{D0D6DC}
+\definecolor{QCText}{HTML}{111111}
+\newlength{\Margin} \setlength{\Margin}{0.25in}
+\newlength{\Gap} \setlength{\Gap}{0.1in}
+\newlength{\TitleH} \setlength{\TitleH}{0.8in}
+\newlength{\HeaderH} \setlength{\HeaderH}{0.38in}
+\newlength{\Pad} \setlength{\Pad}{0.1in}
+\newlength{\UsableW}
+\newlength{\CellW}
+\newlength{\CellH}
+\setlength{\UsableW}{\dimexpr\paperwidth-2\Margin\relax}
+\setlength{\CellW}{5.2in}
+\setlength{\CellH}{3.5in}
+\newcommand{\QuadBox}[4]{%
+  \node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=10pt, fill=white, minimum width=\CellW, minimum height=\CellH, inner sep=0pt] (B) at #1 {};
+  \fill[#2, rounded corners=10pt] ([xshift=0pt,yshift=0pt]B.north west) rectangle ([xshift=0pt,yshift=-\HeaderH]B.north east);
+  \node[anchor=west, text=white, font=\bfseries] at ([xshift=0.18in,yshift=-0.22in]B.north west) {#3};
+  \node[anchor=north west, text=QCText] at ([xshift=\Pad,yshift=-\HeaderH-\Pad]B.north west) {\begin{minipage}[t]{\dimexpr\CellW-2\Pad\relax}\raggedright\small #4\end{minipage}};
+}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at ([xshift=\Margin,yshift=-\Margin]current page.north west);
+\node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=12pt, fill=QCLight, minimum width=\UsableW, minimum height=\TitleH, inner sep=0pt] (T) at (NW) {};
+\node[anchor=north west] at ([xshift=0.22in,yshift=-0.22in]T.north west) {\begin{minipage}[t]{\dimexpr\UsableW-0.44in\relax}{\Huge\bfseries \textcolor{QCBlue}{Dielectrics Formula Sheet}}\par\vspace{2pt}{\normalsize \textbf{Diego Juarez}\hfill \textbf{Computational Electrodynamics}\hfill \textbf{\today}}\end{minipage}};
+\coordinate (GridNW) at ([yshift=-0.15in]T.south west);
+\coordinate (TL) at (GridNW);
+\coordinate (TR) at ([xshift=\CellW+\Gap]GridNW);
+\coordinate (BL) at ([yshift=-\CellH-\Gap]GridNW);
+\coordinate (BR) at ([xshift=\CellW+\Gap,yshift=-\CellH-\Gap]GridNW);
+\QuadBox{(TL)}{QCBlue}{1) Polarization and D Field}{
+\[
+\mathbf P=\text{dipole moment per unit volume}
+\]
+Bound charges:
+\[
+\rho_b=-\nabla\cdot \mathbf P, \qquad \sigma_b=\mathbf P\cdot \hat{\mathbf n}
+\]
+Displacement field:
+\[
+\mathbf D=\varepsilon_0\mathbf E+\mathbf P
+\]
+Gauss law in matter:
+\[
+\nabla\cdot \mathbf D=\rho_f
+\]
+Linear dielectric:
+\[
+\mathbf P=\varepsilon_0\chi_e \mathbf E
+\]
+\[
+\mathbf D=\varepsilon \mathbf E,\qquad \varepsilon=\varepsilon_0(1+\chi_e)
+\]
+}
+\QuadBox{(TR)}{QCGreen}{2) Boundary Conditions}{
+Tangential electric field:
+\[
+\mathbf E_{1t}=\mathbf E_{2t}
+\]
+Normal displacement:
+\[
+D_{2n}-D_{1n}=\sigma_f
+\]
+No free surface charge:
+\[
+D_{1n}=D_{2n}
+\]
+Potential form:
+\[
+\nabla\cdot(\varepsilon\nabla\Phi)=-\rho_f
+\]
+Constant $\varepsilon$:
+\[
+\nabla^2\Phi=-\frac{\rho_f}{\varepsilon}
+\]
+}
+\QuadBox{(BL)}{QCOrange}{3) Canonical Results}{
+Uniformly polarized sphere:
+\[
+\rho_b=0,\qquad \sigma_b=P_0\cos\theta
+\]
+Dielectric-filled capacitor:
+\[
+E=\frac{V}{d}, \qquad C=\varepsilon\frac{A}{d}
+\]
+Point charge in uniform dielectric:
+\[
+\Phi=\frac{q}{4\pi\varepsilon r}
+\]
+Dielectric sphere in uniform field:
+
+Interior field is uniform and reduced relative to the applied field.
+}
+\QuadBox{(BR)}{QCPurple}{4) Quick Reminders}{
+\textbf{Free charge} is externally supplied.
+
+\textbf{Bound charge} arises from polarization.
+
+\textbf{Useful checks}
+
+1. Use $\mathbf D$ for free-charge bookkeeping.
+
+2. Use $\mathbf P$ to find bound surface and volume charge.
+
+3. At interfaces, do not force $\mathbf E_n$ to be continuous.
+
+4. In matter, the relevant equation is often $\nabla\cdot(\varepsilon\nabla\Phi)=-\rho_f$.
+}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,116 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=11in,paperheight=8.5in,margin=0.25in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\hyphenpenalty=8000
+\exhyphenpenalty=8000
+\emergencystretch=2em
+\definecolor{QCBlue}{HTML}{1F4E79}
+\definecolor{QCGreen}{HTML}{2E6B5F}
+\definecolor{QCOrange}{HTML}{B65B2A}
+\definecolor{QCPurple}{HTML}{4B3F72}
+\definecolor{QCLight}{HTML}{F4F6F8}
+\definecolor{QCBorder}{HTML}{D0D6DC}
+\definecolor{QCText}{HTML}{111111}
+\newlength{\Margin} \setlength{\Margin}{0.25in}
+\newlength{\Gap} \setlength{\Gap}{0.1in}
+\newlength{\TitleH} \setlength{\TitleH}{0.8in}
+\newlength{\HeaderH} \setlength{\HeaderH}{0.38in}
+\newlength{\Pad} \setlength{\Pad}{0.1in}
+\newlength{\UsableW}
+\newlength{\CellW}
+\newlength{\CellH}
+\setlength{\UsableW}{\dimexpr\paperwidth-2\Margin\relax}
+\setlength{\CellW}{5.2in}
+\setlength{\CellH}{3.5in}
+\newcommand{\QuadBox}[4]{%
+  \node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=10pt, fill=white, minimum width=\CellW, minimum height=\CellH, inner sep=0pt] (B) at #1 {};
+  \fill[#2, rounded corners=10pt] ([xshift=0pt,yshift=0pt]B.north west) rectangle ([xshift=0pt,yshift=-\HeaderH]B.north east);
+  \node[anchor=west, text=white, font=\bfseries] at ([xshift=0.18in,yshift=-0.22in]B.north west) {#3};
+  \node[anchor=north west, text=QCText] at ([xshift=\Pad,yshift=-\HeaderH-\Pad]B.north west) {\begin{minipage}[t]{\dimexpr\CellW-2\Pad\relax}\raggedright\small #4\end{minipage}};
+}
+\pagestyle{empty}
+\begin{document}
+\begin{tikzpicture}[remember picture,overlay]
+\coordinate (NW) at ([xshift=\Margin,yshift=-\Margin]current page.north west);
+\node[anchor=north west, draw=QCBorder, line width=0.6pt, rounded corners=12pt, fill=QCLight, minimum width=\UsableW, minimum height=\TitleH, inner sep=0pt] (T) at (NW) {};
+\node[anchor=north west] at ([xshift=0.22in,yshift=-0.22in]T.north west) {\begin{minipage}[t]{\dimexpr\UsableW-0.44in\relax}{\Huge\bfseries \textcolor{QCBlue}{Dirac Delta Formula Sheet}}\par\vspace{2pt}{\normalsize \textbf{Diego Juarez}\hfill \textbf{Computational Electrodynamics}\hfill \textbf{\today}}\end{minipage}};
+\coordinate (GridNW) at ([yshift=-0.15in]T.south west);
+\coordinate (TL) at (GridNW);
+\coordinate (TR) at ([xshift=\CellW+\Gap]GridNW);
+\coordinate (BL) at ([yshift=-\CellH-\Gap]GridNW);
+\coordinate (BR) at ([xshift=\CellW+\Gap,yshift=-\CellH-\Gap]GridNW);
+\QuadBox{(TL)}{QCBlue}{1) Defining Properties}{
+\[
+\int_{-\infty}^{\infty} f(x)\delta(x-a)\,dx=f(a)
+\]
+\[
+\int_{-\infty}^{\infty}\delta(x-a)\,dx=1
+\]
+\[
+\delta(ax)=\frac{1}{|a|}\delta(x)
+\]
+\[
+\delta(g(x))=\sum_i \frac{\delta(x-x_i)}{|g'(x_i)|}
+\]
+for simple zeros $x_i$ of $g(x)$.
+}
+\QuadBox{(TR)}{QCGreen}{2) Higher Dimensions}{
+\[
+\delta^{(2)}(\mathbf r-\mathbf r_0)=\delta(x-x_0)\delta(y-y_0)
+\]
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)=\delta(x-x_0)\delta(y-y_0)\delta(z-z_0)
+\]
+Spherical coordinates:
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)=\frac{1}{r^2\sin\theta}\delta(r-r_0)\delta(\theta-\theta_0)\delta(\phi-\phi_0)
+\]
+Cylindrical coordinates:
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)=\frac{1}{s}\delta(s-s_0)\delta(\phi-\phi_0)\delta(z-z_0)
+\]
+}
+\QuadBox{(BL)}{QCOrange}{3) Electrodynamics Uses}{
+Point charge:
+\[
+\rho(\mathbf r)=q\delta^{(3)}(\mathbf r-\mathbf r_0)
+\]
+Line charge on $z$ axis:
+\[
+\rho(x,y,z)=\lambda \delta(x)\delta(y)
+\]
+Plane charge at $z=0$:
+\[
+\rho(x,y,z)=\sigma\delta(z)
+\]
+Derivative identity:
+\[
+\int f(x)\delta'(x-a)\,dx=-f'(a)
+\]
+}
+\QuadBox{(BR)}{QCPurple}{4) Delta Sequences}{
+Gaussian approximation:
+\[
+\delta_\varepsilon(x)=\frac{1}{\sqrt{\pi}\varepsilon}e^{-x^2/\varepsilon^2}
+\]
+\[
+\int_{-\infty}^{\infty}\delta_\varepsilon(x)\,dx=1
+\]
+Distributional limit:
+\[
+\lim_{\varepsilon\to 0}\int f(x)\delta_\varepsilon(x-a)\,dx=f(a)
+\]
+Reminder:
+
+The delta object is a distribution, not an ordinary pointwise function.
+}
+\end{tikzpicture}
+\end{document}
