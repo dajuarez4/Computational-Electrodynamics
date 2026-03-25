@@ -58,6 +58,8 @@ Each topic follows a structured workflow:
 - [Green's functions in electrostatics](./notebooks/Green%27s%20functions%20in%20electrostatics.ipynb)
 - [Method of images in electrostatics](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb)
 - [Multipole expansion in electrostatics](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb)
+- [Dielectrics in electrostatics](./notebooks/Dielectrics%20in%20electrostatics.ipynb)
+- [Electromagnetic Radiation](./notebooks/Electromagnetic%20Radiation.ipynb)
 
 ---
 
