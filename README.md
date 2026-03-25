@@ -87,3 +87,6 @@ This is a personal academic project, but suggestions, ideas, and collaborations 
 ## 📖 Reference
 
 Jackson, J. D. *Classical Electrodynamics*, 3rd Edition.
+
+## Problem solved by Dr Baird
+* [Good notes, problem-solving and lectures by Dr Baird](https://www.wtamu.edu/~cbaird/courses.html)
