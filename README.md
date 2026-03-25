@@ -8,30 +8,27 @@ This repository is a graduate-level study of electrodynamics based on *Classical
 ![Status](https://img.shields.io/badge/Status-In%20Progress-green)
 ---
 
-## 🔬 Approach
+## Approach
 
 Each topic follows a structured workflow:
 
 > **Theory → Code → Visualization**
 
-- 📘 Derivations written in LaTeX within Jupyter notebooks  
-- 🧮 Numerical implementations using Python  
-- 📊 Visualizations to develop physical intuition  
+- Derivations written in LaTeX within Jupyter notebooks  
+- Numerical implementations using Python  
+- Visualizations to develop physical intuition  
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
-
-
-- `notes/` — Theory & derivations  
-- `codes/` — Solvers & utilities  
-- `visualizations/` — Figures & animations  
-- `problems/` — Solved problems  
+- `notebooks/` — Theory, derivations, and computational explorations  
+- `problems/` — Topic-based problem sets in LaTeX and PDF  
+- `Formula Sheet/` — One-page quad-chart formula sheets in LaTeX and PDF  
 
 ---
 
-## 🧠 Topics Covered
+## Topics Covered
 
 - Dirac delta functions  
 - Poisson and Laplace equations  
@@ -43,14 +40,14 @@ Each topic follows a structured workflow:
 
 ---
 
-## ⚙️ Tools & Technologies
+## Tools & Technologies
 
 - Python (NumPy, SciPy, Matplotlib)
 - Jupyter Notebook
 - LaTeX (for mathematical derivations)
 
 ---
-## 📓 Notebooks
+## Notebooks
 
 - [Dirac delta functions](./notebooks/Dirac%20delta%20functions.ipynb)
 - [Poisson's equation](./notebooks/Poisson%27s%20equation.ipynb)
@@ -63,13 +60,57 @@ Each topic follows a structured workflow:
 
 ---
 
-## 🚀 Goal
+## Problem Sets
+
+- [Dirac delta test (LaTeX)](./problems/dirac_delta_test.tex)
+- [Poisson's equation test (LaTeX)](./problems/poisson_equation_test.tex)
+- [Laplace's equation test (LaTeX)](./problems/laplace_equation_test.tex)
+- [Green's functions test (LaTeX)](./problems/greens_functions_test.tex)
+- [Method of images test (LaTeX)](./problems/method_of_images_test.tex)
+- [Multipole expansion test (LaTeX)](./problems/multipole_expansion_test.tex)
+- [Dielectrics test (LaTeX)](./problems/dielectrics_test.tex)
+- [Electromagnetic radiation test (LaTeX)](./problems/electromagnetic_radiation_test.tex)
+
+- [Dirac delta problems (PDF)](./problems/Dirac_Delta_problems.pdf)
+- [Poisson's equation problems (PDF)](./problems/Poisson_equation.pdf)
+- [Laplace's equation problems (PDF)](./problems/Laplace_equation.pdf)
+- [Green's functions problems (PDF)](./problems/Green_functions.pdf)
+- [Method of images problems (PDF)](./problems/method_of_images.pdf)
+- [Multipole expansion problems (PDF)](./problems/multipole_expansion.pdf)
+- [Dielectrics problems (PDF)](./problems/dielectrics_problems.pdf)
+- [Electromagnetic radiation problems (PDF)](./problems/electro_magnetic_radiation.pdf)
+
+---
+
+## Formula Sheets
+
+- [Dirac delta formula sheet (LaTeX)](./Formula%20Sheet/dirac_delta_formula_sheet.tex)
+- [Poisson's equation formula sheet (LaTeX)](./Formula%20Sheet/poisson_formula_sheet.tex)
+- [Laplace's equation formula sheet (LaTeX)](./Formula%20Sheet/laplace_formula_sheet.tex)
+- [Green's functions formula sheet (LaTeX)](./Formula%20Sheet/greens_functions_formula_sheet.tex)
+- [Method of images formula sheet (LaTeX)](./Formula%20Sheet/method_of_images_formula_sheet.tex)
+- [Multipole expansion formula sheet (LaTeX)](./Formula%20Sheet/multipole_formula_sheet.tex)
+- [Dielectrics formula sheet (LaTeX)](./Formula%20Sheet/dielectrics_formula_sheet.tex)
+- [Electromagnetic radiation formula sheet (LaTeX)](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.tex)
+
+- [Dirac delta formula sheet (PDF)](./Formula%20Sheet/dirac_delta_formula_sheet.pdf)
+- [Poisson's equation formula sheet (PDF)](./Formula%20Sheet/poisson_formula_sheet.pdf)
+- [Laplace's equation formula sheet (PDF)](./Formula%20Sheet/laplace_formula_sheet.pdf)
+- [Green's functions formula sheet (PDF)](./Formula%20Sheet/greens_functions_formula_sheet.pdf)
+- [Method of images formula sheet (PDF)](./Formula%20Sheet/method_of_images_formula_sheet.pdf)
+- [Multipole expansion formula sheet (PDF)](./Formula%20Sheet/multipole_formula_sheet.pdf)
+- [Dielectrics formula sheet (PDF)](./Formula%20Sheet/dielectrics_formula_sheet.pdf)
+- [Electromagnetic radiation formula sheet (PDF)](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf)
+
+---
+
+## Goal
 
 The goal of this project is to bridge **analytical electrodynamics** and **computational physics**, enabling a deeper understanding of physical phenomena through both theory and simulation.
 
 ---
 
-## 📌 Future Work
+## Future Work
 
 - Advanced numerical solvers for boundary value problems  
 - Interactive visualizations  
@@ -78,13 +119,13 @@ The goal of this project is to bridge **analytical electrodynamics** and **compu
 
 ---
 
-## 🤝 Contributions
+## Contributions
 
 This is a personal academic project, but suggestions, ideas, and collaborations are always welcome.
 
 ---
 
-## 📖 Reference
+## Reference
 
 Jackson, J. D. *Classical Electrodynamics*, 3rd Edition.
 
