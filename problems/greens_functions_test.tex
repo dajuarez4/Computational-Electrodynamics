@@ -1,0 +1,121 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Green's Functions in Electrostatics Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Green's Functions Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Green's functions in electrostatics.ipynb}
+and focuses on Green-function construction, boundary conditions, reciprocity, and applications.
+
+\section{Definitions and Structure}
+\subsection{Problem 1: Defining Green's Function}
+For electrostatics in a volume $V$, define a Green's function $G(\mathbf{r},\mathbf{r}')$ by the equation
+\[
+\nabla^2 G(\mathbf{r},\mathbf{r}')=-4\pi \delta^{(3)}(\mathbf{r}-\mathbf{r}').
+\]
+Explain the role of the source point $\mathbf{r}'$ and field point $\mathbf{r}$.
+
+\subsection{Problem 2: Free-Space Green's Function}
+Show that in free space,
+\[
+G(\mathbf{r},\mathbf{r}')=\frac{1}{|\mathbf{r}-\mathbf{r}'|}
+\]
+is the appropriate Green's function. State carefully in what sense this solves the defining equation.
+
+\subsection{Problem 3: Integral Representation}
+Starting from Green's second identity, derive the formal solution for the electrostatic potential in a bounded volume in terms of volume and boundary integrals involving $G$.
+
+\section{Boundary Conditions}
+\subsection{Problem 4: Dirichlet Green's Function}
+Define the Dirichlet Green's function for a region $V$ with boundary $S$. State the boundary condition it satisfies and explain why it is useful when the potential is prescribed on $S$.
+
+\subsection{Problem 5: Neumann Green's Function}
+Define the Neumann Green's function. Explain why an additional compatibility condition is required in Neumann problems and identify that condition.
+
+\subsection{Problem 6: Reciprocity}
+Show that under suitable conditions,
+\[
+G(\mathbf{r},\mathbf{r}')=G(\mathbf{r}',\mathbf{r}).
+\]
+State the assumptions needed for this symmetry.
+
+\section{Canonical Examples}
+\subsection{Problem 7: Grounded Infinite Plane}
+Construct the Dirichlet Green's function for the half-space $z>0$ with grounded plane at $z=0$. Verify explicitly that the boundary condition is satisfied.
+
+\subsection{Problem 8: Point Charge Near a Grounded Plane}
+Use the Green's function from the previous problem to write the potential due to a point charge $q$ located at $(0,0,a)$ with $a>0$. Compare the result with the method of images.
+
+\subsection{Problem 9: Spherical Boundary}
+For a point charge inside a grounded conducting sphere of radius $R$, write the strategy for constructing the Green's function. You do not need to derive the full formula, but state the image construction and the boundary condition it enforces.
+
+\section{Interpretation and Comparison}
+\subsection{Problem 10: Green's Function as a Response Kernel}
+Explain why a Green's function may be viewed as the response of the system to a point source. Then explain how superposition turns this into the response to an arbitrary charge density.
+
+\subsection{Problem 11: Connection to the Method of Images}
+Explain why the method of images can be interpreted as constructing a Green's function that already satisfies the boundary conditions. Give one example where this is possible and one where it is not straightforward.
+
+\subsection{Problem 12: Boundary Value Problem View}
+Discuss why the same differential equation can have different Green's functions depending on the geometry and boundary conditions.
+
+\section{Computation-Oriented Problems}
+\subsection{Problem 13: Singularity Structure}
+Take the free-space Green's function
+\[
+G(\mathbf{r},\mathbf{r}')=\frac{1}{|\mathbf{r}-\mathbf{r}'|}.
+\]
+Describe its singular behavior as $\mathbf{r}\to \mathbf{r}'$ and explain why that singularity is physically necessary.
+
+\subsection{Problem 14: Simplified Integral Evaluation}
+Consider a one-dimensional model problem with kernel
+\[
+G(x,x')=-\frac{1}{2}|x-x'|.
+\]
+Verify directly that
+\[
+\frac{d^2}{dx^2}G(x,x')=-\delta(x-x')
+\]
+in the distributional sense.
+
+\section{Challenge Problems}
+\subsection{Problem 15: Uniqueness with Green's Functions}
+Show that if two Green's functions satisfy the same defining equation and the same homogeneous boundary conditions, then their difference must be harmonic and vanish on the boundary. Conclude that the Green's function is unique.
+
+\subsection{Problem 16: Surface Integral Interpretation}
+In the Green-function representation formula, explain the physical role of the boundary term. What information does it encode in Dirichlet and Neumann problems respectively?
+
+\end{document}

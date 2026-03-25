@@ -1,0 +1,117 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Electromagnetic Radiation Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Electromagnetic Radiation Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Electromagnetic Radiation.ipynb}
+and focuses on retarded potentials, radiation-zone fields, dipole radiation, and power flow.
+
+\section{Foundations}
+\subsection{Problem 1: Wave Equations from Maxwell's Equations}
+Starting from Maxwell's equations in vacuum, derive the wave equations for $\mathbf{E}$ and $\mathbf{B}$ in source-free space.
+
+\subsection{Problem 2: Retarded Potentials}
+Write the scalar and vector retarded potentials in the Lorenz gauge for general charge and current densities. Explain the meaning of retarded time.
+
+\subsection{Problem 3: Causality}
+Why are retarded rather than advanced potentials used in classical electrodynamics? Give a physical explanation rather than a formal one only.
+
+\section{Radiation Zone}
+\subsection{Problem 4: Near, Induction, and Radiation Terms}
+For a localized oscillating source, explain the qualitative difference between terms that scale as
+\[
+\frac{1}{r^3},\qquad \frac{1}{r^2},\qquad \frac{1}{r}.
+\]
+Which term carries energy to infinity?
+
+\subsection{Problem 5: Far-Field Approximation}
+State the approximations that define the radiation zone. Explain why in that region the electric and magnetic fields are transverse.
+
+\subsection{Problem 6: Poynting Vector}
+Starting from the far-zone relation between $\mathbf{E}$ and $\mathbf{B}$, show that the Poynting vector points radially outward on average for outgoing radiation.
+
+\section{Dipole Radiation}
+\subsection{Problem 7: Oscillating Electric Dipole}
+An electric dipole moment oscillates as
+\[
+\mathbf{p}(t)=p_0\cos(\omega t)\,\hat{\mathbf{z}}.
+\]
+\begin{enumerate}[label=\alph*)]
+\item Write the far-zone angular dependence of the radiated electric field.
+\item Write the corresponding magnetic field.
+\item State the dependence on $r$, $\omega$, and $\sin\theta$.
+\end{enumerate}
+
+\subsection{Problem 8: Radiation Pattern}
+For the oscillating dipole oriented along the $z$-axis:
+\begin{enumerate}[label=\alph*)]
+\item At which angles is the radiation maximal?
+\item At which angles does it vanish?
+\item Sketch the qualitative angular pattern.
+\end{enumerate}
+
+\subsection{Problem 9: Total Radiated Power}
+Use the angular distribution of dipole radiation to derive the total time-averaged radiated power of a nonrelativistic oscillating dipole.
+
+\subsection{Problem 10: Hertzian Dipole}
+Explain what is meant by a Hertzian dipole. Why is it a useful elementary source in radiation theory?
+
+\section{Physical Interpretation}
+\subsection{Problem 11: Accelerating Charge}
+Explain why a uniformly moving charge does not radiate, while an accelerating charge can. Your answer should distinguish clearly between static, induction, and radiation behavior.
+
+\subsection{Problem 12: Multipole Viewpoint}
+Why is electric dipole radiation usually the leading radiation mechanism for a localized oscillating source? Under what symmetry conditions can dipole radiation vanish?
+
+\subsection{Problem 13: Radiation Reaction Discussion}
+What is meant by radiation reaction? Explain why it is conceptually subtle even before writing down a detailed formula.
+
+\section{Computation-Oriented Problems}
+\subsection{Problem 14: Frequency Dependence}
+How does the total radiated power of an oscillating dipole scale with angular frequency $\omega$ and dipole amplitude $p_0$? What does this imply about high-frequency sources?
+
+\subsection{Problem 15: Near-Field Versus Far-Field}
+Suppose measurements are made at several distances from a source. Explain how one could distinguish experimentally between near-field and far-field behavior using radial scaling.
+
+\section{Challenge Problems}
+\subsection{Problem 16: Symmetry and Forbidden Dipole Radiation}
+Give one example of a source configuration for which the electric dipole moment vanishes by symmetry. What multipole order would then typically dominate the radiation?
+
+\subsection{Problem 17: Dimensional Analysis of Larmor-Type Power}
+Use dimensional analysis and basic physical reasoning to motivate the dependence of radiated power on charge, acceleration, vacuum permittivity, and the speed of light for a nonrelativistic point charge.
+
+\end{document}

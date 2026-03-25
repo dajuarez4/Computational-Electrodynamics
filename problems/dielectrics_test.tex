@@ -1,0 +1,162 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Dielectrics in Electrostatics Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Dielectrics Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Dielectrics in electrostatics.ipynb}
+and focuses on polarization, bound charge, displacement field, interfaces, and dielectric spheres.
+
+\section{Basic Definitions}
+\subsection{Problem 1: Polarization and Bound Charge}
+Define the polarization field $\mathbf{P}(\mathbf{r})$. Show that the bound volume charge density is
+\[
+\rho_b=-\nabla\cdot \mathbf{P}.
+\]
+State also the expression for bound surface charge density.
+
+\subsection{Problem 2: Displacement Field}
+Define the electric displacement field
+\[
+\mathbf{D}=\varepsilon_0\mathbf{E}+\mathbf{P}.
+\]
+Starting from Gauss's law, derive
+\[
+\nabla\cdot \mathbf{D}=\rho_f,
+\]
+where $\rho_f$ is the free charge density.
+
+\subsection{Problem 3: Linear Dielectrics}
+For a linear isotropic dielectric, write the constitutive relation between $\mathbf{P}$ and $\mathbf{E}$. Then derive $\mathbf{D}=\varepsilon \mathbf{E}$ and identify $\varepsilon$ in terms of susceptibility.
+
+\section{Canonical Configurations}
+\subsection{Problem 4: Uniformly Polarized Slab}
+Consider a slab polarized uniformly in the $+\hat{\mathbf{z}}$ direction.
+\begin{enumerate}[label=\alph*)]
+\item Find the bound volume charge density.
+\item Find the bound surface charge densities on the two faces.
+\item Sketch or describe the qualitative electric field produced by the slab.
+\end{enumerate}
+
+\subsection{Problem 5: Uniformly Polarized Sphere}
+A sphere of radius $R$ has uniform polarization $\mathbf{P}=P_0\hat{\mathbf{z}}$.
+\begin{enumerate}[label=\alph*)]
+\item Find $\rho_b$ and $\sigma_b$.
+\item Explain why the interior electric field is uniform.
+\item State the direction of the interior field relative to $\mathbf{P}$.
+\end{enumerate}
+
+\subsection{Problem 6: Dielectric in a Parallel-Plate Capacitor}
+A dielectric slab completely fills the space between parallel conducting plates held at fixed potential difference $V$.
+\begin{enumerate}[label=\alph*)]
+\item Determine the electric field in the dielectric.
+\item Find the displacement field and free surface charge on the plates.
+\item Compare the capacitance with the vacuum case.
+\end{enumerate}
+
+\section{Interfaces and Boundary Conditions}
+\subsection{Problem 7: Interface Between Two Dielectrics}
+Two linear dielectrics with permittivities $\varepsilon_1$ and $\varepsilon_2$ meet at a planar interface.
+\begin{enumerate}[label=\alph*)]
+\item State the boundary condition on the normal component of $\mathbf{D}$.
+\item State the boundary condition on the tangential component of $\mathbf{E}$.
+\item Explain how these conditions change if a free surface charge density is present.
+\end{enumerate}
+
+\subsection{Problem 8: Refraction of Field Lines}
+Using the dielectric boundary conditions, derive the relation between the angles that the electric field makes with the normal on the two sides of a dielectric interface.
+
+\section{Potential Formulation}
+\subsection{Problem 9: Poisson Equation in Dielectrics}
+Starting from
+\[
+\nabla\cdot(\varepsilon \nabla \Phi)=-\rho_f,
+\]
+derive the form of the electrostatic equation for
+\begin{enumerate}[label=\alph*)]
+\item constant $\varepsilon$,
+\item piecewise constant $\varepsilon$,
+\item no free charge.
+\end{enumerate}
+
+\subsection{Problem 10: Piecewise Constant Permittivity}
+In one dimension, let
+\[
+\varepsilon(x)=
+\begin{cases}
+\varepsilon_1, & x<0,\\
+\varepsilon_2, & x>0.
+\end{cases}
+\]
+Assume no free charge except possibly at the interface. State the continuity or jump conditions satisfied by $\Phi$ and $\varepsilon\,d\Phi/dx$ at $x=0$.
+
+\section{Dielectric Sphere in an External Field}
+\subsection{Problem 11: Polarizable Sphere}
+A dielectric sphere of radius $R$ and permittivity $\varepsilon$ is placed in an initially uniform external field $\mathbf{E}_0=E_0\hat{\mathbf{z}}$.
+\begin{enumerate}[label=\alph*)]
+\item Write the general form of the interior and exterior potentials.
+\item Impose the boundary conditions at $r=R$.
+\item State the resulting interior field and induced dipole moment.
+\end{enumerate}
+
+\subsection{Problem 12: Limiting Cases}
+For the dielectric sphere in the previous problem, discuss the limits:
+\begin{enumerate}[label=\alph*)]
+\item $\varepsilon=\varepsilon_0$,
+\item $\varepsilon\to \infty$,
+\item $\varepsilon \gg \varepsilon_0$ but finite.
+\end{enumerate}
+
+\section{Energy and Interpretation}
+\subsection{Problem 13: Electrostatic Energy in Matter}
+Write the electrostatic energy density in a linear dielectric. Explain why the presence of dielectric material changes the energy stored at fixed free charge.
+
+\subsection{Problem 14: Microscopic Versus Macroscopic Picture}
+Explain the conceptual difference between microscopic charges and the macroscopic fields $\mathbf{P}$ and $\mathbf{D}$. Why are bound charges useful even though they are not independent sources?
+
+\section{Challenge Problems}
+\subsection{Problem 15: Point Charge in a Uniform Dielectric}
+A point charge $q$ is embedded in a homogeneous linear dielectric of permittivity $\varepsilon$.
+\begin{enumerate}[label=\alph*)]
+\item Write the potential.
+\item Compare it with the vacuum result.
+\item Explain the physical meaning of the reduction by $\varepsilon$.
+\end{enumerate}
+
+\subsection{Problem 16: Common Pitfall}
+A student says that if $\rho_f=0$ then $\mathbf{D}=0$ everywhere. Explain why this is false and give a counterexample.
+
+\end{document}

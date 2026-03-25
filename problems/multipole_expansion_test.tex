@@ -1,0 +1,132 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Multipole Expansion Test}}
+\author{Diego Juarez}
+\date{March 25th, 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Multipole Expansion Test}
+\fancyhead[R]{Jackson-style Practice}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Source Notebook}
+This problem set follows the notebook
+\url{../notebooks/Multipole expansion in electrostatics.ipynb}
+and focuses on monopole, dipole, quadrupole, symmetry, and validity of far-field approximations.
+
+\section{Expansion Framework}
+\subsection{Problem 1: Coulomb Kernel Expansion}
+Starting from
+\[
+\Phi(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\int \frac{\rho(\mathbf{r}')}{|\mathbf{r}-\mathbf{r}'|}\,d^3r',
+\]
+derive the idea of expanding the kernel for $r\gg r'$. State the small parameter controlling the approximation.
+
+\subsection{Problem 2: Monopole Term}
+Show that the leading far-field term is
+\[
+\Phi_{\text{mono}}(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\frac{Q}{r},
+\]
+where
+\[
+Q=\int \rho(\mathbf{r}')\,d^3r'.
+\]
+Explain why this term vanishes for a neutral distribution.
+
+\subsection{Problem 3: Dipole Term}
+Show that the next term has the form
+\[
+\Phi_{\text{dip}}(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\frac{\mathbf{p}\cdot \hat{\mathbf{r}}}{r^2},
+\]
+with dipole moment
+\[
+\mathbf{p}=\int \mathbf{r}'\rho(\mathbf{r}')\,d^3r'.
+\]
+
+\subsection{Problem 4: Field of an Ideal Dipole}
+Starting from
+\[
+\Phi(\mathbf{r})=\frac{1}{4\pi\varepsilon_0}\frac{\mathbf{p}\cdot \mathbf{r}}{r^3},
+\]
+compute the electric field of an ideal dipole.
+
+\section{Quadrupole and Symmetry}
+\subsection{Problem 5: Quadrupole Structure}
+Define the quadrupole tensor
+\[
+Q_{ij}=\int \rho(\mathbf{r}')\left(3x_i'x_j'-r'^2\delta_{ij}\right)d^3r'.
+\]
+Explain why it is symmetric and traceless in the standard convention.
+
+\subsection{Problem 6: Two Equal and Opposite Charges}
+For charges $+q$ at $(0,0,a)$ and $-q$ at $(0,0,-a)$:
+\begin{enumerate}[label=\alph*)]
+\item Find the total charge.
+\item Find the dipole moment.
+\item Determine which multipole term is the leading nonzero contribution.
+\end{enumerate}
+
+\subsection{Problem 7: Simple Quadrupole Arrangement}
+Consider four point charges arranged so that the total charge and dipole moment vanish. Propose one explicit configuration and show that the leading far-field term is quadrupolar.
+
+\section{Symmetry Arguments}
+\subsection{Problem 8: Spherical Symmetry}
+Show that a spherically symmetric charge distribution has only a monopole term in its exterior potential.
+
+\subsection{Problem 9: Reflection and Inversion Symmetry}
+Explain how reflection symmetry or inversion symmetry can force certain multipole moments to vanish. Give one concrete example for each case.
+
+\subsection{Problem 10: Axial Symmetry}
+Discuss how axial symmetry simplifies the angular dependence of the multipole expansion. Why are Legendre polynomials natural in this setting?
+
+\section{Canonical Examples}
+\subsection{Problem 11: Uniformly Charged Sphere}
+Find the exterior multipole expansion of a uniformly charged sphere and compare it with the exact potential.
+
+\subsection{Problem 12: Neutral Distribution with Nonzero Dipole Moment}
+Construct a simple continuous or discrete neutral distribution with nonzero dipole moment. Write its leading far-field potential.
+
+\subsection{Problem 13: Neutral Distribution with Vanishing Dipole Moment}
+Construct a simple configuration with zero total charge and zero dipole moment but nonzero quadrupole moment.
+
+\section{Validity and Error}
+\subsection{Problem 14: Region of Validity}
+Explain precisely when a multipole expansion is expected to converge well. What goes wrong when the observation point lies inside or too near the source distribution?
+
+\subsection{Problem 15: Error Decay}
+If the monopole and dipole terms are retained, estimate how the neglected terms scale with distance. Give the answer in powers of $1/r$.
+
+\section{Challenge Problems}
+\subsection{Problem 16: Translating the Origin}
+Show that the dipole moment depends on the choice of origin unless the total charge vanishes. Then explain why, for a neutral system, the dipole moment is origin independent.
+
+\subsection{Problem 17: Angular Pattern}
+For an ideal dipole oriented along the $z$-axis, write the angular dependence of the potential and field. Explain why the dipole field has strong directional structure unlike the monopole field.
+
+\end{document}
