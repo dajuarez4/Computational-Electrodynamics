@@ -1,0 +1,252 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[unicode]{hyperref}
+\usepackage{cite}
+
+\title{}
+\author{}
+\date{}
+
+\begin{document}
+
+\noindent{\LARGE \textbf{Dirac Delta Function}}\\
+\noindent{\LARGE \textbf{Rigorous Notes for Electrodynamics}}\\
+\noindent{\LARGE \textbf{with Applications to Localized Sources}}\\[0.4cm]
+
+\noindent{\large \textbf{Project:} Computational Electrodynamics}\\
+\noindent{\large \textbf{Student:} Diego Juarez}\\
+\noindent{\large March 2026}
+
+\vspace{0.3cm}
+
+\begin{center}
+    \rule{0.25\textwidth}{0.4pt}\hspace{0.4em}$\star\ \star\ \star$\hspace{0.4em}\rule{0.25\textwidth}{0.4pt}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{Description}
+These notes develop the Dirac delta function at the level needed for graduate electrodynamics. The emphasis is on mathematical meaning, operational use, and physical interpretation. In particular, the delta function is treated not as an ordinary function but as a distribution defined by its action under integration. This is the correct framework for describing point charges, line charges, surface charges, and singular source terms in Poisson's equation and in Green-function methods.
+
+\section{Motivation}
+Many idealized source distributions in electrodynamics are concentrated on sets of lower dimension. A point charge is concentrated at one point, a line charge on a curve, and a surface charge on a two-dimensional surface. Ordinary functions are not flexible enough to describe such objects while retaining finite total charge in a compact and useful analytic form.
+
+The Dirac delta function solves this difficulty. Although it is written symbolically as $\delta(x-a)$, its meaning is not that of an ordinary function having an infinitely high spike at $x=a$. Instead, it is defined by what it does inside an integral:
+\[
+\int_{-\infty}^{\infty} f(x)\,\delta(x-a)\,dx=f(a).
+\]
+This is the central property and everything else follows from it.
+
+\section{Distributional Definition}
+Let $f$ be a sufficiently smooth test function with suitable decay. The Dirac delta centered at $a$ is the distribution characterized by
+\[
+\langle \delta(x-a),f(x)\rangle = \int_{-\infty}^{\infty} f(x)\delta(x-a)\,dx = f(a).
+\]
+This relation is called the \emph{sifting property}. It says that the delta distribution extracts the value of the test function at the point where the distribution is supported.
+
+The common statements
+\[
+\delta(x-a)=0 \quad \text{for } x\neq a,
+\qquad
+\int_{-\infty}^{\infty}\delta(x-a)\,dx=1
+\]
+are only shorthand for the distributional definition above. They should not be interpreted as a pointwise description in the usual sense.
+
+\section{Basic Properties}
+
+\subsection{Translation}
+The translated delta distribution $\delta(x-a)$ samples the test function at $x=a$:
+\[
+\int_{-\infty}^{\infty} f(x)\delta(x-a)\,dx=f(a).
+\]
+In particular, $\delta(x)$ samples at the origin.
+
+\subsection{Evenness}
+The delta distribution is even:
+\[
+\delta(-x)=\delta(x).
+\]
+To verify this, let $u=-x$ in the integral:
+\[
+\int_{-\infty}^{\infty} f(x)\delta(-x)\,dx
+=
+\int_{-\infty}^{\infty} f(-u)\delta(u)\,du
+=
+f(0),
+\]
+which is the defining action of $\delta(x)$.
+
+\subsection{Scaling}
+If $a\neq 0$, then
+\[
+\delta(ax)=\frac{1}{|a|}\delta(x).
+\]
+This is required to preserve normalization under a change of variables. Indeed,
+\[
+\int_{-\infty}^{\infty} f(x)\delta(ax)\,dx
+=
+\frac{1}{|a|}f(0).
+\]
+The factor $1/|a|$ is essential and is one of the most commonly used identities in applications.
+
+\subsection{Delta of a Function}
+If $g(x)$ has isolated simple zeros $x_i$, meaning $g(x_i)=0$ and $g'(x_i)\neq 0$, then
+\[
+\delta(g(x))=\sum_i \frac{\delta(x-x_i)}{|g'(x_i)|}.
+\]
+This identity is indispensable in coordinate changes, normal-mode decompositions, and integrals constrained by symmetry.
+
+\subsection{Derivative of the Delta Distribution}
+The derivative $\delta'(x-a)$ is defined distributionally by
+\[
+\int_{-\infty}^{\infty} f(x)\delta'(x-a)\,dx=-f'(a).
+\]
+This follows from integration by parts, with the derivative transferred from the distribution onto the test function. Such identities appear frequently when differentiating singular source terms in field equations.
+
+\section{Delta Sequences}
+Although the delta distribution is not an ordinary function, it can be approximated by sequences of ordinary functions whose support becomes narrower while the total integral remains fixed.
+
+A standard example is the normalized Gaussian
+\[
+\delta_\varepsilon(x)=\frac{1}{\sqrt{\pi}\,\varepsilon}e^{-x^2/\varepsilon^2}.
+\]
+It satisfies
+\[
+\int_{-\infty}^{\infty}\delta_\varepsilon(x)\,dx=1
+\]
+for every $\varepsilon>0$. As $\varepsilon\to 0$, the family does not converge pointwise to an ordinary function. Instead, it converges distributionally:
+\[
+\lim_{\varepsilon\to 0}\int_{-\infty}^{\infty} f(x)\delta_\varepsilon(x-a)\,dx=f(a).
+\]
+This is the correct sense in which the Gaussian family approximates the delta function.
+
+\section{Delta Functions in Several Dimensions}
+
+\subsection{Two Dimensions}
+In two dimensions,
+\[
+\delta^{(2)}(\mathbf r-\mathbf r_0)=\delta(x-x_0)\delta(y-y_0),
+\]
+and its defining property is
+\[
+\iint f(x,y)\delta(x-x_0)\delta(y-y_0)\,dx\,dy=f(x_0,y_0).
+\]
+It therefore localizes a distribution at a single point in the plane.
+
+\subsection{Three Dimensions}
+In three-dimensional Cartesian coordinates,
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)=\delta(x-x_0)\delta(y-y_0)\delta(z-z_0),
+\]
+and
+\[
+\iiint f(\mathbf r)\delta^{(3)}(\mathbf r-\mathbf r_0)\,d^3r=f(\mathbf r_0).
+\]
+The three-dimensional delta distribution has physical dimensions of inverse volume. This is required so that expressions such as charge density carry the correct units.
+
+\subsection{Curvilinear Coordinates}
+In curvilinear coordinates, Jacobian factors must be included explicitly. In spherical coordinates,
+\[
+d^3r=r^2\sin\theta\,dr\,d\theta\,d\phi,
+\]
+so one has
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)
+=
+\frac{1}{r^2\sin\theta}\delta(r-r_0)\delta(\theta-\theta_0)\delta(\phi-\phi_0).
+\]
+Likewise, in cylindrical coordinates with
+\[
+d^3r=s\,ds\,d\phi\,dz,
+\]
+the appropriate form is
+\[
+\delta^{(3)}(\mathbf r-\mathbf r_0)
+=
+\frac{1}{s}\delta(s-s_0)\delta(\phi-\phi_0)\delta(z-z_0).
+\]
+These Jacobian factors are not optional. Omitting them destroys the sifting property under the correct volume element.
+
+\section{Role in Electrodynamics}
+\subsection{Point Charges}
+A point charge $q$ at position $\mathbf r_0$ is described by the volume charge density
+\[
+\rho(\mathbf r)=q\,\delta^{(3)}(\mathbf r-\mathbf r_0).
+\]
+Its total charge is obtained immediately:
+\[
+\iiint \rho(\mathbf r)\,d^3r
+=
+q\iiint \delta^{(3)}(\mathbf r-\mathbf r_0)\,d^3r
+=
+q.
+\]
+Thus the delta distribution encodes both localization and correct normalization in a single compact expression.
+
+\subsection{Line Charges}
+An infinite line charge of linear density $\lambda$ along the $z$ axis is represented as
+\[
+\rho(x,y,z)=\lambda\,\delta(x)\delta(y).
+\]
+Then for a finite segment of length $L$,
+\[
+Q=\iiint \rho\,d^3r
+=
+\int_{-L/2}^{L/2}\!dz\int dx\int dy\,\lambda\delta(x)\delta(y)
+=
+\lambda L.
+\]
+The three-dimensional density reproduces the expected charge per unit length.
+
+\subsection{Surface Charges}
+A plane charge with surface density $\sigma$ lying in the plane $z=0$ is written
+\[
+\rho(x,y,z)=\sigma\,\delta(z).
+\]
+Integrating over a slab of cross-sectional area $A$ yields
+\[
+Q=\iiint \rho\,d^3r
+=
+\iint_A dx\,dy\int dz\,\sigma\delta(z)
+=
+\sigma A.
+\]
+This embeds a surface source into the standard volume-density framework used by Maxwell's equations.
+
+\section{Poisson's Equation with Singular Sources}
+The electrostatic potential of a point charge is governed by Poisson's equation
+\[
+\nabla^2\Phi(\mathbf r)=-\frac{\rho(\mathbf r)}{\varepsilon_0}.
+\]
+For a point charge $q$ at $\mathbf r_0$,
+\[
+\nabla^2\Phi(\mathbf r)
+=
+-\frac{q}{\varepsilon_0}\delta^{(3)}(\mathbf r-\mathbf r_0).
+\]
+The corresponding solution is the Coulomb potential
+\[
+\Phi(\mathbf r)=\frac{1}{4\pi\varepsilon_0}\frac{q}{|\mathbf r-\mathbf r_0|}.
+\]
+Away from $\mathbf r_0$, the right-hand side vanishes and the potential satisfies Laplace's equation. At the source point, however, the singularity in the potential encodes the full point-charge source through the delta distribution.
+
+\section{Why the Delta Function Is Essential}
+The central importance of the delta distribution is that it allows all localized sources to be written in the common language of volume densities. This unifies the treatment of point, line, and surface charge distributions and allows Poisson's equation, Green's functions, and Fourier methods to be applied without reformulating the theory separately for each geometry.
+
+From a mathematical point of view, the delta distribution is a linear functional on test functions. From a physical point of view, it is the idealized representation of a finite quantity concentrated in an infinitesimal region. Both viewpoints are necessary for serious work in electrodynamics.
+
+\section{Summary}
+The Dirac delta function should never be regarded as an ordinary function with an infinitely tall spike. Its correct meaning is distributional. It is defined by the sifting property, transforms under scaling with a Jacobian factor, generalizes naturally to several dimensions, and provides the cleanest representation of singular charge distributions in electrodynamics.
+
+The notation may be compact, but the concept is subtle. Once understood properly, however, the delta function becomes one of the most efficient and powerful tools in classical field theory.
+
+\section*{What Would Improve the Next Draft}
+I can strengthen the next version further in either of two ways:
+\begin{itemize}
+\item If you want a closer Jackson flavor, send the exact edition or the chapter sections you want mirrored in notation and emphasis.
+\item If you want a longer set of notes, I can expand this into a full mini-chapter with derivations, worked examples, and references.
+\end{itemize}
+
+\end{document}

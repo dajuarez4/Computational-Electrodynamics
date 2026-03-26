@@ -1,0 +1,339 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[unicode]{hyperref}
+\usepackage{cite}
+
+\title{}
+\author{}
+\date{}
+
+\begin{document}
+
+\noindent{\LARGE \textbf{Poisson's Equation in Electrostatics}}\\
+\noindent{\LARGE \textbf{Rigorous Notes for Electrodynamics}}\\
+\noindent{\LARGE \textbf{with Boundary-Value and Green-Function Perspective}}\\[0.4cm]
+
+\noindent{\large \textbf{Project:} Computational Electrodynamics}\\
+\noindent{\large \textbf{Student:} Diego Juarez}\\
+\noindent{\large March 2026}
+
+\vspace{0.3cm}
+
+\begin{center}
+    \rule{0.25\textwidth}{0.4pt}\hspace{0.4em}$\star\ \star\ \star$\hspace{0.4em}\rule{0.25\textwidth}{0.4pt}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{Description}
+These notes develop Poisson's equation as one of the central equations of electrostatics. The emphasis is on derivation from Maxwell's equations, physical interpretation, mathematical structure, symmetry reduction, and the boundary-value viewpoint that underlies much of classical electrodynamics. Particular care is taken to explain why Poisson's equation is not merely a differential identity but the starting point for uniqueness theorems, Green's functions, the method of images, and systematic construction of electrostatic potentials.
+
+\section{Electrostatic Foundations}
+In electrostatics, Maxwell's equations reduce to
+\[
+\nabla\cdot \mathbf E=\frac{\rho}{\varepsilon_0},
+\qquad
+\nabla\times \mathbf E=0.
+\]
+The vanishing curl implies that the electric field is conservative. Therefore, at least in any simply connected region, there exists a scalar potential $\Phi(\mathbf r)$ such that
+\[
+\mathbf E=-\nabla \Phi.
+\]
+Substituting this relation into Gauss's law gives
+\[
+\nabla\cdot(-\nabla \Phi)=\frac{\rho}{\varepsilon_0},
+\]
+or
+\[
+\boxed{\nabla^2\Phi=-\frac{\rho}{\varepsilon_0}}.
+\]
+This is Poisson's equation.
+
+In a region where no charge is present, $\rho=0$, so the equation reduces to
+\[
+\nabla^2\Phi=0.
+\]
+This is Laplace's equation. Thus Laplace's equation is simply the source-free limit of Poisson's equation.
+
+\section{Physical Meaning}
+Poisson's equation expresses a local relation between charge density and curvature of the electrostatic potential. In one spatial dimension,
+\[
+\frac{d^2\Phi}{dx^2}=-\frac{\rho(x)}{\varepsilon_0}.
+\]
+Hence the sign of the charge density determines the sign of the second derivative:
+\begin{itemize}
+\item If $\rho>0$, then $d^2\Phi/dx^2<0$, so the potential is locally concave downward.
+\item If $\rho<0$, then $d^2\Phi/dx^2>0$, so the potential is locally concave upward.
+\item If $\rho=0$, the potential is harmonic and is determined entirely by surrounding boundary data.
+\end{itemize}
+
+This interpretation is useful but incomplete unless boundary conditions are included. The local differential equation alone does not determine the physical solution uniquely. Electrostatics is therefore inherently a boundary-value theory: the charge density supplies the source term, while boundary data and asymptotic conditions determine which solution is physically realized.
+
+\section{Mathematical Structure}
+
+\subsection{The Laplacian}
+In Cartesian coordinates,
+\[
+\nabla^2\Phi=
+\frac{\partial^2\Phi}{\partial x^2}
++
+\frac{\partial^2\Phi}{\partial y^2}
++
+\frac{\partial^2\Phi}{\partial z^2}.
+\]
+In cylindrical coordinates $(s,\varphi,z)$,
+\[
+\nabla^2\Phi=
+\frac{1}{s}\frac{\partial}{\partial s}\left(s\frac{\partial \Phi}{\partial s}\right)
++
+\frac{1}{s^2}\frac{\partial^2\Phi}{\partial \varphi^2}
++
+\frac{\partial^2\Phi}{\partial z^2}.
+\]
+In spherical coordinates $(r,\theta,\phi)$,
+\[
+\nabla^2\Phi=
+\frac{1}{r^2}\frac{\partial}{\partial r}\left(r^2\frac{\partial\Phi}{\partial r}\right)
++
+\frac{1}{r^2\sin\theta}\frac{\partial}{\partial\theta}\left(\sin\theta\frac{\partial\Phi}{\partial\theta}\right)
++
+\frac{1}{r^2\sin^2\theta}\frac{\partial^2\Phi}{\partial\phi^2}.
+\]
+These explicit forms matter whenever symmetry reduces the problem to fewer variables.
+
+\subsection{Linearity}
+Poisson's equation is linear. If $\Phi_1$ and $\Phi_2$ satisfy
+\[
+\nabla^2\Phi_1=-\frac{\rho_1}{\varepsilon_0},
+\qquad
+\nabla^2\Phi_2=-\frac{\rho_2}{\varepsilon_0},
+\]
+then for constants $a$ and $b$,
+\[
+\nabla^2(a\Phi_1+b\Phi_2)=-\frac{a\rho_1+b\rho_2}{\varepsilon_0}.
+\]
+This differential statement of superposition is one of the main reasons electrostatics admits systematic analytic constructions.
+
+\subsection{Boundary Conditions}
+A differential equation by itself is not enough. One must also prescribe boundary information. The most common choices are:
+\begin{itemize}
+\item \textbf{Dirichlet boundary conditions:} the potential $\Phi$ is given on the boundary.
+\item \textbf{Neumann boundary conditions:} the normal derivative $\partial \Phi/\partial n$ is given on the boundary.
+\end{itemize}
+Dirichlet data determine the solution uniquely. Neumann data determine the solution up to an additive constant, provided the necessary compatibility condition is satisfied. Physically, this reflects the fact that only potential differences are observable.
+
+\section{Connection with Coulomb's Law}
+The potential of a point charge $q$ at position $\mathbf r_0$ is
+\[
+\Phi(\mathbf r)=\frac{1}{4\pi\varepsilon_0}\frac{q}{|\mathbf r-\mathbf r_0|}.
+\]
+Away from the source point, this satisfies Laplace's equation:
+\[
+\nabla^2\left(\frac{1}{|\mathbf r-\mathbf r_0|}\right)=0,
+\qquad
+\mathbf r\neq \mathbf r_0.
+\]
+However, globally the source is singular, and the correct identity is distributional:
+\[
+\nabla^2\left(\frac{1}{r}\right)=-4\pi\delta^{(3)}(\mathbf r).
+\]
+Therefore,
+\[
+\nabla^2\Phi(\mathbf r)
+=
+\frac{q}{4\pi\varepsilon_0}\nabla^2\left(\frac{1}{|\mathbf r-\mathbf r_0|}\right)
+=
+-\frac{q}{\varepsilon_0}\delta^{(3)}(\mathbf r-\mathbf r_0).
+\]
+Hence a point charge is represented by
+\[
+\rho(\mathbf r)=q\,\delta^{(3)}(\mathbf r-\mathbf r_0),
+\]
+and the Coulomb potential is precisely the Green-function solution of Poisson's equation for that source.
+
+\section{Canonical Examples}
+
+\subsection{Uniform Charge Density in One Dimension}
+Suppose the potential depends only on one coordinate $x$ and the volume charge density is constant:
+\[
+\rho(x)=\rho_0.
+\]
+Then Poisson's equation becomes
+\[
+\frac{d^2\Phi}{dx^2}=-\frac{\rho_0}{\varepsilon_0}.
+\]
+Integrating twice,
+\[
+\Phi(x)=-\frac{\rho_0}{2\varepsilon_0}x^2+C_1x+C_2.
+\]
+The constants are not determined by the differential equation; they are fixed by boundary conditions. This is the simplest example showing that source information alone is insufficient.
+
+\subsection{Piecewise One-Dimensional Source}
+Suppose charge occupies only part of an interval. In each subregion where $\rho=0$, the potential is linear because Laplace's equation applies. In a region of constant charge density, the potential is quadratic. The complete solution is assembled piecewise by enforcing:
+\begin{itemize}
+\item continuity of $\Phi$,
+\item continuity of $d\Phi/dx$ if no surface charge is present,
+\item and the prescribed boundary values.
+\end{itemize}
+This logic recurs throughout electrostatics.
+
+\subsection{Region with Zero Charge}
+It is important not to confuse ``no local charge'' with ``zero potential.'' If $\rho=0$ in a region, then $\Phi$ is harmonic there, but it may still be nontrivial because it is shaped by external charges and boundary conditions. The potential between conducting plates is a simple example: the region between the plates may contain no charge, yet the potential is nonzero and spatially varying.
+
+\section{Spherical Symmetry}
+If both source and potential depend only on the radial coordinate, then $\rho=\rho(r)$ and $\Phi=\Phi(r)$. The angular derivatives vanish, and Poisson's equation reduces to
+\[
+\frac{1}{r^2}\frac{d}{dr}\left(r^2\frac{d\Phi}{dr}\right)
+=
+-\frac{\rho(r)}{\varepsilon_0}.
+\]
+This is the radial Poisson equation.
+
+\subsection{Uniformly Charged Solid Sphere}
+Consider a sphere of radius $R$ with uniform volume charge density
+\[
+\rho(r)=
+\begin{cases}
+\rho_0, & r<R,\\
+0, & r>R.
+\end{cases}
+\]
+Inside the sphere,
+\[
+\frac{1}{r^2}\frac{d}{dr}\left(r^2\frac{d\Phi_{\text{in}}}{dr}\right)
+=
+-\frac{\rho_0}{\varepsilon_0}.
+\]
+Multiplying by $r^2$ and integrating,
+\[
+r^2\frac{d\Phi_{\text{in}}}{dr}
+=
+-\frac{\rho_0}{\varepsilon_0}\frac{r^3}{3}+C.
+\]
+Regularity at the origin requires $C=0$, since otherwise $d\Phi/dr\sim 1/r^2$ would diverge. Thus
+\[
+\frac{d\Phi_{\text{in}}}{dr}=-\frac{\rho_0}{3\varepsilon_0}r,
+\]
+and integrating once more,
+\[
+\Phi_{\text{in}}(r)=-\frac{\rho_0}{6\varepsilon_0}r^2+C_{\text{in}}.
+\]
+
+Outside the sphere, $\rho=0$, so
+\[
+\frac{1}{r^2}\frac{d}{dr}\left(r^2\frac{d\Phi_{\text{out}}}{dr}\right)=0.
+\]
+The spherically symmetric solution is
+\[
+\Phi_{\text{out}}(r)=\frac{A}{r}+B.
+\]
+Imposing $\Phi_{\text{out}}\to 0$ as $r\to\infty$ gives $B=0$. The total charge is
+\[
+Q=\frac{4\pi R^3}{3}\rho_0,
+\]
+so the exterior solution must be
+\[
+\Phi_{\text{out}}(r)=\frac{1}{4\pi\varepsilon_0}\frac{Q}{r}
+=
+\frac{\rho_0R^3}{3\varepsilon_0 r}.
+\]
+Matching the potential continuously at $r=R$ yields
+\[
+\Phi_{\text{in}}(r)=\frac{\rho_0}{6\varepsilon_0}(3R^2-r^2),
+\qquad
+\Phi_{\text{out}}(r)=\frac{\rho_0R^3}{3\varepsilon_0 r}.
+\]
+The electric field then follows from $\mathbf E=-\nabla\Phi$:
+\[
+\mathbf E(r)=
+\begin{cases}
+\dfrac{\rho_0 r}{3\varepsilon_0}\,\hat{\mathbf r}, & r<R,\\[0.8em]
+\dfrac{\rho_0 R^3}{3\varepsilon_0 r^2}\,\hat{\mathbf r}, & r>R.
+\end{cases}
+\]
+The interior field grows linearly with $r$, while the exterior field is that of a point charge carrying the total charge $Q$.
+
+\section{Boundary-Value Problem Perspective}
+Poisson's equation is best understood not merely as a differential relation but as a boundary-value problem. In practical electrostatics, one specifies some combination of:
+\begin{itemize}
+\item the source density $\rho(\mathbf r)$ in a region,
+\item the value of the potential on conducting boundaries,
+\item or the normal derivative of the potential on the boundary.
+\end{itemize}
+Conductors in electrostatic equilibrium are equipotentials. Grounded conductors therefore impose the boundary condition $\Phi=0$. This viewpoint is fundamental because it explains why the same charge distribution can produce different physical solutions in different geometries.
+
+\subsection{Uniqueness}
+Suppose $\Phi_1$ and $\Phi_2$ solve Poisson's equation with the same charge density and the same Dirichlet boundary data. Their difference $u=\Phi_1-\Phi_2$ satisfies
+\[
+\nabla^2 u=0
+\]
+and vanishes on the boundary. The uniqueness theorem for Laplace's equation then implies $u=0$, hence $\Phi_1=\Phi_2$. Therefore, once a candidate solution satisfies both Poisson's equation and the boundary conditions, the problem is solved completely.
+
+This principle justifies symmetry arguments, separation of variables, Green's functions, and the method of images.
+
+\section{Green-Function Viewpoint}
+The free-space Green's function for the Laplacian is
+\[
+G(\mathbf r,\mathbf r')=\frac{1}{|\mathbf r-\mathbf r'|},
+\]
+up to the conventional factor $1/(4\pi)$. It satisfies
+\[
+\nabla^2 G(\mathbf r,\mathbf r')=-4\pi\delta^{(3)}(\mathbf r-\mathbf r').
+\]
+Therefore, the formal free-space solution of Poisson's equation is
+\[
+\Phi(\mathbf r)
+=
+\frac{1}{4\pi\varepsilon_0}
+\int \frac{\rho(\mathbf r')}{|\mathbf r-\mathbf r'|}\,d^3r'.
+\]
+This formula is the continuous superposition of Coulomb potentials produced by infinitesimal charge elements. In bounded regions, the Green's function must be modified so that it also encodes the boundary conditions. This is the natural bridge from Poisson's equation to later methods of solution.
+
+\section{Computational Interpretation}
+Poisson's equation also provides a useful geometric interpretation for numerical work. In one dimension, finite differences replace the second derivative by
+\[
+\frac{\Phi_{i+1}-2\Phi_i+\Phi_{i-1}}{h^2}
+\approx
+-\frac{\rho_i}{\varepsilon_0}.
+\]
+This gives a discrete form of the curvature-source relation. From the numerical point of view, the workflow is
+\[
+\rho \longrightarrow \Phi \longrightarrow \mathbf E,
+\qquad
+\mathbf E=-\nabla\Phi.
+\]
+Thus source distributions determine potential, and potential determines the electric field.
+
+Even in numerical settings, boundary conditions remain indispensable. A finite-difference scheme with the wrong boundary data solves the wrong physical problem, no matter how accurate the discretization may be.
+
+\section{Common Pitfalls}
+\begin{itemize}
+\item Confusing Poisson's equation with Laplace's equation by overlooking whether the region actually contains charge.
+\item Ignoring boundary conditions and assuming that the source density alone determines the potential.
+\item Using the Coulomb potential without recognizing the distributional identity
+\[
+\nabla^2\left(\frac{1}{r}\right)=-4\pi\delta^{(3)}(\mathbf r).
+\]
+\item Forgetting continuity conditions across interfaces or jump conditions when singular surface sources are present.
+\item Writing the Laplacian incorrectly in curvilinear coordinates by omitting Jacobian factors.
+\end{itemize}
+
+\section{Summary}
+Poisson's equation,
+\[
+\nabla^2\Phi=-\frac{\rho}{\varepsilon_0},
+\]
+is the local differential law relating electrostatic potential to charge density. It is derived directly from Maxwell's equations, but its full physical meaning emerges only when combined with boundary conditions. It explains how the source density controls the local curvature of the potential, while the boundary-value framework determines the global solution.
+
+Through singular sources, spherical symmetry, uniqueness theorems, and Green functions, Poisson's equation becomes the organizing principle for a large part of electrostatics. It is the natural entry point to almost every advanced method that follows in classical electrodynamics.
+
+\section*{What Would Improve the Next Draft}
+I can strengthen the next version further in either of two directions:
+\begin{itemize}
+\item If you want it closer to Jackson's notation and pacing, send the edition or the corresponding chapter pages.
+\item If you want a more complete chapter-style note, I can add worked derivations, theorem statements, and a short section of solved examples.
+\end{itemize}
+
+\end{document}
