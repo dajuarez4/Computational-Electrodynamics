@@ -86,6 +86,24 @@ Each topic follows a structured workflow:
 
 ---
 
+## Visualizations
+
+The repository also includes interactive and static visualizations that build intuition for how the Dirac delta function behaves as a sampling device rather than as an ordinary spike.
+
+### Dirac Delta v2: Charge Hunt
+
+The charge-density plot shows a one-dimensional localized source profile with positive and negative contributions. The heatmap shows the detector response
+\[
+\left|\int \rho(x)\,\delta_\varepsilon(x-a)\,dx\right|,
+\]
+which becomes strongest when the sampling point is centered on a source and the kernel is sufficiently narrow.
+
+![Dirac Delta v2 Charge Density](./codes/plots/dirac_delta_v2_charge_density.png)
+
+![Dirac Delta v2 Heatmap](./codes/plots/dirac_delta_v2_charge_hunt_heatmap.png)
+
+---
+
 ## Goal
 
 The goal of this project is to bridge **analytical electrodynamics** and **computational physics**, enabling a deeper understanding of physical phenomena through both theory and simulation.
