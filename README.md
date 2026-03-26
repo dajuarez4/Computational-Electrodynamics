@@ -92,11 +92,7 @@ The repository also includes interactive and static visualizations that build in
 
 ### Dirac Delta v2: Charge Hunt
 
-The charge-density plot shows a one-dimensional localized source profile with positive and negative contributions. The heatmap shows the detector response
-\[
-\left|\int \rho(x)\,\delta_\varepsilon(x-a)\,dx\right|,
-\]
-which becomes strongest when the sampling point is centered on a source and the kernel is sufficiently narrow.
+The charge-density plot shows a one-dimensional localized source profile with positive and negative contributions. The heatmap shows the detector response `|∫ ρ(x) δ_ε(x-a) dx|`, which becomes strongest when the sampling point is centered on a source and the kernel is sufficiently narrow.
 
 ![Dirac Delta v2 Charge Density](./codes/plots/dirac_delta_v2_charge_density.png)
 
