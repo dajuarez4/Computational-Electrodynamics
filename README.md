@@ -98,6 +98,10 @@ The charge-density plot shows a one-dimensional localized source profile with po
 
 ![Dirac Delta v2 Heatmap](./codes/plots/dirac_delta_v2_charge_hunt_heatmap.png)
 
+The animation below shows the grounded-sphere method of images: as the external source moves, the image charge changes position and magnitude so that the sphere remains at zero potential.
+
+![Method of Images Grounded Sphere](./codes/plots/method_of_images_grounded_sphere.gif)
+
 ---
 
 ## Goal
