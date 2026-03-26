@@ -47,42 +47,16 @@ Each topic follows a structured workflow:
 - LaTeX (for mathematical derivations)
 
 ---
-## Notebooks
+## Topic Materials
 
-- [Dirac delta functions](./notebooks/Dirac%20delta%20functions.ipynb)
-- [Poisson's equation](./notebooks/Poisson%27s%20equation.ipynb)
-- [Laplace's equation](./notebooks/Laplace%27s%20equation.ipynb)
-- [Green's functions in electrostatics](./notebooks/Green%27s%20functions%20in%20electrostatics.ipynb)
-- [Method of images in electrostatics](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb)
-- [Multipole expansion in electrostatics](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb)
-- [Dielectrics in electrostatics](./notebooks/Dielectrics%20in%20electrostatics.ipynb)
-- [Electromagnetic Radiation](./notebooks/Electromagnetic%20Radiation.ipynb)
-
----
-
-## Problem Sets
-
-- [Dirac delta problems (PDF)](./problems/Dirac_Delta_problems.pdf)
-- [Poisson's equation problems (PDF)](./problems/Poisson_equation.pdf)
-- [Laplace's equation problems (PDF)](./problems/Laplace_equation.pdf)
-- [Green's functions problems (PDF)](./problems/Green_functions.pdf)
-- [Method of images problems (PDF)](./problems/method_of_images.pdf)
-- [Multipole expansion problems (PDF)](./problems/multipole_expansion.pdf)
-- [Dielectrics problems (PDF)](./problems/dielectrics_problems.pdf)
-- [Electromagnetic radiation problems (PDF)](./problems/electro_magnetic_radiation.pdf)
-
----
-
-## Formula Sheets
-
-- [Dirac delta formula sheet (PDF)](./Formula%20Sheet/dirac_delta_formula_sheet.pdf)
-- [Poisson's equation formula sheet (PDF)](./Formula%20Sheet/poisson_formula_sheet.pdf)
-- [Laplace's equation formula sheet (PDF)](./Formula%20Sheet/laplace_formula_sheet.pdf)
-- [Green's functions formula sheet (PDF)](./Formula%20Sheet/greens_functions_formula_sheet.pdf)
-- [Method of images formula sheet (PDF)](./Formula%20Sheet/method_of_images_formula_sheet.pdf)
-- [Multipole expansion formula sheet (PDF)](./Formula%20Sheet/multipole_formula_sheet.pdf)
-- [Dielectrics formula sheet (PDF)](./Formula%20Sheet/dielectrics_formula_sheet.pdf)
-- [Electromagnetic radiation formula sheet (PDF)](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf)
+- `Dirac Delta`: [Notebook](./notebooks/Dirac%20delta%20functions.ipynb), [Problem Set](./problems/Dirac_Delta_problems.pdf), [Formula Sheet](./Formula%20Sheet/dirac_delta_formula_sheet.pdf)
+- `Poisson's Equation`: [Notebook](./notebooks/Poisson%27s%20equation.ipynb), [Problem Set](./problems/Poisson_equation.pdf), [Formula Sheet](./Formula%20Sheet/poisson_formula_sheet.pdf)
+- `Laplace's Equation`: [Notebook](./notebooks/Laplace%27s%20equation.ipynb), [Problem Set](./problems/Laplace_equation.pdf), [Formula Sheet](./Formula%20Sheet/laplace_formula_sheet.pdf)
+- `Green's Functions`: [Notebook](./notebooks/Green%27s%20functions%20in%20electrostatics.ipynb), [Problem Set](./problems/Green_functions.pdf), [Formula Sheet](./Formula%20Sheet/greens_functions_formula_sheet.pdf)
+- `Method of Images`: [Notebook](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb), [Problem Set](./problems/method_of_images.pdf), [Formula Sheet](./Formula%20Sheet/method_of_images_formula_sheet.pdf)
+- `Multipole Expansion`: [Notebook](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb), [Problem Set](./problems/multipole_expansion.pdf), [Formula Sheet](./Formula%20Sheet/multipole_formula_sheet.pdf)
+- `Dielectrics`: [Notebook](./notebooks/Dielectrics%20in%20electrostatics.ipynb), [Problem Set](./problems/dielectrics_problems.pdf), [Formula Sheet](./Formula%20Sheet/dielectrics_formula_sheet.pdf)
+- `Electromagnetic Radiation`: [Notebook](./notebooks/Electromagnetic%20Radiation.ipynb), [Problem Set](./problems/electro_magnetic_radiation.pdf), [Formula Sheet](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf)
 
 ---
 
