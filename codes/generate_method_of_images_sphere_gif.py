@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-OUTPUT_DIR = Path("codes/plots")
+OUTPUT_DIR = Path("plots")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 GIF_PATH = OUTPUT_DIR / "method_of_images_grounded_sphere.gif"
@@ -81,7 +81,7 @@ def make_frame(a: float, index: int) -> np.ndarray:
 
     ax.plot([0, 0], [b, a], color="#A8B9CC", linestyle="--", linewidth=1.0, alpha=0.65, zorder=6)
     ax.text(0.12, a + 0.12, "real charge  +q", color="#7CFFB2", fontsize=11, weight="bold")
-    ax.text(0.12, b - 0.18, fr"image charge  {q_image:+.2f}q", color="#FF8D7A", fontsize=10, weight="bold")
+    ax.text(0.12, b - 0.18, fr"                 q' = {q_image:+.2f}q", color="#FF8D7A", fontsize=10, weight="bold")
 
     ax.set_title("Method of Images: Grounded Sphere with a Moving External Charge", color="white", fontsize=10, pad=12)
     ax.text(
