@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Method of Images Notes</title>
+  <style>
+    :root {
+      --ink: #1a2530;
+      --muted: #5b6776;
+      --accent: #0f5a8a;
+      --accent-soft: #edf5fb;
+      --warm: #b4661f;
+      --paper: #fcfbf7;
+      --panel: #ffffff;
+      --line: #d7dfe8;
+    }
+    * { box-sizing: border-box; }
+    @page { size: Letter; margin: 0.55in; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f3eee6 0%, #f8f7f3 100%);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.58;
+    }
+    .page {
+      width: 8.4in;
+      margin: 0 auto 0.3in auto;
+      background: var(--paper);
+      border: 1px solid rgba(26, 37, 48, 0.08);
+      box-shadow: 0 16px 36px rgba(26, 37, 48, 0.08);
+      padding: 0.58in;
+      position: relative;
+    }
+    .page::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--warm) 100%);
+    }
+    .page-break { page-break-before: always; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.74rem;
+      color: var(--warm);
+      margin-bottom: 0.5rem;
+    }
+    h1, h2, h3 { margin: 0; color: var(--ink); }
+    h1 { font-size: 2rem; line-height: 1.08; max-width: 92%; margin-bottom: 0.7rem; }
+    h2 {
+      font-size: 1.18rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.16rem;
+      border-bottom: 1px solid var(--line);
+    }
+    h3 { font-size: 0.98rem; margin-bottom: 0.3rem; }
+    p { margin: 0.38rem 0 0.75rem 0; font-size: 0.97rem; }
+    ul, ol { margin: 0.35rem 0 0.8rem 1.15rem; padding: 0; }
+    li { margin: 0.24rem 0; }
+    .subtitle { color: var(--muted); font-size: 1.03rem; max-width: 92%; }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0 1rem 0;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0.85rem 0.95rem;
+      break-inside: avoid;
+    }
+    .card strong.label {
+      display: block;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.28rem;
+    }
+    .equation {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 0.72rem 0.85rem;
+      margin: 0.7rem 0;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .equation code {
+      white-space: pre-wrap;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-top: 0.7rem;
+    }
+    .footer {
+      margin-top: 1rem;
+      padding-top: 0.35rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="eyebrow">Computational Electrodynamics</div>
+    <h1>Method of Images Notes</h1>
+    <p class="subtitle">
+      This is the version I want in my head when solving problems: not just the image-charge formulas,
+      but why the construction is legal, when it works, and what to check before trusting it.
+    </p>
+    <div class="meta">
+      <div class="card"><strong class="label">Prepared For</strong>Diego Juarez</div>
+      <div class="card"><strong class="label">Topic</strong>Method of images for grounded conductors</div>
+      <div class="card"><strong class="label">Date</strong>March 28, 2026</div>
+    </div>
+
+    <h2>1. What the method is actually doing</h2>
+    <p>In electrostatics the potential satisfies Poisson's equation in source regions and Laplace's equation in charge-free regions.</p>
+    <div class="equation"><code>Laplace(phi(r)) = -rho(r) / eps0</code></div>
+    <div class="equation"><code>Laplace(phi(r)) = 0   in source-free regions</code></div>
+    <p>
+      The hard part is usually the boundary condition on the conductor. The method of images replaces that boundary by fictitious charges outside the physical region, chosen so that the candidate potential automatically satisfies the boundary.
+    </p>
+    <ol>
+      <li>Solve the right PDE in the physical region.</li>
+      <li>Satisfy the boundary exactly.</li>
+      <li>Keep image singularities outside the physical region.</li>
+      <li>Use uniqueness.</li>
+    </ol>
+
+    <h2>2. Why uniqueness makes the method rigorous</h2>
+    <p>
+      For a Dirichlet problem, if the charge density in the region is specified, the boundary potential is specified,
+      and the behavior at infinity is fixed when needed, then the electrostatic solution is unique.
+    </p>
+    <p>
+      That means the image charges do not need to be physically present. They only need to help construct a potential
+      that solves the same problem in the physical region.
+    </p>
+
+    <h2>3. Checklist before trying images</h2>
+    <ul>
+      <li>Is the geometry symmetric enough to admit an exact image construction?</li>
+      <li>Is the conductor grounded or isolated?</li>
+      <li>What is the physical region?</li>
+      <li>Where are the real charges?</li>
+      <li>Can all images be placed outside the physical region?</li>
+      <li>Can the boundary be verified exactly?</li>
+    </ul>
+
+    <h2>4. Grounded infinite plane</h2>
+    <p>Take a point charge q at (0,0,a) with a &gt; 0 above the grounded plane z = 0. The physical region is z &gt; 0.</p>
+    <div class="equation"><code>real charge:  q  at (0,0,a)
+image charge: -q at (0,0,-a)</code></div>
+    <div class="equation"><code>phi(r) =
+(1 / 4 pi eps0)
+[ q / |r-r0| - q / |r-r0*| ],   z > 0</code></div>
+    <p>
+      On the plane the distances to the real and image charge are equal, so phi = 0 exactly.
+      The only singularity in z &gt; 0 is the real charge, and the potential decays correctly at infinity.
+      By uniqueness, the construction is valid.
+    </p>
+
+    <div class="footer">
+      Main anchors here: the method-of-images notebook and formula sheet.
+    </div>
+  </section>
+
+  <section class="page page-break">
+    <h2>5. Field, induced charge, and force for the plane</h2>
+    <p>The induced surface charge density comes from the normal field just above the conductor.</p>
+    <div class="equation"><code>sigma(rho) = eps0 Ez(rho,0+)
+           = -eps0 (dphi/dz)|_{z=0+}</code></div>
+    <div class="equation"><code>sigma(rho) = - q a / [ 2 pi (rho^2 + a^2)^(3/2) ]</code></div>
+    <p>This result is negative everywhere for a positive external charge and is strongest directly below the charge.</p>
+    <div class="equation"><code>Q_ind = integral sigma(rho) 2 pi rho d rho = -q</code></div>
+    <p>The force on the real charge is the Coulomb force due to the image charge:</p>
+    <div class="equation"><code>F = - q^2 / (16 pi eps0 a^2)  z-hat</code></div>
+    <p>
+      The charge is attracted toward the plane. The shortcut is legitimate because the image reproduces the correct field in the physical region, not because there is literally a charge behind the plane.
+    </p>
+
+    <h2>6. Energy subtlety for the plane</h2>
+    <p>
+      The force can be computed directly from the image, but the energy is not the full Coulomb interaction energy between the real and image charge treated as two independent charges.
+    </p>
+    <div class="equation"><code>U = (1/2) q phi_image(r0)</code></div>
+    <p>
+      The factor of one-half matters because the conductor response is induced.
+    </p>
+
+    <h2>7. Grounded conducting sphere</h2>
+    <p>Now place a real charge q on the z-axis a distance a from the center of a grounded sphere of radius R, with a &gt; R.</p>
+    <div class="equation"><code>q' = -q R/a
+b  = R^2/a</code></div>
+    <div class="equation"><code>phi(r) =
+(1 / 4 pi eps0)
+[ q / |r-a z-hat| + q' / |r-b z-hat| ],   r > R</code></div>
+    <p>
+      The image sits inside the sphere, outside the physical exterior region. The curved boundary means the image changes both position and magnitude, unlike the plane case.
+    </p>
+
+    <div class="footer">
+      Main anchors here: grounded-sphere derivations in the notebook and the sphere GIF code.
+    </div>
+  </section>
+
+  <section class="page page-break">
+    <h2>8. Induced charge and force for the sphere</h2>
+    <p>The surface charge density comes from the outward radial derivative at the surface:</p>
+    <div class="equation"><code>sigma(theta) = -eps0 (dphi/dr)|_{r=R+}</code></div>
+    <div class="equation"><code>sigma(theta) =
+- (q / 4 pi R)
+  (a^2 - R^2) / (a^2 + R^2 - 2 a R cos(theta))^(3/2)</code></div>
+    <p>
+      The induced charge is negative everywhere and is most concentrated near the point closest to the external charge.
+    </p>
+    <div class="equation"><code>Q_ind = q' = -q R/a</code></div>
+    <div class="equation"><code>F = - (1 / 4 pi eps0) q^2 R a / (a^2 - R^2)^2  z-hat</code></div>
+    <p>
+      Two checks are worth keeping in mind: as a goes to infinity, the force goes to zero; as a approaches R from above, the attraction grows strongly. In the local flat-surface limit, the sphere result approaches the plane result.
+    </p>
+
+    <h2>9. Plane versus sphere</h2>
+    <div class="grid-two">
+      <div class="card">
+        <h3>Shared structure</h3>
+        <ul>
+          <li>both are grounded Dirichlet problems</li>
+          <li>both use images outside the physical region</li>
+          <li>both rely on exact boundary cancellation</li>
+          <li>both are justified by uniqueness</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Important differences</h3>
+        <ul>
+          <li>plane: simple mirror image with opposite sign</li>
+          <li>sphere: image changes both position and magnitude</li>
+          <li>plane: total induced charge is -q</li>
+          <li>sphere: total induced charge is -qR/a</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>10. Relation to Green's functions</h2>
+    <div class="equation"><code>G_D(r,r') = 1/|r-r'| - 1/|r-r'*|</code></div>
+    <p>
+      For the grounded plane, the method of images can be read as constructing a Dirichlet Green function for the half-space. So the method is not separate from Green-function theory. It is a special exact case of it.
+    </p>
+
+    <h2>11. Grounded versus isolated conductors</h2>
+    <p>
+      A grounded conductor has fixed potential and can exchange charge with ground. An isolated neutral conductor is a different problem: the total charge is constrained and the image construction generally changes.
+    </p>
+
+    <h2>12. When the method fails</h2>
+    <ul>
+      <li>irregular geometries</li>
+      <li>insufficient symmetry</li>
+      <li>cases where only an approximate boundary match is possible</li>
+    </ul>
+    <p>In those cases, use separation of variables, Green functions in a more general form, or numerical methods.</p>
+
+    <h2>13. What I actually want to remember</h2>
+    <ul>
+      <li>The method is justified by uniqueness, not by reality of the images.</li>
+      <li>Images must stay outside the physical region.</li>
+      <li>Grounded plane: mirror charge -q.</li>
+      <li>Plane induced charge density: -q a / [2 pi (rho^2 + a^2)^(3/2)].</li>
+      <li>Grounded sphere: q' = -qR/a and b = R^2/a.</li>
+      <li>The method of images is really a special Green-function construction.</li>
+      <li>Grounded and isolated conductors are different problems.</li>
+    </ul>
+
+    <div class="footer">
+      Sources: Jackson PDF, the method-of-images notebook, formula sheet, problem set, and the grounded-sphere visualization code in this repo.
+    </div>
+  </section>
+</body>
+</html>
