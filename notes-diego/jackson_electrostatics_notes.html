@@ -3,22 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jackson Electrostatics Notes</title>
+  <title>Jackson Electrostatics Survival Notes</title>
   <style>
     :root {
-      --ink: #14213d;
-      --muted: #4f5d75;
-      --accent: #b5651d;
-      --accent-soft: #f7efe5;
-      --line: #d8dee8;
-      --paper: #fffdf9;
+      --ink: #1c2430;
+      --muted: #5a6675;
+      --accent: #174c7a;
+      --accent-soft: #eef5fb;
+      --line: #d6dee8;
+      --paper: #fcfbf8;
       --panel: #ffffff;
-      --shadow: 0 18px 38px rgba(20, 33, 61, 0.08);
+      --warm: #a85d1a;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     @page {
       size: Letter;
@@ -27,600 +25,453 @@
 
     body {
       margin: 0;
-      font-family: "Georgia", "Times New Roman", serif;
+      background: linear-gradient(180deg, #f4efe7 0%, #f8f7f3 100%);
       color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(181, 101, 29, 0.08), transparent 28%),
-        linear-gradient(180deg, #fffdf9 0%, #f8f5ef 100%);
-      line-height: 1.55;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.58;
     }
 
-    .page {
-      max-width: 8.5in;
-      min-height: 10.35in;
+    .sheet {
+      width: 8.4in;
       margin: 0 auto 0.3in auto;
       background: var(--paper);
-      border: 1px solid rgba(20, 33, 61, 0.08);
-      box-shadow: var(--shadow);
-      padding: 0.55in;
+      border: 1px solid rgba(28, 36, 48, 0.08);
+      box-shadow: 0 16px 36px rgba(28, 36, 48, 0.08);
+      padding: 0.58in;
       position: relative;
-      overflow: hidden;
     }
 
-    .page::before {
+    .sheet::before {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 10px;
-      background: linear-gradient(90deg, #14213d 0%, #b5651d 55%, #e9c46a 100%);
-    }
-
-    .cover {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 0.76rem;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-
-    h1, h2, h3 {
-      margin: 0;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      line-height: 1.08;
-      max-width: 85%;
-    }
-
-    h2 {
-      font-size: 1.35rem;
-      margin-bottom: 0.45rem;
-      padding-bottom: 0.18rem;
-      border-bottom: 1px solid var(--line);
-    }
-
-    h3 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    p {
-      margin: 0.35rem 0 0.7rem 0;
-      font-size: 0.99rem;
-    }
-
-    .subtitle {
-      margin-top: 0.8rem;
-      max-width: 88%;
-      font-size: 1.08rem;
-      color: var(--muted);
-    }
-
-    .meta {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.6rem;
-      margin-top: 1rem;
-    }
-
-    .meta-card,
-    .card,
-    .quote,
-    .reference {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 0.9rem 1rem;
-    }
-
-    .meta-card strong {
-      display: block;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-    }
-
-    .meta-card span {
-      font-size: 1rem;
-    }
-
-    .hero-strip {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 1rem;
-      margin-top: 1.2rem;
-      align-items: stretch;
-    }
-
-    .quote {
-      background: linear-gradient(180deg, #fff6eb 0%, #fffdf9 100%);
-    }
-
-    .quote p {
-      font-size: 1.04rem;
-      margin: 0;
-    }
-
-    .quote small {
-      display: block;
-      margin-top: 0.7rem;
-      color: var(--muted);
-      font-style: italic;
-    }
-
-    .columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 0.9rem;
-    }
-
-    .card {
-      break-inside: avoid;
-    }
-
-    ul {
-      margin: 0.3rem 0 0 1.15rem;
-      padding: 0;
-    }
-
-    li {
-      margin: 0.25rem 0;
-    }
-
-    .equation {
-      margin: 0.7rem 0;
-      padding: 0.75rem 0.9rem;
-      background: var(--accent-soft);
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      font-size: 1.02rem;
-    }
-
-    .grid-two {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.9rem;
-      margin-top: 0.9rem;
-    }
-
-    .mini {
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
-
-    .checklist {
-      background: #f7fafc;
-    }
-
-    .section-intro {
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .footer-note {
-      position: absolute;
-      bottom: 0.45in;
-      left: 0.55in;
-      right: 0.55in;
-      font-size: 0.78rem;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
-      padding-top: 0.35rem;
+      height: 8px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--warm) 100%);
     }
 
     .page-break {
       page-break-before: always;
     }
 
-    .reference {
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.74rem;
+      color: var(--warm);
+      margin-bottom: 0.5rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    h1 {
+      font-size: 2rem;
+      line-height: 1.08;
+      max-width: 90%;
       margin-bottom: 0.7rem;
     }
 
-    .reference strong {
-      display: block;
-      margin-bottom: 0.2rem;
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.18rem;
+      border-bottom: 1px solid var(--line);
     }
 
-    .tag {
-      display: inline-block;
-      margin-top: 0.35rem;
-      padding: 0.18rem 0.45rem;
-      background: #eef3f8;
-      border-radius: 999px;
-      font-size: 0.78rem;
+    h3 {
+      font-size: 0.98rem;
+      margin-bottom: 0.35rem;
+    }
+
+    p {
+      margin: 0.38rem 0 0.75rem 0;
+      font-size: 0.97rem;
+    }
+
+    ul, ol {
+      margin: 0.35rem 0 0.8rem 1.15rem;
+      padding: 0;
+    }
+
+    li {
+      margin: 0.24rem 0;
+    }
+
+    .subtitle {
       color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 92%;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0 1rem 0;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0.85rem 0.95rem;
+      break-inside: avoid;
+    }
+
+    .card strong.label {
+      display: block;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.28rem;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-top: 0.7rem;
+    }
+
+    .equation {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 0.72rem 0.85rem;
+      margin: 0.7rem 0;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .equation code {
+      white-space: pre-wrap;
+      font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.88rem;
+    }
+
+    .leadbox {
+      background: linear-gradient(180deg, #fffaf3 0%, #ffffff 100%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1rem 1.05rem;
+      margin-top: 0.85rem;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    .footer {
+      margin-top: 1rem;
+      padding-top: 0.35rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
     }
   </style>
 </head>
 <body>
-  <section class="page cover">
-    <div>
-      <div class="eyebrow">Computational Electrodynamics</div>
-      <h1>Electrostatics Notes I Would Actually Use</h1>
-      <p class="subtitle">
-        A compact Jackson-centered roadmap for the electrostatics part of the course:
-        what matters, what connects, and what I should be checking when a solution starts to feel slippery.
-      </p>
-
-      <div class="meta">
-        <div class="meta-card">
-          <strong>Prepared For</strong>
-          <span>Diego Juarez</span>
-        </div>
-        <div class="meta-card">
-          <strong>Source Base</strong>
-          <span>Jackson + repo notebooks, problems, and formula sheets</span>
-        </div>
-        <div class="meta-card">
-          <strong>Date</strong>
-          <span>March 28, 2026</span>
-        </div>
-      </div>
-
-      <div class="hero-strip">
-        <div class="quote">
-          <p>
-            The recurring idea is simple: electrostatics is not just about writing down
-            Coulomb's law. It is about solving boundary-value problems without losing the physics.
-          </p>
-          <small>Working perspective adapted from Jackson and the repo study materials.</small>
-        </div>
-        <div class="card">
-          <h3>What this note is trying to do</h3>
-          <ul>
-            <li>Keep the big picture visible across topics.</li>
-            <li>Collect the equations that keep reappearing.</li>
-            <li>Give short “sanity checks” that catch bad solutions early.</li>
-            <li>Read more like a student notebook than a generated textbook.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-note">
-      Main anchor text: J. D. Jackson, <em>Classical Electrodynamics</em>, 3rd ed.
-      Secondary anchors: the repository notebooks, notes, problems, and formula sheets.
-    </div>
-  </section>
-
-  <section class="page page-break">
-    <div class="eyebrow">1. The Core Frame</div>
-    <h2>Electrostatics as a Boundary-Value Theory</h2>
-    <p class="section-intro">
-      The single most useful mindset from Jackson is that the differential equation is only half the problem.
-      The source tells me what is happening locally; the boundary conditions tell me which solution is physically allowed.
+  <section class="sheet">
+    <div class="eyebrow">Computational Electrodynamics</div>
+    <h1>Jackson Electrostatics Survival Notes</h1>
+    <p class="subtitle">
+      This version is for studying, not showing off. It keeps the core electrostatics machinery visible:
+      what equation I am solving, what region I am solving it in, what the boundary is doing,
+      and which method is actually justified.
     </p>
 
-    <div class="columns">
+    <div class="meta">
       <div class="card">
-        <h3>Starting point</h3>
-        <div class="equation">
-          ∇ · E = ρ / ε<sub>0</sub>, &nbsp;&nbsp; ∇ × E = 0, &nbsp;&nbsp; E = -∇φ
-        </div>
-        <div class="equation">
-          ∇<sup>2</sup>φ = -ρ / ε<sub>0</sub>
-        </div>
-        <p>
-          This is Poisson's equation. In any region where ρ = 0, it reduces to Laplace's equation:
-        </p>
-        <div class="equation">
-          ∇<sup>2</sup>φ = 0
-        </div>
-        <p>
-          That looks innocent, but it is the engine behind uniqueness, separation of variables,
-          Green's functions, and the method of images.
-        </p>
+        <strong class="label">Prepared For</strong>
+        Diego Juarez
       </div>
-
-      <div class="card checklist">
-        <h3>What I should always ask first</h3>
-        <ul>
-          <li>Where is the charge, and where is the charge-free region?</li>
-          <li>Am I solving Poisson or Laplace in the region of interest?</li>
-          <li>What boundary data are fixed: φ, ∂φ/∂n, or mixed?</li>
-          <li>Is the region bounded, or do I need behavior at infinity?</li>
-          <li>What symmetry is real, and what symmetry am I only hoping for?</li>
-        </ul>
+      <div class="card">
+        <strong class="label">Main Sources</strong>
+        Jackson plus the notebooks, notes, formula sheets, and problems already in this repo
+      </div>
+      <div class="card">
+        <strong class="label">Date</strong>
+        March 28, 2026
       </div>
     </div>
 
-    <div class="grid-two">
-      <div class="card">
-        <h3>What Laplace's equation is really saying</h3>
-        <p>
-          In a source-free region, the potential is harmonic. That means it does not have local spikes
-          generated from inside the region. Whatever structure I see is being inherited from the boundary
-          or from charges sitting somewhere else.
-        </p>
-        <p>
-          Practically, this is why conductor problems feel global: the answer at one point depends on the
-          entire arrangement, not only on nearby geometry.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Uniqueness is the safety net</h3>
-        <p>
-          If I build a candidate potential that satisfies the governing equation in the physical region,
-          obeys the boundary conditions, and has the right asymptotic behavior, then I am done. I do not
-          need to “prove” it again by physical intuition.
-        </p>
-        <p>
-          This is the justification behind image charges and many Green-function constructions.
-        </p>
-      </div>
+    <div class="leadbox">
+      <h3>The big idea</h3>
+      <p>
+        Electrostatics starts locally and ends globally. Locally I have Maxwell's equations.
+        Globally I have a boundary-value problem. If I lose track of the physical region or the boundary conditions,
+        the algebra may still look fine while the answer is wrong.
+      </p>
     </div>
 
-    <div class="footer-note">
-      Repo tie-in: this viewpoint matches the framing in
-      <em>notebooks/Poisson's equation.ipynb</em>,
-      <em>notebooks/Laplace's equation.ipynb</em>, and
-      <em>notebooks/Method of images in electrostatics.ipynb</em>.
+    <h2>1. The actual structure of the subject</h2>
+    <p>
+      In electrostatics,
+    </p>
+    <div class="equation"><code>div E = rho / eps0
+curl E = 0
+E = -grad phi</code></div>
+    <p>
+      So the potential satisfies Poisson's equation:
+    </p>
+    <div class="equation"><code>Laplace(phi) = -rho / eps0</code></div>
+    <p>
+      In a source-free region this reduces to Laplace's equation:
+    </p>
+    <div class="equation"><code>Laplace(phi) = 0</code></div>
+    <p>
+      The useful summary is:
+    </p>
+    <ul>
+      <li>Poisson tells me how charge creates local curvature in the potential.</li>
+      <li>Laplace governs charge-free regions.</li>
+      <li>The PDE alone is never the whole problem.</li>
+      <li>The physical solution is chosen by boundary conditions and asymptotic behavior.</li>
+    </ul>
+
+    <h2>2. What I should identify before touching algebra</h2>
+    <ol>
+      <li>Physical region: where do I actually need the solution?</li>
+      <li>Source structure: where is rho nonzero?</li>
+      <li>Boundary data: is phi specified, is the normal derivative specified, or is the conductor grounded?</li>
+      <li>Far-field behavior: what is the potential supposed to do at infinity?</li>
+    </ol>
+    <p>
+      Two common mistakes are solving Poisson in a region that is actually source-free, and using the right PDE with the wrong boundary condition.
+    </p>
+
+    <h2>3. Poisson's equation means local curvature</h2>
+    <div class="equation"><code>d^2 phi / dx^2 = -rho(x) / eps0</code></div>
+    <p>
+      In 1D this gives a clean sign test:
+    </p>
+    <ul>
+      <li>positive rho means downward curvature</li>
+      <li>negative rho means upward curvature</li>
+      <li>zero rho means the potential is linear in that region</li>
+    </ul>
+    <p>
+      The global warning is important: source-free does not mean zero potential. The region between conducting plates is charge-free and still supports a nontrivial field because the boundary forces it.
+    </p>
+
+    <div class="footer">
+      Main anchors here: the repo Poisson and Laplace notebooks plus the Poisson formula sheet.
     </div>
   </section>
 
-  <section class="page page-break">
-    <div class="eyebrow">2. The Equations Worth Keeping Close</div>
-    <h2>Free-Space Kernel, Delta Functions, and Green-Function Logic</h2>
-
-    <div class="columns">
-      <div class="card">
-        <h3>Coulomb potential as the prototype</h3>
-        <div class="equation">
-          φ(r) = (1 / 4π ε<sub>0</sub>) ∫ ρ(r′) / |r - r′| d<sup>3</sup>r′
-        </div>
-        <p>
-          This is not just an integral formula to memorize. It is the free-space Green-function solution
-          of Poisson's equation. The kernel 1 / |r - r′| is what space itself contributes before boundaries
-          complicate the story.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Delta function identity I do not want to forget</h3>
-        <div class="equation">
-          ∇<sup>2</sup>(1 / r) = -4π δ<sup>(3)</sup>(r)
-        </div>
-        <p>
-          This is the bridge between a singular point source and Poisson's equation. A point charge at r<sub>0</sub>
-          is represented by ρ(r) = q δ<sup>(3)</sup>(r - r<sub>0</sub>).
-        </p>
-        <p class="mini">
-          If I forget the Jacobian factors in curvilinear coordinates, the delta function stops doing its job correctly.
-        </p>
-      </div>
-    </div>
-
+  <section class="sheet page-break">
+    <h2>4. Laplace's equation is rigid</h2>
+    <p>
+      Harmonic functions do not behave like arbitrary smooth functions. They are pinned down by the boundary.
+      That is why source-free electrostatics often feels cleaner but more constrained.
+    </p>
     <div class="grid-two">
       <div class="card">
-        <h3>Green's function playbook</h3>
+        <h3>Things worth remembering</h3>
         <ul>
-          <li>Pick G(r, r′) so that ∇<sup>2</sup>G = -4π δ<sup>(3)</sup>(r - r′) in the region.</li>
-          <li>Force G to satisfy the same boundary conditions as the physical problem.</li>
-          <li>Use the resulting integral representation to separate source terms from boundary terms.</li>
+          <li>mean-value behavior</li>
+          <li>no arbitrary interior extrema</li>
+          <li>strong uniqueness properties</li>
+          <li>superposition still works because the equation is linear</li>
         </ul>
-        <p>
-          Once the Green's function is adapted to the geometry, the rest of the problem becomes bookkeeping.
-        </p>
       </div>
-
-      <div class="card checklist">
-        <h3>Quick checks for singular-source problems</h3>
-        <ul>
-          <li>Away from the source point, the potential should usually satisfy Laplace's equation.</li>
-          <li>The singularity should match the expected local behavior near the charge.</li>
-          <li>Total charge should come out correctly when integrating the source density.</li>
-          <li>Dimensions matter: δ<sup>(3)</sup> has units of inverse volume.</li>
-        </ul>
+      <div class="card">
+        <h3>Radial source-free forms</h3>
+        <div class="equation"><code>spherical:  phi(r) = A + B/r</code></div>
+        <div class="equation"><code>cylindrical: phi(s) = A ln(s) + B</code></div>
       </div>
     </div>
 
-    <div class="footer-note">
-      Repo tie-in: compare with <em>notes/dirac_delta_function_notes.tex</em>,
-      <em>Formula Sheet/greens_functions_formula_sheet.tex</em>, and
-      <em>notebooks/Green's functions in electrostatics.ipynb</em>.
+    <h2>5. Boundary conditions are part of the physics</h2>
+    <p>
+      The PDE gives a family of solutions. The boundary picks the physical one.
+    </p>
+    <ul>
+      <li>Dirichlet data: phi is known on the boundary</li>
+      <li>Neumann data: the normal derivative is known on the boundary</li>
+      <li>Grounded conductor: phi = 0 on the conductor</li>
+      <li>Isolated conductor: equipotential, but not necessarily zero</li>
+    </ul>
+    <p>
+      If a surface charge density sigma is present, the normal field jumps:
+    </p>
+    <div class="equation"><code>E2_normal - E1_normal = sigma / eps0</code></div>
+    <p>
+      When a solution looks almost right but fails on the boundary, it is wrong.
+    </p>
+
+    <h2>6. Uniqueness is what makes the toolkit legal</h2>
+    <p>
+      If I build a candidate potential that solves Poisson or Laplace in the physical region,
+      satisfies the required boundary conditions, and has the right behavior at infinity,
+      then uniqueness says that candidate is the physical answer.
+    </p>
+    <p>
+      That single fact is what makes the method of images rigorous and what makes Green-function constructions trustworthy.
+    </p>
+
+    <h2>7. Coulomb's law is already Green-function language</h2>
+    <div class="equation"><code>Laplace(G(r,r')) = -4 pi delta^3(r-r')</code></div>
+    <div class="equation"><code>G(r,r') = 1 / |r-r'|</code></div>
+    <div class="equation"><code>phi(r) = (1 / 4 pi eps0) integral rho(r') / |r-r'| d^3r'</code></div>
+    <p>
+      The Coulomb kernel is the free-space fundamental solution of the Laplacian. Once boundaries appear,
+      the operator stays the same but the correct Green function changes.
+    </p>
+
+    <div class="footer">
+      Main anchors here: the Green's functions notebook and formula sheet.
     </div>
   </section>
 
-  <section class="page page-break">
-    <div class="eyebrow">3. Canonical Problems</div>
-    <h2>Plane, Sphere, and the Discipline of Boundary Conditions</h2>
+  <section class="sheet page-break">
+    <h2>8. Why the delta function keeps showing up</h2>
+    <div class="equation"><code>rho(r) = q delta^3(r-r0)</code></div>
+    <div class="equation"><code>Laplace(1/r) = -4 pi delta^3(r)</code></div>
+    <p>
+      Away from the source point, 1/r is harmonic. At the source, it reproduces the correct singular charge in the distributional sense.
+      That is exactly why the Coulomb potential solves Poisson's equation for a point charge.
+    </p>
 
-    <div class="columns">
-      <div class="card">
-        <h3>Grounded plane with a point charge</h3>
-        <p>
-          Real charge q at (0, 0, a), image charge -q at (0, 0, -a). The candidate potential in the half-space z &gt; 0 is
-        </p>
-        <div class="equation">
-          φ(r) = (q / 4π ε<sub>0</sub>) [ 1 / |r - r<sub>0</sub>| - 1 / |r - r<sub>0</sub><sup>*</sup>| ]
-        </div>
-        <p>
-          On z = 0 the two distances match, so the boundary condition φ = 0 is automatic. At that point the uniqueness theorem
-          finishes the argument.
-        </p>
-      </div>
+    <h2>9. The Green-function representation formula</h2>
+    <div class="equation"><code>phi(r) =
+(1 / 4 pi eps0) integral_V rho(r') G(r,r') d^3r'
+- (1 / 4 pi) integral_S [ G dphi/dn' - phi dG/dn' ] da'</code></div>
+    <p>
+      The structure matters more than memorizing every sign on day one:
+    </p>
+    <ul>
+      <li>one term carries the source information</li>
+      <li>one term carries the boundary information</li>
+      <li>the Green function is the object that knows the geometry</li>
+    </ul>
+    <p>
+      For Dirichlet problems it is often smart to pick a Green function that vanishes on the boundary.
+    </p>
 
-      <div class="card">
-        <h3>Grounded sphere with an exterior charge</h3>
-        <p>
-          This is the version that feels more “Jackson” because the geometry is less forgiving and the algebra is more instructive.
-        </p>
-        <div class="equation">
-          q′ = -qR/a, &nbsp;&nbsp; b = R<sup>2</sup>/a
-        </div>
-        <p>
-          The image charge sits inside the sphere, not in the physical exterior region. That is the whole point:
-          image charges are mathematical devices, not claims about hidden matter inside the conductor.
-        </p>
-      </div>
-    </div>
+    <h2>10. The method of images is a boundary trick, not magic</h2>
+    <ol>
+      <li>Choose image charges in the excluded region.</li>
+      <li>Build a candidate potential.</li>
+      <li>Check the boundary exactly.</li>
+      <li>Check that only the real charges create singularities in the physical region.</li>
+      <li>Invoke uniqueness.</li>
+    </ol>
+    <p>
+      The image charges are not physical. They are a way to encode the boundary.
+    </p>
 
-    <div class="grid-two">
-      <div class="card">
-        <h3>Parallel-plate intuition</h3>
-        <p>
-          In a charge-free slab the potential is linear, not because “electric fields are always constant,”
-          but because the geometry plus the boundary data leave only that harmonic option.
-        </p>
-        <div class="equation">
-          φ(x) = V<sub>0</sub> x / d, &nbsp;&nbsp; E = -(V<sub>0</sub>/d) x̂
-        </div>
-        <p>
-          This is the cleanest reminder that Laplace's equation can still produce a nontrivial field.
-        </p>
-      </div>
+    <h2>11. Example: point charge above a grounded plane</h2>
+    <div class="equation"><code>real charge:  q at (0,0,a)
+image charge: -q at (0,0,-a)</code></div>
+    <div class="equation"><code>phi(r) =
+(1 / 4 pi eps0)
+[ q / |r-r0| - q / |r-r0*| ]</code></div>
+    <p>
+      Why it works:
+    </p>
+    <ul>
+      <li>the physical region z &gt; 0 contains only the real singularity</li>
+      <li>on z = 0 the two distances match, so phi = 0 exactly</li>
+      <li>the potential decays correctly at infinity</li>
+    </ul>
+    <div class="equation"><code>F = (1 / 4 pi eps0) q^2 / (2a)^2</code></div>
+    <p>Direction: toward the plane.</p>
 
-      <div class="card checklist">
-        <h3>My method-of-images checklist</h3>
-        <ul>
-          <li>The images must lie outside the physical region.</li>
-          <li>The boundary condition has to be satisfied exactly, not approximately.</li>
-          <li>The potential must have the right singularities only where the real charges are.</li>
-          <li>The uniqueness theorem should be named explicitly in the solution.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer-note">
-      Repo tie-in: the grounded-plane and grounded-sphere logic appears in
-      <em>Formula Sheet/method_of_images_formula_sheet.tex</em>,
-      <em>problems/method_of_images.pdf</em>, and
-      <em>codes/generate_method_of_images_sphere_gif.py</em>.
+    <div class="footer">
+      Main anchors here: the method-of-images notebook, formula sheet, and the grounded-sphere animation code.
     </div>
   </section>
 
-  <section class="page page-break">
-    <div class="eyebrow">4. Far-Field Structure and Matter</div>
-    <h2>Multipoles, Dielectrics, and What Changes Once Material Responds</h2>
+  <section class="sheet page-break">
+    <h2>12. Example: point charge outside a grounded sphere</h2>
+    <p>
+      Let a grounded conducting sphere of radius R sit at the origin and place a real charge q a distance a from the center, with a &gt; R.
+    </p>
+    <div class="equation"><code>q' = -q R / a
+b  = R^2 / a</code></div>
+    <p>
+      The image charge sits on the same axis inside the sphere. The important pattern is:
+    </p>
+    <ul>
+      <li>curved boundary means the image changes both position and strength</li>
+      <li>the image still lies outside the physical region</li>
+      <li>the sphere surface becomes an equipotential with phi = 0</li>
+    </ul>
+    <p>
+      This is a geometry-dependent Green-function construction in disguise.
+    </p>
 
-    <div class="columns">
-      <div class="card">
-        <h3>Multipole expansion in one sentence</h3>
-        <p>
-          When the observation point is far away from a localized source, the field can be organized by how
-          fast each contribution falls with distance.
-        </p>
-        <div class="equation">
-          φ(r) = (1 / 4π ε<sub>0</sub>) [ Q / r + (p · r̂) / r<sup>2</sup> + higher terms ]
-        </div>
-        <p>
-          The monopole term tells me whether any net charge survived. The dipole term tells me whether the
-          first charge separation survived. Higher moments encode finer angular structure.
-        </p>
-      </div>
+    <h2>13. Multipole expansion: how the far field forgets details</h2>
+    <div class="equation"><code>phi(r) ~ (1 / 4 pi eps0) [ Q/r + (p . rhat)/r^2 + ... ]</code></div>
+    <p>
+      The far field remembers the coarse structure first:
+    </p>
+    <ul>
+      <li>monopole term: total charge</li>
+      <li>dipole term: first-order charge separation</li>
+      <li>higher terms: finer angular structure</li>
+    </ul>
+    <p>
+      The more symmetry the source has, the more low-order moments vanish.
+    </p>
 
-      <div class="card">
-        <h3>What I should hear when someone says “dielectric”</h3>
-        <p>
-          A dielectric does not kill the field the way a conductor does. Instead it responds by polarization,
-          which introduces bound charge and changes the relationship between the source charge and the resulting field.
-        </p>
-        <div class="equation">
-          D = ε<sub>0</sub>E + P, &nbsp;&nbsp; ∇ · D = ρ<sub>free</sub>
-        </div>
-        <p>
-          This separation between free and bound charge is the bookkeeping move that makes the subject manageable.
-        </p>
-      </div>
-    </div>
+    <h2>14. Dielectrics: same electrostatics, better bookkeeping</h2>
+    <div class="equation"><code>D = eps0 E + P
+div D = rho_free</code></div>
+    <p>
+      A dielectric does not kill the field like a conductor. It polarizes, which means bound charge appears and the accounting changes.
+    </p>
+    <ul>
+      <li>free charge is what I put in explicitly</li>
+      <li>bound charge comes from polarization</li>
+      <li>boundary conditions must track the right quantity</li>
+    </ul>
 
-    <div class="grid-two">
-      <div class="card">
-        <h3>Boundary conditions I want in muscle memory</h3>
-        <ul>
-          <li>Tangential E is continuous across an electrostatic boundary.</li>
-          <li>The jump in the normal component of D is set by free surface charge.</li>
-          <li>At a conductor in electrostatic equilibrium, the interior field vanishes and the surface is equipotential.</li>
-        </ul>
-      </div>
+    <h2>15. A workflow that actually helps</h2>
+    <ol>
+      <li>Sketch the geometry.</li>
+      <li>Label the physical region.</li>
+      <li>Mark where charge really exists.</li>
+      <li>Decide whether each region uses Poisson or Laplace.</li>
+      <li>Write the boundary conditions separately.</li>
+      <li>Check symmetry honestly.</li>
+      <li>Choose the method only after that.</li>
+    </ol>
 
-      <div class="card checklist">
-        <h3>Common failure mode</h3>
-        <p>
-          The easiest mistake is mixing up free charge, total charge, and bound charge, then applying the wrong
-          boundary condition. If the answer for a dielectric interface looks too much like the vacuum answer, it probably is.
-        </p>
-      </div>
-    </div>
+    <h2>16. Fast checks that catch bad answers</h2>
+    <ul>
+      <li>If the region is source-free, the candidate must be harmonic there.</li>
+      <li>If there is a conductor, the surface must be equipotential.</li>
+      <li>If the problem is grounded, the boundary value must be exactly zero.</li>
+      <li>If it is an image solution, the images must stay outside the physical region.</li>
+      <li>If the far field is wrong, the whole answer is suspect.</li>
+      <li>If the units fail, stop and back up.</li>
+    </ul>
 
-    <div class="footer-note">
-      Repo tie-in: see <em>notebooks/Multipole expansion in electrostatics.ipynb</em>,
-      <em>notebooks/Dielectrics in electrostatics.ipynb</em>, and the corresponding problem sets and formula sheets.
-    </div>
-  </section>
+    <h2>17. What I would want on one sheet before an exam</h2>
+    <ul>
+      <li>E = -grad phi</li>
+      <li>Laplace(phi) = -rho / eps0</li>
+      <li>source-free does not mean zero potential</li>
+      <li>uniqueness is the reason image methods and Green functions work</li>
+      <li>1 / |r-r'| is the free-space Green function</li>
+      <li>Laplace(1/r) = -4 pi delta^3(r)</li>
+      <li>grounded plane: mirror with charge -q</li>
+      <li>grounded sphere: q' = -qR/a and b = R^2/a</li>
+      <li>far field starts with monopole, then dipole</li>
+      <li>in dielectrics, keep free and bound charge separate</li>
+    </ul>
 
-  <section class="page page-break">
-    <div class="eyebrow">5. What To Remember Under Exam Pressure</div>
-    <h2>A Short Working Summary and References</h2>
-
-    <div class="columns">
-      <div class="card">
-        <h3>Five lines I would want on scratch paper</h3>
-        <ul>
-          <li>Electrostatics starts with E = -∇φ and ends with a boundary-value problem.</li>
-          <li>Poisson handles source regions; Laplace handles charge-free regions.</li>
-          <li>Uniqueness is what licenses clever constructions.</li>
-          <li>Green's functions package geometry plus boundary conditions into a kernel.</li>
-          <li>Multipoles and dielectrics are not separate worlds; they grow naturally out of the same framework.</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Personal workflow for problem solving</h3>
-        <ul>
-          <li>Draw the physical region before touching the algebra.</li>
-          <li>Write the PDE and the boundary data on separate lines.</li>
-          <li>State symmetry honestly.</li>
-          <li>Check limiting behavior at the end.</li>
-          <li>If the answer is elegant, make sure uniqueness actually supports it.</li>
-        </ul>
-      </div>
-    </div>
-
-    <h2 style="margin-top: 1rem;">References Used in This Repo-Based Note</h2>
-    <div class="reference">
-      <strong>Primary text</strong>
-      J. D. Jackson, <em>Classical Electrodynamics</em>, 3rd edition.
-      <div class="tag">Local file: Classical_Electrodynamics_Jackson_3rd_.pdf</div>
-    </div>
-    <div class="reference">
-      <strong>Repo notebooks</strong>
-      <em>Poisson's equation.ipynb</em>, <em>Laplace's equation.ipynb</em>,
-      <em>Green's functions in electrostatics.ipynb</em>,
-      <em>Method of images in electrostatics.ipynb</em>,
-      <em>Multipole expansion in electrostatics.ipynb</em>,
-      and <em>Dielectrics in electrostatics.ipynb</em>.
-    </div>
-    <div class="reference">
-      <strong>Repo notes and quick sheets</strong>
-      <em>notes/poisson_equation_notes.tex</em>,
-      <em>notes/dirac_delta_function_notes.tex</em>,
-      and the files in <em>Formula Sheet/</em>.
-    </div>
-    <div class="reference">
-      <strong>Repo problem sets and visual support</strong>
-      The PDFs in <em>problems/</em>, especially the method-of-images and Green-function sets,
-      plus <em>codes/generate_method_of_images_sphere_gif.py</em> for geometric intuition.
-    </div>
-
-    <div class="footer-note">
-      Written to sound like study notes, not a polished textbook chapter. The goal was clarity, memory, and usable structure.
+    <div class="footer">
+      References: Jackson 3rd ed.; repo notebooks on Poisson, Laplace, Green's functions, method of images, multipoles, and dielectrics; repo formula sheets and problem sets.
     </div>
   </section>
 </body>
