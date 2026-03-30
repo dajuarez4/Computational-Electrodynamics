@@ -25,6 +25,7 @@ Each topic follows a structured workflow:
 - `notebooks/` — Theory, derivations, and computational explorations  
 - `problems/` — Topic-based problem sets in LaTeX and PDF  
 - `Formula Sheet/` — One-page quad-chart formula sheets in LaTeX and PDF  
+- `notes-diego/` — Personal study notes, chapter PDFs, and support materials  
 
 ---
 
@@ -53,10 +54,23 @@ Each topic follows a structured workflow:
 - `Poisson's Equation`: [Notebook](./notebooks/Poisson%27s%20equation.ipynb), [Problem Set](./problems/Poisson_equation.pdf), [Formula Sheet](./Formula%20Sheet/poisson_formula_sheet.pdf)
 - `Laplace's Equation`: [Notebook](./notebooks/Laplace%27s%20equation.ipynb), [Problem Set](./problems/Laplace_equation.pdf), [Formula Sheet](./Formula%20Sheet/laplace_formula_sheet.pdf)
 - `Green's Functions`: [Notebook](./notebooks/Green%27s%20functions%20in%20electrostatics.ipynb), [Problem Set](./problems/Green_functions.pdf), [Formula Sheet](./Formula%20Sheet/greens_functions_formula_sheet.pdf)
-- `Method of Images`: [Notebook](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb), [Problem Set](./problems/method_of_images.pdf), [Formula Sheet](./Formula%20Sheet/method_of_images_formula_sheet.pdf)
+- `Method of Images`: [Notebook](./notebooks/Method%20of%20images%20in%20electrostatics.ipynb), [Problem Set](./problems/method_of_images.pdf), [Formula Sheet](./Formula%20Sheet/method_of_images_formula_sheet.pdf), [Diego Note](./notes-diego/method_of_images_notes_diego.pdf)
 - `Multipole Expansion`: [Notebook](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb), [Problem Set](./problems/multipole_expansion.pdf), [Formula Sheet](./Formula%20Sheet/multipole_formula_sheet.pdf)
 - `Dielectrics`: [Notebook](./notebooks/Dielectrics%20in%20electrostatics.ipynb), [Problem Set](./problems/dielectrics_problems.pdf), [Formula Sheet](./Formula%20Sheet/dielectrics_formula_sheet.pdf)
 - `Electromagnetic Radiation`: [Notebook](./notebooks/Electromagnetic%20Radiation.ipynb), [Problem Set](./problems/electro_magnetic_radiation.pdf), [Formula Sheet](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf)
+
+---
+
+## Diego Notes
+
+- `Electrostatics Overview`: [Jackson Electrostatics Survival Notes](./notes-diego/jackson_electrostatics_notes.pdf)
+- `Method of Images`: [Focused Topic Note](./notes-diego/method_of_images_notes_diego.pdf)
+- `Chapter 1`: [PDF](./notes-diego/chapter-1/chapter-1.pdf), [Notes PDF](./notes-diego/chapter-1/chapter_1_notes.pdf), [Markdown](./notes-diego/chapter-1/chapter-1.md)
+- `Chapter 2`: [PDF](./notes-diego/chapter-2/chapter-2.pdf), [Notes PDF](./notes-diego/chapter-2/chapter_2_notes.pdf)
+- `Chapter 3`: [PDF](./notes-diego/chapter-3/chapter-3.pdf), [Notes PDF](./notes-diego/chapter-3/chapter_3_notes.pdf)
+- `Chapter 4`: [PDF](./notes-diego/chapter-4/chapter-4.pdf), [Notes PDF](./notes-diego/chapter-4/chapter_4_notes.pdf)
+- `Vector Formulas`: [Reference PDF](./notes-diego/vector-formulas/Vector_formulas.pdf)
+- `Calculus Theorems`: [PDF](./notes-diego/calculus-theorems/calculus_theorems.pdf), [Notebook](./notes-diego/calculus-theorems/theorems_from_calculus.ipynb)
 
 ---
 
