@@ -61,16 +61,15 @@ Each topic follows a structured workflow:
 
 ---
 
-## Diego Notes
+## Notes
 
-- `Electrostatics Overview`: [Jackson Electrostatics Survival Notes](./notes-diego/jackson_electrostatics_notes.pdf)
-- `Method of Images`: [Focused Topic Note](./notes-diego/method_of_images_notes_diego.pdf)
-- `Chapter 1`: [PDF](./notes-diego/chapter-1/chapter-1.pdf), [Notes PDF](./notes-diego/chapter-1/chapter_1_notes.pdf), [Markdown](./notes-diego/chapter-1/chapter-1.md)
-- `Chapter 2`: [PDF](./notes-diego/chapter-2/chapter-2.pdf), [Notes PDF](./notes-diego/chapter-2/chapter_2_notes.pdf)
-- `Chapter 3`: [PDF](./notes-diego/chapter-3/chapter-3.pdf), [Notes PDF](./notes-diego/chapter-3/chapter_3_notes.pdf)
-- `Chapter 4`: [PDF](./notes-diego/chapter-4/chapter-4.pdf), [Notes PDF](./notes-diego/chapter-4/chapter_4_notes.pdf)
 - `Vector Formulas`: [Reference PDF](./notes-diego/vector-formulas/Vector_formulas.pdf)
 - `Calculus Theorems`: [PDF](./notes-diego/calculus-theorems/calculus_theorems.pdf), [Notebook](./notes-diego/calculus-theorems/theorems_from_calculus.ipynb)
+- `Chapter 1`: [Jackson-PDF](./notes-diego/chapter-1/chapter-1.pdf), [Notes PDF](./notes-diego/chapter-1/chapter_1_notes.pdf)
+- `Chapter 2`: [Jackson-PDF](./notes-diego/chapter-2/chapter-2.pdf), [Notes PDF](./notes-diego/chapter-2/chapter_2_notes.pdf)
+- `Chapter 3`: [Jackson-PDF](./notes-diego/chapter-3/chapter-3.pdf), [Notes PDF](./notes-diego/chapter-3/chapter_3_notes.pdf)
+- `Chapter 4`: [Jackson-PDF](./notes-diego/chapter-4/chapter-4.pdf), [Notes PDF](./notes-diego/chapter-4/chapter_4_notes.pdf)
+
 
 ---
 
