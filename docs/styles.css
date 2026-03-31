@@ -33,6 +33,28 @@ body {
     linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
 }
 
+.corner-counter {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  display: inline-flex;
+  padding: 0.35rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.92);
+  border: 1px solid rgba(22, 32, 42, 0.1);
+  box-shadow: 0 10px 24px rgba(22, 32, 42, 0.12);
+}
+
+.corner-counter:hover {
+  text-decoration: none;
+}
+
+.corner-counter img {
+  display: block;
+  height: 20px;
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -429,5 +451,12 @@ code {
 
   .showcase-card.wide {
     grid-column: auto;
+  }
+
+  .corner-counter {
+    right: 10px;
+    bottom: 10px;
+    transform: scale(0.95);
+    transform-origin: bottom right;
   }
 }

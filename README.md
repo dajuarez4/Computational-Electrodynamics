@@ -8,6 +8,12 @@ This repository is a graduate-level study of electrodynamics based on *Classical
 ![Status](https://img.shields.io/badge/Status-In%20Progress-green)
 ---
 
+## Website
+
+- Live site: [dajuarez4.github.io/Computational-Electrodynamics](https://dajuarez4.github.io/Computational-Electrodynamics/)
+
+---
+
 ## Approach
 
 Each topic follows a structured workflow:
@@ -69,6 +75,7 @@ Each topic follows a structured workflow:
 - `Chapter 2`: [Jackson-PDF](./notes-diego/chapter-2/chapter-2.pdf), [Notes PDF](./notes-diego/chapter-2/chapter_2_notes.pdf)
 - `Chapter 3`: [Jackson-PDF](./notes-diego/chapter-3/chapter-3.pdf), [Notes PDF](./notes-diego/chapter-3/chapter_3_notes.pdf)
 - `Chapter 4`: [Jackson-PDF](./notes-diego/chapter-4/chapter-4.pdf), [Notes PDF](./notes-diego/chapter-4/chapter_4_notes.pdf)
+- `Chapter 5`: [Jackson-PDF](./notes-diego/chapter-5/chapter-5.pdf), [Notes PDF](./notes-diego/chapter-5/chapter-5_notes.pdf)
 
 
 ---
