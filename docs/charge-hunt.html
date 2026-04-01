@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charge Hunt | Computational Electrodynamics</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="corner-counter" href="https://hitscounter.dev/history?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2F" aria-label="Website views">
+    <img alt="Website views" src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2F&label=Views&icon=eye&color=%23198754&message=&style=flat&tz=America%2FDenver">
+  </a>
+  <div class="site-shell">
+    <header class="subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./charge-hunt.html">Charge Hunt</a>
+          <a href="./index.html">Home</a>
+        </div>
+      </nav>
+      <div class="subhero-copy">
+        <p class="eyebrow">Interactive</p>
+        <h1>Charge Hunt</h1>
+        <p class="lede">Drag the detector across the line, adjust the width of the delta-sequence, and try to locate the hidden source profile without revealing it too early.</p>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="section">
+        <div class="game-layout">
+          <article class="game-panel">
+            <div class="game-canvas-wrap">
+              <canvas id="chargeHuntCanvas" width="980" height="520" aria-label="Charge Hunt game canvas"></canvas>
+            </div>
+            <div class="game-controls">
+              <label class="control">
+                <span>Detector position</span>
+                <input id="centerSlider" type="range" min="-4" max="4" value="0" step="0.01">
+              </label>
+              <label class="control">
+                <span>Kernel width ε</span>
+                <input id="epsilonSlider" type="range" min="0.05" max="1.2" value="0.28" step="0.01">
+              </label>
+            </div>
+          </article>
+
+          <aside class="game-sidebar">
+            <article class="resource-panel emphasis">
+              <h3>How to play</h3>
+              <ul class="game-list">
+                <li>Move the detector until the response spikes.</li>
+                <li>Make ε smaller to localize the source more sharply.</li>
+                <li>Scan several regions before revealing the hidden charge profile.</li>
+              </ul>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Current readout</h3>
+              <div class="stat-stack">
+                <div class="stat-line"><span>Center</span><strong id="centerValue">0.00</strong></div>
+                <div class="stat-line"><span>Epsilon</span><strong id="epsilonValue">0.28</strong></div>
+                <div class="stat-line"><span>Response</span><strong id="responseValue">0.000</strong></div>
+                <div class="stat-line"><span>Best scan</span><strong id="bestValue">0.000</strong></div>
+                <div class="stat-line"><span>Scans</span><strong id="scanCountValue">0</strong></div>
+              </div>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Actions</h3>
+              <div class="stacked-links game-actions">
+                <button class="button primary game-button" id="newLevelBtn" type="button">New Level</button>
+                <button class="button secondary game-button" id="revealBtn" type="button">Reveal Source</button>
+                <button class="button secondary game-button" id="resetTrailBtn" type="button">Reset Scan Trail</button>
+              </div>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Why this matters</h3>
+              <p class="game-note">
+                This game is built around the same idea as the Dirac-delta visualizations in the repo:
+                a narrow, normalized kernel behaves like a detector that responds most strongly when it is centered on a localized source.
+              </p>
+              <div class="stacked-links">
+                <a href="https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/codes/dirac_delta_game_v2.py">Open the original Python game</a>
+                <a href="./visuals.html">Back to visuals</a>
+              </div>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Interactive page inspired by the repository’s Dirac delta charge-hunt work.</p>
+    </footer>
+  </div>
+  <script src="./charge-hunt.js"></script>
+</body>
+</html>
