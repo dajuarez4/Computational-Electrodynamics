@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+
+\title{Mini Electrodynamics Lab Notes}
+\author{Diego Juarez}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{What the lab is doing}
+This little lab is meant to be a visual electrostatics playground, not a high-precision simulator. The idea is simple: place a few point charges in two dimensions, compute the potential and electric field they generate, then draw the results as a heatmap, vector arrows, contours, and a test-particle trajectory.
+
+\section*{Potential}
+At a point $(x,y)$, the lab computes the scalar potential by summing the contribution from every charge:
+\[
+\phi(x,y) = \sum_i \frac{q_i}{r_i},
+\qquad
+r_i = \sqrt{(x-x_i)^2 + (y-y_i)^2}.
+\]
+Here $(x_i,y_i)$ is the position of the $i$th charge and $q_i$ is its strength. In the actual code, a small softening term is added to $r_i^2$ before taking the square root. That is just there to avoid a numerical blow-up exactly on top of a charge and to keep the visualization stable.
+
+The potential is what drives the heatmap coloring. Positive regions and negative regions are colored differently so the field geometry is easier to read at a glance.
+
+\section*{Electric field}
+The electric field is related to the potential by
+\[
+\mathbf{E} = -\nabla \phi.
+\]
+For point charges, the lab computes the field components directly:
+\[
+E_x(x,y) = \sum_i \frac{q_i(x-x_i)}{r_i^3},
+\qquad
+E_y(x,y) = \sum_i \frac{q_i(y-y_i)}{r_i^3}.
+\]
+The readout labeled $|E|$ is just the field magnitude:
+\[
+|\mathbf{E}| = \sqrt{E_x^2 + E_y^2}.
+\]
+The arrow plot uses these field components. The arrow direction shows the local direction of the field, while the length changes with the field strength.
+
+\section*{Equipotential contours}
+The contour lines are rough level sets of the potential. In other words, they try to mark curves where
+\[
+\phi(x,y) = \text{constant}.
+\]
+These are useful because the electric field points perpendicular to equipotential lines. So when the contours are packed tightly together, the field is usually stronger.
+
+\section*{Grounded plane mode}
+When grounded-plane mode is turned on, the lab uses the method of images. For every real charge above the plane $y=0$, an image charge is added with
+\[
+(x_i,y_i,q_i)\longrightarrow (x_i,-y_i,-q_i).
+\]
+This mirrored charge distribution makes the potential vanish on the plane:
+\[
+\phi(x,0)=0.
+\]
+That is the correct boundary condition for a grounded conductor. So the lab is using the standard image-charge trick to imitate a conducting plane without explicitly solving the boundary-value problem numerically.
+
+\section*{Probe particle}
+The moving particle is just a numerical intuition tool. The local field is sampled at the particle position, the velocity is updated, and then the position is stepped forward in time. This is enough to show how a test object tends to move through the field.
+
+The speed slider in the interface is not meant to represent a physical unit like meters per second. It is only a simulation-control parameter that changes how fast the trajectory evolves on the screen.
+
+\section*{Why this is useful}
+The point of the lab is not to replace full derivations. The point is to build intuition:
+\begin{itemize}
+\item how positive and negative charges reshape the potential landscape,
+\item how field arrows line up with the charge configuration,
+\item how grounded boundaries can be represented with images,
+\item and how a test particle reacts to the geometry of the field.
+\end{itemize}
+
+So this should be thought of as a visual companion to the notes, not as a black-box solver.
+
+\end{document}

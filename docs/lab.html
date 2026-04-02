@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Electrodynamics Lab | Computational Electrodynamics</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="corner-counter" href="https://hitscounter.dev/history?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2F" aria-label="Website views">
+    <img alt="Website views" src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2F&label=Views&icon=eye&color=%23198754&message=&style=flat&tz=America%2FDenver">
+  </a>
+  <div class="site-shell">
+    <header class="subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./charge-hunt.html">Charge Hunt</a>
+          <a href="./lab.html">Lab</a>
+          <a href="./index.html">Home</a>
+        </div>
+      </nav>
+      <div class="subhero-copy">
+        <p class="eyebrow">Interactive Lab</p>
+        <h1>Mini Electrodynamics Lab v1</h1>
+        <p class="lede">Drag point charges, switch on grounded-plane mode, watch the potential heatmap and field arrows update, and launch a test particle through the field.</p>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="section">
+        <div class="lab-layout">
+          <article class="game-panel">
+            <div class="game-canvas-wrap">
+              <canvas id="labCanvas" width="1080" height="820" aria-label="Mini Electrodynamics Lab canvas"></canvas>
+            </div>
+          </article>
+
+          <aside class="game-sidebar">
+            <article class="resource-panel emphasis">
+              <h3>Controls</h3>
+              <ul class="game-list">
+                <li>Drag a charge directly on the canvas.</li>
+                <li>Toggle grounded-plane mode to create image charges below the conductor.</li>
+                <li>Launch the test particle and watch its trajectory respond to the field.</li>
+              </ul>
+            </article>
+
+            <article class="resource-panel emphasis">
+              <h3>Physics Notes</h3>
+              <div class="stacked-links">
+                <a class="button secondary game-button" href="./games-explanation/Game_physics_explanation.pdf">Open Physics PDF</a>
+              </div>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Modes</h3>
+              <div class="stacked-links game-actions">
+                <button class="button primary game-button" id="addPositiveBtn" type="button">Add + Charge</button>
+                <button class="button secondary game-button" id="addNegativeBtn" type="button">Add - Charge</button>
+                <button class="button secondary game-button" id="resetChargesBtn" type="button">Reset Charges</button>
+                <button class="button secondary game-button" id="groundedToggleBtn" type="button">Grounded Plane: Off</button>
+                <button class="button secondary game-button" id="launchParticleBtn" type="button">Launch Particle</button>
+                <button class="button secondary game-button" id="resetParticleBtn" type="button">Reset Particle</button>
+              </div>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Display</h3>
+              <label class="control">
+                <span>Heatmap strength</span>
+                <input id="heatSlider" type="range" min="0.25" max="1.75" step="0.01" value="1.00">
+              </label>
+              <label class="control">
+                <span>Arrow density</span>
+                <input id="arrowSlider" type="range" min="12" max="26" step="1" value="18">
+              </label>
+              <label class="control">
+                <span>Particle speed</span>
+                <input id="particleSlider" type="range" min="0.2" max="3.0" step="0.01" value="1.00">
+              </label>
+            </article>
+
+            <article class="resource-panel">
+              <h3>Readout</h3>
+              <div class="stat-stack">
+                <div class="stat-line"><span>Charges</span><strong id="chargeCountValue">2</strong></div>
+                <div class="stat-line"><span>Mode</span><strong id="modeValue">Free space</strong></div>
+                <div class="stat-line"><span>Probe x</span><strong id="probeXValue">0.00</strong></div>
+                <div class="stat-line"><span>Probe y</span><strong id="probeYValue">0.00</strong></div>
+                <div class="stat-line"><span>Potential</span><strong id="potentialValue">0.000</strong></div>
+                <div class="stat-line"><span>|E|</span><strong id="fieldMagValue">0.000</strong></div>
+              </div>
+            </article>
+
+            <article class="resource-panel">
+              <h3>What this is</h3>
+              <p class="game-note">
+                This is a small field lab for electrostatics: a 2D playground for charges, fields, potentials, conductor images, and motion of a probe particle.
+              </p>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Mini Electrodynamics Lab v1: draggable charges, field arrows, heatmap, test particle, and grounded-plane mode.</p>
+    </footer>
+  </div>
+  <script src="./lab.js"></script>
+</body>
+</html>
