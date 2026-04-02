@@ -493,18 +493,22 @@ code {
   font-family: inherit;
 }
 
-.resource-panel .game-button.primary {
+.resource-panel .game-button.primary,
+.resource-panel a.game-button.primary {
   background: linear-gradient(135deg, #f0bf83, #e8b06c);
   color: #13212d;
+  border: 1px solid rgba(22, 32, 42, 0.08);
 }
 
-.resource-panel .game-button.secondary {
+.resource-panel .game-button.secondary,
+.resource-panel a.game-button.secondary {
   background: #eef3f7;
   color: var(--ink);
   border: 1px solid rgba(22, 32, 42, 0.1);
 }
 
-.resource-panel .game-button.secondary:hover {
+.resource-panel .game-button.secondary:hover,
+.resource-panel a.game-button.secondary:hover {
   background: #e3ebf2;
 }
 
