@@ -403,7 +403,7 @@ code {
 
 .game-layout {
   display: grid;
-  grid-template-columns: 1.55fr 0.85fr;
+  grid-template-columns: minmax(0, 1.95fr) minmax(320px, 0.65fr);
   gap: 1rem;
 }
 
@@ -425,7 +425,7 @@ code {
 .game-canvas-wrap canvas {
   display: block;
   width: 100%;
-  height: auto;
+  height: 620px;
 }
 
 .game-controls {
@@ -487,6 +487,48 @@ code {
   margin-bottom: 0;
 }
 
+.hunt-status {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 14px;
+  font-weight: 700;
+  border: 1px solid rgba(22, 32, 42, 0.08);
+  background: rgba(15, 94, 140, 0.06);
+  color: var(--ink);
+}
+
+.hunt-status.cold {
+  background: rgba(86, 122, 158, 0.12);
+}
+
+.hunt-status.warm {
+  background: rgba(236, 187, 134, 0.2);
+}
+
+.hunt-status.hot {
+  background: rgba(241, 125, 83, 0.2);
+}
+
+.mini-heat-wrap {
+  margin-top: 0.9rem;
+}
+
+.mini-heat-title {
+  margin-bottom: 0.45rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+#heatStrip {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  border: 1px solid rgba(22, 32, 42, 0.1);
+  background: #0d1822;
+}
+
 @media (max-width: 1100px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -507,6 +549,10 @@ code {
 
   .game-layout {
     grid-template-columns: 1fr;
+  }
+
+  .game-canvas-wrap canvas {
+    height: auto;
   }
 }
 

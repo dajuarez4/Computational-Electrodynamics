@@ -209,8 +209,8 @@
   function drawGame() {
     var response = responseFor(state.center, state.epsilon);
     var maxAbs = maxAbsProfile();
-    var topRect = { left: 42, top: 38, width: canvas.width - 84, height: 270, right: canvas.width - 42, bottom: 308 };
-    var bottomRect = { left: 42, top: 350, width: canvas.width - 84, height: 128, right: canvas.width - 42, bottom: 478 };
+    var topRect = { left: 42, top: 28, width: canvas.width - 84, height: 300, right: canvas.width - 42, bottom: 328 };
+    var bottomRect = { left: 42, top: 360, width: canvas.width - 84, height: 110, right: canvas.width - 42, bottom: 470 };
     var detectorX = xToCanvas(state.center, topRect);
     var j;
 
@@ -280,26 +280,25 @@
     ctx.fillStyle = "#edf5fb";
     ctx.font = "700 17px Georgia";
     ctx.fillText("Hidden line-charge profile", topRect.left + 18, topRect.top + 28);
-    ctx.font = "16px Georgia";
+    ctx.font = "14px Georgia";
     ctx.fillStyle = "#a8bbcf";
-    ctx.fillText(state.reveal ? "Source revealed. Scan again or load a new level." : "Source hidden. Use the detector response to infer where the charges are.", topRect.left + 18, topRect.top + 52);
-    ctx.fillText("Blue curve = detector kernel. Gold detector brightens when the overlap gets stronger.", topRect.left + 18, topRect.top + 74);
+    ctx.fillText(state.reveal ? "Source revealed." : "Source hidden. Scan the line and watch the detector response.", topRect.left + 18, topRect.top + 50);
 
     ctx.fillStyle = "rgba(255,190,90," + Math.min(0.95, 0.14 + response * 0.9) + ")";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 88, 18 + (1.2 - state.epsilon) * 18 + response * 20, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 82, 18 + (1.2 - state.epsilon) * 18 + response * 20, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#f8d6a1";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 88, 10, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 82, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.font = "700 15px Georgia";
-    ctx.fillText("a = " + state.center.toFixed(2), detectorX - 24, topRect.top + 126);
+    ctx.fillText("a = " + state.center.toFixed(2), detectorX - 24, topRect.top + 118);
 
     ctx.strokeStyle = "rgba(248,214,161,0.42)";
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
-    ctx.moveTo(detectorX, topRect.top + 108);
+    ctx.moveTo(detectorX, topRect.top + 100);
     ctx.lineTo(detectorX, topRect.bottom - 18);
     ctx.stroke();
     ctx.setLineDash([]);
@@ -309,20 +308,20 @@
     ctx.fill();
 
     ctx.fillStyle = "rgba(255,196,120,0.96)";
-    roundedRect(topRect.right - 168, topRect.top + 18, 136, 42, 14);
+    roundedRect(topRect.right - 160, topRect.top + 18, 128, 36, 14);
     ctx.fill();
     ctx.fillStyle = "#13212d";
-    ctx.font = "700 14px Georgia";
-    ctx.fillText("response", topRect.right - 152, topRect.top + 36);
-    ctx.font = "700 18px Georgia";
-    ctx.fillText(response.toFixed(3), topRect.right - 90, topRect.top + 36);
+    ctx.font = "700 12px Georgia";
+    ctx.fillText("response", topRect.right - 148, topRect.top + 32);
+    ctx.font = "700 16px Georgia";
+    ctx.fillText(response.toFixed(3), topRect.right - 90, topRect.top + 32);
 
     ctx.fillStyle = "#edf5fb";
-    ctx.font = "700 16px Georgia";
+    ctx.font = "700 15px Georgia";
     ctx.fillText("Detector response trail", bottomRect.left + 18, bottomRect.top + 28);
-    ctx.font = "15px Georgia";
+    ctx.font = "13px Georgia";
     ctx.fillStyle = "#a8bbcf";
-    ctx.fillText("Each glow marks where you scanned. Brighter means a stronger overlap.", bottomRect.left + 18, bottomRect.top + 50);
+    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 48);
 
     ctx.fillStyle = "rgba(255,255,255,0.08)";
     roundedRect(bottomRect.left + 18, bottomRect.bottom - 34, bottomRect.width - 36, 14, 8);
