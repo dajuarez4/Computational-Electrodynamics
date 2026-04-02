@@ -312,9 +312,6 @@
     ctx.fillStyle = "#edf5fb";
     ctx.font = "700 18px Georgia";
     ctx.fillText("Detector response trail", trailRect.left + 18, trailRect.top + 30);
-    ctx.font = "14px Georgia";
-    ctx.fillStyle = "#a8bbcf";
-    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", trailRect.left + 18, trailRect.top + 56);
 
     for (j = 0; j < state.scans.length; j += 1) {
       var scan = state.scans[j];
