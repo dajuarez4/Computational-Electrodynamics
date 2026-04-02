@@ -209,8 +209,8 @@
   function drawGame() {
     var response = responseFor(state.center, state.epsilon);
     var maxAbs = maxAbsProfile();
-    var topRect = { left: 42, top: 30, width: canvas.width - 84, height: 360, right: canvas.width - 42, bottom: 390 };
-    var bottomRect = { left: 42, top: 470, width: canvas.width - 84, height: 140, right: canvas.width - 42, bottom: 610 };
+    var topRect = { left: 42, top: 30, width: canvas.width - 84, height: 390, right: canvas.width - 42, bottom: 420 };
+    var bottomRect = { left: 42, top: 520, width: canvas.width - 84, height: 220, right: canvas.width - 42, bottom: 740 };
     var detectorX = xToCanvas(state.center, topRect);
     var j;
 
@@ -307,11 +307,11 @@
     ctx.fillText(response.toFixed(3), topRect.right - 90, topRect.top + 32);
 
     ctx.fillStyle = "#edf5fb";
-    ctx.font = "700 15px Georgia";
-    ctx.fillText("Detector response trail", bottomRect.left + 18, bottomRect.top + 28);
-    ctx.font = "13px Georgia";
+    ctx.font = "700 18px Georgia";
+    ctx.fillText("Detector response trail", bottomRect.left + 18, bottomRect.top + 30);
+    ctx.font = "14px Georgia";
     ctx.fillStyle = "#a8bbcf";
-    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 52);
+    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 56);
 
     for (j = 0; j < state.scans.length; j += 1) {
       var scan = state.scans[j];
@@ -319,19 +319,20 @@
       var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
       ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
       ctx.beginPath();
-      ctx.arc(sx, bottomRect.top + 72, 8 + scan.response * 20, 0, Math.PI * 2);
+      ctx.arc(sx, bottomRect.top + 118, 8 + scan.response * 20, 0, Math.PI * 2);
       ctx.fill();
     }
 
+    ctx.fillStyle = "#edf5fb";
+    ctx.font = "16px Georgia";
+    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 42);
+
     ctx.fillStyle = "rgba(255,255,255,0.08)";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 32, bottomRect.width - 36, 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 28, bottomRect.width - 36, 16, 8);
     ctx.fill();
     ctx.fillStyle = "#f5c48e";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 32, (bottomRect.width - 36) * Math.min(1, response / 0.8), 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 28, (bottomRect.width - 36) * Math.min(1, response / 0.8), 16, 8);
     ctx.fill();
-    ctx.fillStyle = "#edf5fb";
-    ctx.font = "15px Georgia";
-    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 40);
 
     drawHeatStrip();
   }

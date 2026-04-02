@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visuals | Computational Electrodynamics</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./index.html">Home</a>
+        </div>
+      </nav>
+      <div class="subhero-copy">
+        <p class="eyebrow">Visuals</p>
+        <h1>Figures and animations that build intuition</h1>
+        <p class="lede">These assets come directly from the computational side of the project and help connect the math to geometry.</p>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="section">
+        <div class="showcase-grid">
+          <article class="showcase-card wide">
+            <img src="../codes/plots/method_of_images_grounded_sphere_preview.png" alt="Grounded sphere preview">
+            <div class="showcase-copy">
+              <h3>Grounded Sphere Image Construction</h3>
+              <p>The external source moves along the symmetry axis while the image position and magnitude update to preserve the grounded boundary.</p>
+              <a class="text-link" href="../codes/plots/method_of_images_grounded_sphere.gif">Open GIF</a>
+            </div>
+          </article>
+          <article class="showcase-card">
+            <img src="../codes/plots/dirac_delta_v2_charge_density.png" alt="Dirac delta charge density">
+            <div class="showcase-copy">
+              <h3>Charge Density</h3>
+              <p>A direct visual for localized source structure before applying the sampling kernel.</p>
+            </div>
+          </article>
+          <article class="showcase-card">
+            <img src="../codes/plots/dirac_delta_v2_charge_hunt_heatmap.png" alt="Dirac delta heatmap">
+            <div class="showcase-copy">
+              <h3>Heatmap Response</h3>
+              <p>The strongest detector response appears when the smoothed delta is centered on a source region.</p>
+            </div>
+          </article>
+          <article class="showcase-card">
+            <img src="../codes/plots/dirac_delta_v2_charge_hunt.png" alt="Charge hunt plot">
+            <div class="showcase-copy">
+              <h3>Charge Hunt</h3>
+              <p>A more direct visual of the sampling game behind the delta-function interpretation.</p>
+            </div>
+          </article>
+          <article class="showcase-card">
+            <img src="../codes/plots/dirac_delta_v2_sampling.png" alt="Sampling plot">
+            <div class="showcase-copy">
+              <h3>Sampling Kernel</h3>
+              <p>Shows how narrowing the approximation changes what the source “looks like” under integration.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="action-row">
+          <a class="button primary" href="../codes/generate_method_of_images_sphere_gif.py">Open Sphere Script</a>
+          <a class="button secondary" href="../codes/generate_dirac_delta_v2_plots.py">Open Dirac Delta Plot Script</a>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>These visuals are good candidates for future interactive pages.</p>
+    </footer>
+  </div>
+</body>
+</html>
