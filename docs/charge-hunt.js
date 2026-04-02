@@ -39,6 +39,10 @@
   const responseValue = document.getElementById("responseValue");
   const bestValue = document.getElementById("bestValue");
   const scanCountValue = document.getElementById("scanCountValue");
+  const levelValue = document.getElementById("levelValue");
+  const huntStatus = document.getElementById("huntStatus");
+  const heatStrip = document.getElementById("heatStrip");
+  const heatCtx = heatStrip.getContext("2d");
 
   const state = {
     levelIndex: 0,
@@ -47,23 +51,36 @@
     reveal: false,
     best: 0,
     scans: [],
-    draggingCanvas: false
+    draggingCanvas: false,
+    seed: Math.random() * 1000
   };
 
   function gaussianDelta(x, epsilon, center) {
-    return Math.exp(-((x - center) / epsilon) ** 2) / (Math.sqrt(Math.PI) * epsilon);
+    return Math.exp(-(((x - center) / epsilon) ** 2)) / (Math.sqrt(Math.PI) * epsilon);
   }
 
   function chargeDensity(x, charges, sigma = 0.12) {
     let total = 0;
     for (const charge of charges) {
-      total += charge.strength * Math.exp(-((x - charge.position) / sigma) ** 2) / (Math.sqrt(Math.PI) * sigma);
+      total += charge.strength * Math.exp(-(((x - charge.position) / sigma) ** 2)) / (Math.sqrt(Math.PI) * sigma);
     }
     return total;
   }
 
   function activeCharges() {
     return levels[state.levelIndex];
+  }
+
+  function randomLevel() {
+    const count = 4 + Math.floor(Math.random() * 2);
+    const charges = [];
+    for (let i = 0; i < count; i += 1) {
+      charges.push({
+        position: -3 + Math.random() * 6,
+        strength: (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.95)
+      });
+    }
+    return charges.sort((a, b) => a.position - b.position);
   }
 
   function profileValues() {
@@ -109,13 +126,25 @@
     }
   }
 
+  function statusFor(response, best, epsilon) {
+    if (best > 0.72 && epsilon < 0.18) return "Locked on. This is the kind of narrow, centered hit you want.";
+    if (response > 0.55) return "Very hot. You are almost sitting on top of the source.";
+    if (response > 0.32) return "Warm. Something is nearby, tighten the detector.";
+    if (response > 0.16) return "Faint signal. Keep sweeping and compare nearby positions.";
+    if (epsilon > 0.65) return "Cold. Your detector is too wide right now.";
+    return "Cold. Sweep the line first before shrinking ε.";
+  }
+
   function refreshReadout() {
     const response = responseFor(state.center, state.epsilon);
+    levelValue.textContent = String(state.levelIndex + 1);
     centerValue.textContent = state.center.toFixed(2);
     epsilonValue.textContent = state.epsilon.toFixed(2);
     responseValue.textContent = response.toFixed(3);
     bestValue.textContent = state.best.toFixed(3);
     scanCountValue.textContent = String(state.scans.length);
+    huntStatus.textContent = statusFor(response, state.best, state.epsilon);
+    huntStatus.className = `hunt-status ${response > 0.55 ? "hot" : response > 0.22 ? "warm" : "cold"}`;
   }
 
   function drawRoundedRect(x, y, w, h, r) {
@@ -173,6 +202,18 @@
     ctx.lineTo(topRect.right - 14, yToCanvas(0, topRect, -maxAbs, maxAbs));
     ctx.stroke();
 
+    ctx.beginPath();
+    xs.forEach((x, i) => {
+      const kernelPreview = 1.12 * Math.exp(-((((x - state.center) / Math.max(state.epsilon, 0.05)) ** 2)));
+      const px = xToCanvas(x, topRect);
+      const py = yToCanvas(kernelPreview, topRect, -maxAbs, maxAbs);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    });
+    ctx.strokeStyle = "rgba(121, 216, 255, 0.95)";
+    ctx.lineWidth = 2.4;
+    ctx.stroke();
+
     if (state.reveal) {
       ctx.beginPath();
       profile.forEach((value, i) => {
@@ -188,10 +229,10 @@
 
     for (const scan of state.scans) {
       const x = xToCanvas(scan.center, bottomRect);
-      const alpha = Math.min(0.88, 0.14 + scan.response * 0.92);
+      const alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
       ctx.fillStyle = `rgba(236, 187, 134, ${alpha})`;
       ctx.beginPath();
-      ctx.arc(x, bottomRect.top + 28, 5 + scan.response * 12, 0, Math.PI * 2);
+      ctx.arc(x, bottomRect.top + 30, 8 + scan.response * 20, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -201,6 +242,7 @@
     ctx.font = "16px Georgia";
     ctx.fillStyle = "#a8bbcf";
     ctx.fillText(state.reveal ? "Source revealed. Scan again or load a new level." : "Source hidden. Use the detector response to infer where the charges are.", topRect.left + 18, topRect.top + 52);
+    ctx.fillText("Blue curve = detector kernel. Gold detector brightens when the overlap gets stronger.", topRect.left + 18, topRect.top + 74);
 
     const detectorX = xToCanvas(state.center, topRect);
     const detectorRadius = 14 + (1.2 - state.epsilon) * 18;
@@ -213,6 +255,8 @@
     ctx.beginPath();
     ctx.arc(detectorX, topRect.top + 88, 9, 0, Math.PI * 2);
     ctx.fill();
+    ctx.font = "700 15px Georgia";
+    ctx.fillText(`a = ${state.center.toFixed(2)}`, detectorX - 22, topRect.top + 126);
 
     ctx.strokeStyle = "rgba(248, 214, 161, 0.42)";
     ctx.setLineDash([6, 6]);
@@ -226,6 +270,15 @@
     ctx.fillStyle = "rgba(121, 216, 255, 0.16)";
     drawRoundedRect(detectorX - kernelHalfWidth, topRect.bottom - 52, kernelHalfWidth * 2, 28, 12);
     ctx.fill();
+
+    ctx.fillStyle = "rgba(255, 196, 120, 0.96)";
+    drawRoundedRect(topRect.right - 168, topRect.top + 18, 136, 42, 14);
+    ctx.fill();
+    ctx.fillStyle = "#13212d";
+    ctx.font = "700 14px Georgia";
+    ctx.fillText("response", topRect.right - 152, topRect.top + 36);
+    ctx.font = "700 18px Georgia";
+    ctx.fillText(response.toFixed(3), topRect.right - 90, topRect.top + 36);
 
     ctx.fillStyle = "#edf5fb";
     ctx.font = "700 16px Georgia";
@@ -247,6 +300,54 @@
     ctx.fillStyle = "#edf5fb";
     ctx.font = "15px Georgia";
     ctx.fillText("Response meter", meterX, meterY - 10);
+    drawHeatStrip();
+  }
+
+  function drawHeatStrip() {
+    const width = heatStrip.width;
+    const height = heatStrip.height;
+    heatCtx.clearRect(0, 0, width, height);
+    heatCtx.fillStyle = "#0d1822";
+    heatCtx.fillRect(0, 0, width, height);
+
+    const epsilon = state.epsilon;
+    const responses = xs.map((x) => responseFor(x, epsilon));
+    const maxR = Math.max(...responses, 0.001);
+
+    for (let i = 0; i < width; i += 1) {
+      const t = i / (width - 1);
+      const x = domainMin + t * (domainMax - domainMin);
+      const idx = Math.floor(t * (responses.length - 1));
+      const r = responses[idx] / maxR;
+      const red = Math.round(34 + r * 220);
+      const green = Math.round(62 + r * 135);
+      const blue = Math.round(88 - r * 45);
+      heatCtx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+      heatCtx.fillRect(i, 18, 1, 26);
+      if (state.reveal) {
+        const density = chargeDensity(x, activeCharges());
+        if (Math.abs(density) > 0.55) {
+          heatCtx.fillStyle = density > 0 ? "rgba(121,216,255,0.9)" : "rgba(255,120,120,0.85)";
+          heatCtx.fillRect(i, 48, 1, 10);
+        }
+      }
+    }
+
+    const markerX = ((state.center - domainMin) / (domainMax - domainMin)) * width;
+    heatCtx.strokeStyle = "rgba(255,255,255,0.92)";
+    heatCtx.lineWidth = 2;
+    heatCtx.beginPath();
+    heatCtx.moveTo(markerX, 10);
+    heatCtx.lineTo(markerX, 60);
+    heatCtx.stroke();
+
+    heatCtx.fillStyle = "#edf5fb";
+    heatCtx.font = "12px Georgia";
+    heatCtx.fillText("response", 10, 12);
+    if (state.reveal) {
+      heatCtx.fillStyle = "#a8bbcf";
+      heatCtx.fillText("source markers revealed", 180, 12);
+    }
   }
 
   function setCenterFromSlider() {
@@ -275,7 +376,10 @@
   }
 
   function newLevel() {
-    state.levelIndex = (state.levelIndex + 1) % levels.length;
+    state.levelIndex += 1;
+    if (state.levelIndex >= levels.length) {
+      levels.push(randomLevel());
+    }
     state.reveal = false;
     state.best = 0;
     state.scans = [];
@@ -293,6 +397,7 @@
   revealBtn.addEventListener("click", () => {
     state.reveal = !state.reveal;
     revealBtn.textContent = state.reveal ? "Hide Source" : "Reveal Source";
+    refreshReadout();
     draw();
   });
   resetTrailBtn.addEventListener("click", () => {
