@@ -267,16 +267,6 @@
       ctx.stroke();
     }
 
-    for (j = 0; j < state.scans.length; j += 1) {
-      var scan = state.scans[j];
-      var sx = xToCanvas(scan.center, bottomRect);
-      var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
-      ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
-      ctx.beginPath();
-      ctx.arc(sx, bottomRect.top + 38, 8 + scan.response * 20, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
     ctx.fillStyle = "#edf5fb";
     ctx.font = "700 17px Georgia";
     ctx.fillText("Hidden line-charge profile", topRect.left + 18, topRect.top + 28);
@@ -323,15 +313,25 @@
     ctx.fillStyle = "#a8bbcf";
     ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 52);
 
+    for (j = 0; j < state.scans.length; j += 1) {
+      var scan = state.scans[j];
+      var sx = xToCanvas(scan.center, bottomRect);
+      var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
+      ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
+      ctx.beginPath();
+      ctx.arc(sx, bottomRect.top + 72, 8 + scan.response * 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     ctx.fillStyle = "rgba(255,255,255,0.08)";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 36, bottomRect.width - 36, 16, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 32, bottomRect.width - 36, 14, 8);
     ctx.fill();
     ctx.fillStyle = "#f5c48e";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 36, (bottomRect.width - 36) * Math.min(1, response / 0.8), 16, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 32, (bottomRect.width - 36) * Math.min(1, response / 0.8), 14, 8);
     ctx.fill();
     ctx.fillStyle = "#edf5fb";
     ctx.font = "15px Georgia";
-    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 48);
+    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 40);
 
     drawHeatStrip();
   }
