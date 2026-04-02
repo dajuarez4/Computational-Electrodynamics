@@ -209,8 +209,8 @@
   function drawGame() {
     var response = responseFor(state.center, state.epsilon);
     var maxAbs = maxAbsProfile();
-    var topRect = { left: 42, top: 28, width: canvas.width - 84, height: 300, right: canvas.width - 42, bottom: 328 };
-    var bottomRect = { left: 42, top: 360, width: canvas.width - 84, height: 110, right: canvas.width - 42, bottom: 470 };
+    var topRect = { left: 42, top: 30, width: canvas.width - 84, height: 360, right: canvas.width - 42, bottom: 390 };
+    var bottomRect = { left: 42, top: 470, width: canvas.width - 84, height: 140, right: canvas.width - 42, bottom: 610 };
     var detectorX = xToCanvas(state.center, topRect);
     var j;
 
@@ -273,7 +273,7 @@
       var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
       ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
       ctx.beginPath();
-      ctx.arc(sx, bottomRect.top + 30, 8 + scan.response * 20, 0, Math.PI * 2);
+      ctx.arc(sx, bottomRect.top + 38, 8 + scan.response * 20, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -286,25 +286,25 @@
 
     ctx.fillStyle = "rgba(255,190,90," + Math.min(0.95, 0.14 + response * 0.9) + ")";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 82, 18 + (1.2 - state.epsilon) * 18 + response * 20, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 96, 18 + (1.2 - state.epsilon) * 18 + response * 20, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#f8d6a1";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 82, 10, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 96, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.font = "700 15px Georgia";
-    ctx.fillText("a = " + state.center.toFixed(2), detectorX - 24, topRect.top + 118);
+    ctx.fillText("a = " + state.center.toFixed(2), detectorX - 24, topRect.top + 136);
 
     ctx.strokeStyle = "rgba(248,214,161,0.42)";
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
-    ctx.moveTo(detectorX, topRect.top + 100);
+    ctx.moveTo(detectorX, topRect.top + 118);
     ctx.lineTo(detectorX, topRect.bottom - 18);
     ctx.stroke();
     ctx.setLineDash([]);
 
     ctx.fillStyle = "rgba(121,216,255,0.16)";
-    roundedRect(detectorX - state.epsilon * 80, topRect.bottom - 52, state.epsilon * 160, 28, 12);
+    roundedRect(detectorX - state.epsilon * 80, topRect.bottom - 58, state.epsilon * 160, 32, 12);
     ctx.fill();
 
     ctx.fillStyle = "rgba(255,196,120,0.96)";
@@ -321,17 +321,17 @@
     ctx.fillText("Detector response trail", bottomRect.left + 18, bottomRect.top + 28);
     ctx.font = "13px Georgia";
     ctx.fillStyle = "#a8bbcf";
-    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 48);
+    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 52);
 
     ctx.fillStyle = "rgba(255,255,255,0.08)";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 34, bottomRect.width - 36, 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 36, bottomRect.width - 36, 16, 8);
     ctx.fill();
     ctx.fillStyle = "#f5c48e";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 34, (bottomRect.width - 36) * Math.min(1, response / 0.8), 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 36, (bottomRect.width - 36) * Math.min(1, response / 0.8), 16, 8);
     ctx.fill();
     ctx.fillStyle = "#edf5fb";
     ctx.font = "15px Georgia";
-    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 44);
+    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 48);
 
     drawHeatStrip();
   }

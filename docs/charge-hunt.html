@@ -34,7 +34,7 @@
         <div class="game-layout">
           <article class="game-panel">
             <div class="game-canvas-wrap">
-              <canvas id="chargeHuntCanvas" width="980" height="520" aria-label="Charge Hunt game canvas"></canvas>
+              <canvas id="chargeHuntCanvas" width="980" height="700" aria-label="Charge Hunt game canvas"></canvas>
             </div>
             <div class="game-controls">
               <label class="control">
@@ -61,11 +61,17 @@
             <article class="resource-panel">
               <h3>Current readout</h3>
               <div class="stat-stack">
+                <div class="stat-line"><span>Level</span><strong id="levelValue">1</strong></div>
                 <div class="stat-line"><span>Center</span><strong id="centerValue">0.00</strong></div>
                 <div class="stat-line"><span>Epsilon</span><strong id="epsilonValue">0.28</strong></div>
                 <div class="stat-line"><span>Response</span><strong id="responseValue">0.000</strong></div>
                 <div class="stat-line"><span>Best scan</span><strong id="bestValue">0.000</strong></div>
                 <div class="stat-line"><span>Scans</span><strong id="scanCountValue">0</strong></div>
+              </div>
+              <div class="hunt-status" id="huntStatus">Cold. Sweep the line first before shrinking ε.</div>
+              <div class="mini-heat-wrap">
+                <div class="mini-heat-title">Scan quality map</div>
+                <canvas id="heatStrip" width="320" height="68" aria-label="Charge Hunt response strip"></canvas>
               </div>
             </article>
 
