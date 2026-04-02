@@ -1,109 +1,115 @@
 (function () {
-  const domainMin = -4;
-  const domainMax = 4;
-  const samples = 900;
-  const xs = Array.from({ length: samples }, (_, i) => domainMin + (i / (samples - 1)) * (domainMax - domainMin));
-  const dx = xs[1] - xs[0];
+  var domainMin = -4.0;
+  var domainMax = 4.0;
+  var sampleCount = 600;
+  var xs = [];
+  var i;
 
-  const levels = [
+  for (i = 0; i < sampleCount; i += 1) {
+    xs.push(domainMin + (i / (sampleCount - 1)) * (domainMax - domainMin));
+  }
+
+  var dx = xs[1] - xs[0];
+
+  var levels = [
     [
       { position: -2.35, strength: 0.95 },
       { position: -0.45, strength: -0.65 },
       { position: 1.35, strength: 1.15 },
-      { position: 2.6, strength: -0.55 }
+      { position: 2.60, strength: -0.55 }
     ],
     [
-      { position: -2.8, strength: -0.85 },
-      { position: -1.1, strength: 1.05 },
-      { position: 0.9, strength: 0.72 },
-      { position: 2.2, strength: -1.0 }
+      { position: -2.80, strength: -0.85 },
+      { position: -1.10, strength: 1.05 },
+      { position: 0.90, strength: 0.72 },
+      { position: 2.20, strength: -1.00 }
     ],
     [
-      { position: -2.0, strength: 0.6 },
-      { position: -0.2, strength: 1.25 },
-      { position: 1.1, strength: -0.8 },
-      { position: 2.9, strength: 0.72 }
+      { position: -2.00, strength: 0.60 },
+      { position: -0.20, strength: 1.25 },
+      { position: 1.10, strength: -0.80 },
+      { position: 2.90, strength: 0.72 }
     ]
   ];
 
-  const canvas = document.getElementById("chargeHuntCanvas");
-  const ctx = canvas.getContext("2d");
-  const centerSlider = document.getElementById("centerSlider");
-  const epsilonSlider = document.getElementById("epsilonSlider");
-  const newLevelBtn = document.getElementById("newLevelBtn");
-  const revealBtn = document.getElementById("revealBtn");
-  const resetTrailBtn = document.getElementById("resetTrailBtn");
+  var canvas = document.getElementById("chargeHuntCanvas");
+  var ctx = canvas ? canvas.getContext("2d") : null;
+  var heatStrip = document.getElementById("heatStrip");
+  var heatCtx = heatStrip ? heatStrip.getContext("2d") : null;
 
-  const centerValue = document.getElementById("centerValue");
-  const epsilonValue = document.getElementById("epsilonValue");
-  const responseValue = document.getElementById("responseValue");
-  const bestValue = document.getElementById("bestValue");
-  const scanCountValue = document.getElementById("scanCountValue");
-  const levelValue = document.getElementById("levelValue");
-  const huntStatus = document.getElementById("huntStatus");
-  const heatStrip = document.getElementById("heatStrip");
-  const heatCtx = heatStrip.getContext("2d");
+  var centerSlider = document.getElementById("centerSlider");
+  var epsilonSlider = document.getElementById("epsilonSlider");
+  var newLevelBtn = document.getElementById("newLevelBtn");
+  var revealBtn = document.getElementById("revealBtn");
+  var resetTrailBtn = document.getElementById("resetTrailBtn");
 
-  const state = {
+  var centerValue = document.getElementById("centerValue");
+  var epsilonValue = document.getElementById("epsilonValue");
+  var responseValue = document.getElementById("responseValue");
+  var bestValue = document.getElementById("bestValue");
+  var scanCountValue = document.getElementById("scanCountValue");
+  var levelValue = document.getElementById("levelValue");
+  var huntStatus = document.getElementById("huntStatus");
+
+  var state = {
     levelIndex: 0,
-    center: 0,
+    center: 0.0,
     epsilon: 0.28,
     reveal: false,
-    best: 0,
+    best: 0.0,
     scans: [],
-    draggingCanvas: false,
-    seed: Math.random() * 1000
+    dragging: false
   };
 
-  function gaussianDelta(x, epsilon, center) {
-    const scaled = (x - center) / epsilon;
-    return Math.exp(-Math.pow(scaled, 2)) / (Math.sqrt(Math.PI) * epsilon);
+  if (!canvas || !ctx || !heatStrip || !heatCtx) {
+    return;
   }
 
-  function chargeDensity(x, charges, sigma = 0.12) {
-    let total = 0;
-    for (const charge of charges) {
-      const scaled = (x - charge.position) / sigma;
-      total += charge.strength * Math.exp(-Math.pow(scaled, 2)) / (Math.sqrt(Math.PI) * sigma);
-    }
-    return total;
+  function clamp(value, low, high) {
+    return Math.max(low, Math.min(high, value));
   }
 
   function activeCharges() {
     return levels[state.levelIndex];
   }
 
-  function randomLevel() {
-    const count = 4 + Math.floor(Math.random() * 2);
-    const charges = [];
-    for (let i = 0; i < count; i += 1) {
-      charges.push({
-        position: -3 + Math.random() * 6,
-        strength: (Math.random() > 0.5 ? 1 : -1) * (0.45 + Math.random() * 0.95)
-      });
-    }
-    return charges.sort((a, b) => a.position - b.position);
+  function gaussianDelta(x, epsilon, center) {
+    var scaled = (x - center) / epsilon;
+    return Math.exp(-scaled * scaled) / (Math.sqrt(Math.PI) * epsilon);
   }
 
-  function profileValues() {
-    const charges = activeCharges();
-    return xs.map((x) => chargeDensity(x, charges));
+  function chargeDensity(x, charges) {
+    var sigma = 0.12;
+    var total = 0.0;
+    var j;
+    for (j = 0; j < charges.length; j += 1) {
+      var scaled = (x - charges[j].position) / sigma;
+      total += charges[j].strength * Math.exp(-scaled * scaled) / (Math.sqrt(Math.PI) * sigma);
+    }
+    return total;
   }
 
   function responseFor(center, epsilon) {
-    const charges = activeCharges();
-    let total = 0;
-    for (let i = 0; i < xs.length; i += 1) {
-      const density = chargeDensity(xs[i], charges);
-      const kernel = gaussianDelta(xs[i], epsilon, center);
-      total += density * kernel * dx;
+    var charges = activeCharges();
+    var total = 0.0;
+    var j;
+    for (j = 0; j < xs.length; j += 1) {
+      total += chargeDensity(xs[j], charges) * gaussianDelta(xs[j], epsilon, center) * dx;
     }
-    const localizationBonus = 1 / (1 + 3.6 * epsilon);
-    return Math.abs(total) * localizationBonus;
+    return Math.abs(total) / (1.0 + 3.6 * epsilon);
   }
 
-  function clamp(value, low, high) {
-    return Math.max(low, Math.min(high, value));
+  function maxAbsProfile() {
+    var charges = activeCharges();
+    var maxValue = 1.2;
+    var j;
+    for (j = 0; j < xs.length; j += 1) {
+      var value = Math.abs(chargeDensity(xs[j], charges));
+      if (value > maxValue) {
+        maxValue = value;
+      }
+    }
+    return maxValue;
   }
 
   function xToCanvas(x, rect) {
@@ -111,45 +117,10 @@
   }
 
   function yToCanvas(y, rect, yMin, yMax) {
-    const t = (y - yMin) / (yMax - yMin);
-    return rect.bottom - t * rect.height;
+    return rect.bottom - ((y - yMin) / (yMax - yMin)) * rect.height;
   }
 
-  function addScan() {
-    const response = responseFor(state.center, state.epsilon);
-    state.best = Math.max(state.best, response);
-    state.scans.push({
-      center: state.center,
-      epsilon: state.epsilon,
-      response
-    });
-    if (state.scans.length > 400) {
-      state.scans.shift();
-    }
-  }
-
-  function statusFor(response, best, epsilon) {
-    if (best > 0.72 && epsilon < 0.18) return "Locked on. This is the kind of narrow, centered hit you want.";
-    if (response > 0.55) return "Very hot. You are almost sitting on top of the source.";
-    if (response > 0.32) return "Warm. Something is nearby, tighten the detector.";
-    if (response > 0.16) return "Faint signal. Keep sweeping and compare nearby positions.";
-    if (epsilon > 0.65) return "Cold. Your detector is too wide right now.";
-    return "Cold. Sweep the line first before shrinking ε.";
-  }
-
-  function refreshReadout() {
-    const response = responseFor(state.center, state.epsilon);
-    levelValue.textContent = String(state.levelIndex + 1);
-    centerValue.textContent = state.center.toFixed(2);
-    epsilonValue.textContent = state.epsilon.toFixed(2);
-    responseValue.textContent = response.toFixed(3);
-    bestValue.textContent = state.best.toFixed(3);
-    scanCountValue.textContent = String(state.scans.length);
-    huntStatus.textContent = statusFor(response, state.best, state.epsilon);
-    huntStatus.className = `hunt-status ${response > 0.55 ? "hot" : response > 0.22 ? "warm" : "cold"}`;
-  }
-
-  function drawRoundedRect(x, y, w, h, r) {
+  function roundedRect(x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
     ctx.lineTo(x + w - r, y);
@@ -163,38 +134,103 @@
     ctx.closePath();
   }
 
-  function draw() {
-    const profile = profileValues();
-    const response = responseFor(state.center, state.epsilon);
-    const maxAbs = Math.max(...profile.map((v) => Math.abs(v)), 1.2);
+  function addScan() {
+    var response = responseFor(state.center, state.epsilon);
+    state.scans.push({
+      center: state.center,
+      response: response
+    });
+    if (state.scans.length > 250) {
+      state.scans.shift();
+    }
+    if (response > state.best) {
+      state.best = response;
+    }
+  }
+
+  function statusText(response) {
+    if (response > 0.55) return "Very hot. You are close to a hidden source.";
+    if (response > 0.32) return "Warm. Sweep nearby and tighten epsilon.";
+    if (response > 0.16) return "Faint signal. Keep scanning.";
+    if (state.epsilon > 0.6) return "Cold. Your detector is too wide.";
+    return "Cold. Sweep the line first before shrinking epsilon.";
+  }
+
+  function updateReadout() {
+    var response = responseFor(state.center, state.epsilon);
+    levelValue.textContent = String(state.levelIndex + 1);
+    centerValue.textContent = state.center.toFixed(2);
+    epsilonValue.textContent = state.epsilon.toFixed(2);
+    responseValue.textContent = response.toFixed(3);
+    bestValue.textContent = state.best.toFixed(3);
+    scanCountValue.textContent = String(state.scans.length);
+    huntStatus.textContent = statusText(response);
+    huntStatus.className = "hunt-status";
+    if (response > 0.55) huntStatus.className += " hot";
+    else if (response > 0.22) huntStatus.className += " warm";
+    else huntStatus.className += " cold";
+  }
+
+  function drawHeatStrip() {
+    var width = heatStrip.width;
+    var height = heatStrip.height;
+    heatCtx.clearRect(0, 0, width, height);
+    heatCtx.fillStyle = "#0d1822";
+    heatCtx.fillRect(0, 0, width, height);
+
+    var j;
+    var maxResponse = 0.001;
+    var responses = [];
+    for (j = 0; j < width; j += 1) {
+      var x = domainMin + (j / (width - 1)) * (domainMax - domainMin);
+      var r = responseFor(x, state.epsilon);
+      responses.push(r);
+      if (r > maxResponse) maxResponse = r;
+    }
+
+    for (j = 0; j < width; j += 1) {
+      var t = responses[j] / maxResponse;
+      var red = Math.round(34 + t * 220);
+      var green = Math.round(62 + t * 135);
+      var blue = Math.round(88 - t * 45);
+      heatCtx.fillStyle = "rgb(" + red + "," + green + "," + blue + ")";
+      heatCtx.fillRect(j, 18, 1, 26);
+    }
+
+    var markerX = ((state.center - domainMin) / (domainMax - domainMin)) * width;
+    heatCtx.strokeStyle = "rgba(255,255,255,0.92)";
+    heatCtx.lineWidth = 2;
+    heatCtx.beginPath();
+    heatCtx.moveTo(markerX, 10);
+    heatCtx.lineTo(markerX, 60);
+    heatCtx.stroke();
+  }
+
+  function drawGame() {
+    var response = responseFor(state.center, state.epsilon);
+    var maxAbs = maxAbsProfile();
+    var topRect = { left: 42, top: 38, width: canvas.width - 84, height: 270, right: canvas.width - 42, bottom: 308 };
+    var bottomRect = { left: 42, top: 350, width: canvas.width - 84, height: 128, right: canvas.width - 42, bottom: 478 };
+    var detectorX = xToCanvas(state.center, topRect);
+    var j;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#08111a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const topRect = { left: 42, top: 38, width: canvas.width - 84, height: 270, right: canvas.width - 42, bottom: 308 };
-    const bottomRect = { left: 42, top: 350, width: canvas.width - 84, height: 128, right: canvas.width - 42, bottom: 478 };
-
     ctx.fillStyle = "#0d1822";
-    drawRoundedRect(topRect.left, topRect.top, topRect.width, topRect.height, 22);
+    roundedRect(topRect.left, topRect.top, topRect.width, topRect.height, 22);
     ctx.fill();
-    drawRoundedRect(bottomRect.left, bottomRect.top, bottomRect.width, bottomRect.height, 22);
+    roundedRect(bottomRect.left, bottomRect.top, bottomRect.width, bottomRect.height, 22);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(179, 199, 218, 0.14)";
+    ctx.strokeStyle = "rgba(179,199,218,0.14)";
     ctx.lineWidth = 1;
-    for (let i = 0; i <= 8; i += 1) {
-      const x = topRect.left + (i / 8) * topRect.width;
+    for (j = 0; j <= 8; j += 1) {
+      var gx = topRect.left + (j / 8) * topRect.width;
       ctx.beginPath();
-      ctx.moveTo(x, topRect.top + 16);
-      ctx.lineTo(x, topRect.bottom - 16);
-      ctx.stroke();
-    }
-    for (let i = 0; i <= 4; i += 1) {
-      const y = topRect.top + 16 + (i / 4) * (topRect.height - 32);
-      ctx.beginPath();
-      ctx.moveTo(topRect.left + 14, y);
-      ctx.lineTo(topRect.right - 14, y);
+      ctx.moveTo(gx, topRect.top + 16);
+      ctx.lineTo(gx, topRect.bottom - 16);
       ctx.stroke();
     }
 
@@ -205,37 +241,39 @@
     ctx.stroke();
 
     ctx.beginPath();
-    xs.forEach((x, i) => {
-      const scaled = (x - state.center) / Math.max(state.epsilon, 0.05);
-      const kernelPreview = 1.12 * Math.exp(-Math.pow(scaled, 2));
-      const px = xToCanvas(x, topRect);
-      const py = yToCanvas(kernelPreview, topRect, -maxAbs, maxAbs);
-      if (i === 0) ctx.moveTo(px, py);
+    for (j = 0; j < xs.length; j += 1) {
+      var scaled = (xs[j] - state.center) / Math.max(state.epsilon, 0.05);
+      var kernelPreview = 1.12 * Math.exp(-scaled * scaled);
+      var px = xToCanvas(xs[j], topRect);
+      var py = yToCanvas(kernelPreview, topRect, -maxAbs, maxAbs);
+      if (j === 0) ctx.moveTo(px, py);
       else ctx.lineTo(px, py);
-    });
-    ctx.strokeStyle = "rgba(121, 216, 255, 0.95)";
+    }
+    ctx.strokeStyle = "rgba(121,216,255,0.95)";
     ctx.lineWidth = 2.4;
     ctx.stroke();
 
     if (state.reveal) {
       ctx.beginPath();
-      profile.forEach((value, i) => {
-        const x = xToCanvas(xs[i], topRect);
-        const y = yToCanvas(value, topRect, -maxAbs, maxAbs);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
+      for (j = 0; j < xs.length; j += 1) {
+        var chargeY = chargeDensity(xs[j], activeCharges());
+        var qx = xToCanvas(xs[j], topRect);
+        var qy = yToCanvas(chargeY, topRect, -maxAbs, maxAbs);
+        if (j === 0) ctx.moveTo(qx, qy);
+        else ctx.lineTo(qx, qy);
+      }
       ctx.strokeStyle = "#79d8ff";
       ctx.lineWidth = 3;
       ctx.stroke();
     }
 
-    for (const scan of state.scans) {
-      const x = xToCanvas(scan.center, bottomRect);
-      const alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
-      ctx.fillStyle = `rgba(236, 187, 134, ${alpha})`;
+    for (j = 0; j < state.scans.length; j += 1) {
+      var scan = state.scans[j];
+      var sx = xToCanvas(scan.center, bottomRect);
+      var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
+      ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
       ctx.beginPath();
-      ctx.arc(x, bottomRect.top + 30, 8 + scan.response * 20, 0, Math.PI * 2);
+      ctx.arc(sx, bottomRect.top + 30, 8 + scan.response * 20, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -247,21 +285,18 @@
     ctx.fillText(state.reveal ? "Source revealed. Scan again or load a new level." : "Source hidden. Use the detector response to infer where the charges are.", topRect.left + 18, topRect.top + 52);
     ctx.fillText("Blue curve = detector kernel. Gold detector brightens when the overlap gets stronger.", topRect.left + 18, topRect.top + 74);
 
-    const detectorX = xToCanvas(state.center, topRect);
-    const detectorRadius = 14 + (1.2 - state.epsilon) * 18;
-    const glow = Math.min(0.95, 0.14 + response * 0.9);
-    ctx.fillStyle = `rgba(255, 190, 90, ${glow})`;
+    ctx.fillStyle = "rgba(255,190,90," + Math.min(0.95, 0.14 + response * 0.9) + ")";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 88, detectorRadius + response * 20, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 88, 18 + (1.2 - state.epsilon) * 18 + response * 20, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#f8d6a1";
     ctx.beginPath();
-    ctx.arc(detectorX, topRect.top + 88, 9, 0, Math.PI * 2);
+    ctx.arc(detectorX, topRect.top + 88, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.font = "700 15px Georgia";
-    ctx.fillText(`a = ${state.center.toFixed(2)}`, detectorX - 22, topRect.top + 126);
+    ctx.fillText("a = " + state.center.toFixed(2), detectorX - 24, topRect.top + 126);
 
-    ctx.strokeStyle = "rgba(248, 214, 161, 0.42)";
+    ctx.strokeStyle = "rgba(248,214,161,0.42)";
     ctx.setLineDash([6, 6]);
     ctx.beginPath();
     ctx.moveTo(detectorX, topRect.top + 108);
@@ -269,13 +304,12 @@
     ctx.stroke();
     ctx.setLineDash([]);
 
-    const kernelHalfWidth = state.epsilon * 80;
-    ctx.fillStyle = "rgba(121, 216, 255, 0.16)";
-    drawRoundedRect(detectorX - kernelHalfWidth, topRect.bottom - 52, kernelHalfWidth * 2, 28, 12);
+    ctx.fillStyle = "rgba(121,216,255,0.16)";
+    roundedRect(detectorX - state.epsilon * 80, topRect.bottom - 52, state.epsilon * 160, 28, 12);
     ctx.fill();
 
-    ctx.fillStyle = "rgba(255, 196, 120, 0.96)";
-    drawRoundedRect(topRect.right - 168, topRect.top + 18, 136, 42, 14);
+    ctx.fillStyle = "rgba(255,196,120,0.96)";
+    roundedRect(topRect.right - 168, topRect.top + 18, 136, 42, 14);
     ctx.fill();
     ctx.fillStyle = "#13212d";
     ctx.font = "700 14px Georgia";
@@ -290,167 +324,115 @@
     ctx.fillStyle = "#a8bbcf";
     ctx.fillText("Each glow marks where you scanned. Brighter means a stronger overlap.", bottomRect.left + 18, bottomRect.top + 50);
 
-    const meterX = bottomRect.left + 18;
-    const meterY = bottomRect.bottom - 34;
-    const meterW = bottomRect.width - 36;
     ctx.fillStyle = "rgba(255,255,255,0.08)";
-    drawRoundedRect(meterX, meterY, meterW, 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 34, bottomRect.width - 36, 14, 8);
     ctx.fill();
     ctx.fillStyle = "#f5c48e";
-    drawRoundedRect(meterX, meterY, meterW * Math.min(1, response / 0.8), 14, 8);
+    roundedRect(bottomRect.left + 18, bottomRect.bottom - 34, (bottomRect.width - 36) * Math.min(1, response / 0.8), 14, 8);
     ctx.fill();
-
     ctx.fillStyle = "#edf5fb";
     ctx.font = "15px Georgia";
-    ctx.fillText("Response meter", meterX, meterY - 10);
+    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 44);
+
     drawHeatStrip();
   }
 
-  function drawHeatStrip() {
-    const width = heatStrip.width;
-    const height = heatStrip.height;
-    heatCtx.clearRect(0, 0, width, height);
-    heatCtx.fillStyle = "#0d1822";
-    heatCtx.fillRect(0, 0, width, height);
-
-    const epsilon = state.epsilon;
-    const responses = xs.map((x) => responseFor(x, epsilon));
-    const maxR = Math.max(...responses, 0.001);
-
-    for (let i = 0; i < width; i += 1) {
-      const t = i / (width - 1);
-      const x = domainMin + t * (domainMax - domainMin);
-      const idx = Math.floor(t * (responses.length - 1));
-      const r = responses[idx] / maxR;
-      const red = Math.round(34 + r * 220);
-      const green = Math.round(62 + r * 135);
-      const blue = Math.round(88 - r * 45);
-      heatCtx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
-      heatCtx.fillRect(i, 18, 1, 26);
-      if (state.reveal) {
-        const density = chargeDensity(x, activeCharges());
-        if (Math.abs(density) > 0.55) {
-          heatCtx.fillStyle = density > 0 ? "rgba(121,216,255,0.9)" : "rgba(255,120,120,0.85)";
-          heatCtx.fillRect(i, 48, 1, 10);
-        }
-      }
-    }
-
-    const markerX = ((state.center - domainMin) / (domainMax - domainMin)) * width;
-    heatCtx.strokeStyle = "rgba(255,255,255,0.92)";
-    heatCtx.lineWidth = 2;
-    heatCtx.beginPath();
-    heatCtx.moveTo(markerX, 10);
-    heatCtx.lineTo(markerX, 60);
-    heatCtx.stroke();
-
-    heatCtx.fillStyle = "#edf5fb";
-    heatCtx.font = "12px Georgia";
-    heatCtx.fillText("response", 10, 12);
-    if (state.reveal) {
-      heatCtx.fillStyle = "#a8bbcf";
-      heatCtx.fillText("source markers revealed", 180, 12);
-    }
+  function refreshAll() {
+    updateReadout();
+    drawGame();
   }
 
-  function setCenterFromSlider() {
-    state.center = parseFloat(centerSlider.value);
+  function setCenter(value) {
+    state.center = clamp(parseFloat(value), domainMin, domainMax);
+    centerSlider.value = String(state.center);
     addScan();
-    refreshReadout();
-    draw();
+    refreshAll();
   }
 
-  function setEpsilonFromSlider() {
-    state.epsilon = parseFloat(epsilonSlider.value);
+  function setEpsilon(value) {
+    state.epsilon = clamp(parseFloat(value), 0.05, 1.2);
+    epsilonSlider.value = String(state.epsilon);
     addScan();
-    refreshReadout();
-    draw();
-  }
-
-  function setCenterFromCanvas(event) {
-    const rect = canvas.getBoundingClientRect();
-    const x = clamp(event.clientX - rect.left, 42, canvas.width - 42);
-    const t = (x - 42) / (canvas.width - 84);
-    state.center = domainMin + t * (domainMax - domainMin);
-    centerSlider.value = state.center.toFixed(2);
-    addScan();
-    refreshReadout();
-    draw();
+    refreshAll();
   }
 
   function newLevel() {
-    state.levelIndex += 1;
-    if (state.levelIndex >= levels.length) {
-      levels.push(randomLevel());
-    }
-    state.reveal = false;
-    state.best = 0;
-    state.scans = [];
-    state.center = 0;
+    state.levelIndex = (state.levelIndex + 1) % levels.length;
+    state.center = 0.0;
     state.epsilon = 0.28;
+    state.reveal = false;
+    state.best = 0.0;
+    state.scans = [];
+    revealBtn.textContent = "Reveal Source";
     centerSlider.value = "0";
     epsilonSlider.value = "0.28";
-    refreshReadout();
-    draw();
+    addScan();
+    refreshAll();
   }
 
-  centerSlider.addEventListener("input", setCenterFromSlider);
-  epsilonSlider.addEventListener("input", setEpsilonFromSlider);
-  newLevelBtn.addEventListener("click", newLevel);
-  revealBtn.addEventListener("click", () => {
+  centerSlider.addEventListener("input", function () {
+    setCenter(centerSlider.value);
+  });
+
+  epsilonSlider.addEventListener("input", function () {
+    setEpsilon(epsilonSlider.value);
+  });
+
+  newLevelBtn.addEventListener("click", function () {
+    newLevel();
+  });
+
+  revealBtn.addEventListener("click", function () {
     state.reveal = !state.reveal;
     revealBtn.textContent = state.reveal ? "Hide Source" : "Reveal Source";
-    refreshReadout();
-    draw();
+    refreshAll();
   });
-  resetTrailBtn.addEventListener("click", () => {
+
+  resetTrailBtn.addEventListener("click", function () {
     state.scans = [];
-    state.best = 0;
-    refreshReadout();
-    draw();
+    state.best = 0.0;
+    addScan();
+    refreshAll();
   });
 
-  canvas.addEventListener("mousedown", (event) => {
-    state.draggingCanvas = true;
-    setCenterFromCanvas(event);
-  });
-  window.addEventListener("mouseup", () => {
-    state.draggingCanvas = false;
-  });
-  canvas.addEventListener("mousemove", (event) => {
-    if (state.draggingCanvas) {
-      setCenterFromCanvas(event);
-    }
+  canvas.addEventListener("mousedown", function (event) {
+    state.dragging = true;
+    var rect = canvas.getBoundingClientRect();
+    var localX = clamp(event.clientX - rect.left, 42, canvas.width - 42);
+    var t = (localX - 42) / (canvas.width - 84);
+    setCenter(domainMin + t * (domainMax - domainMin));
   });
 
-  window.addEventListener("keydown", (event) => {
+  window.addEventListener("mouseup", function () {
+    state.dragging = false;
+  });
+
+  canvas.addEventListener("mousemove", function (event) {
+    if (!state.dragging) return;
+    var rect = canvas.getBoundingClientRect();
+    var localX = clamp(event.clientX - rect.left, 42, canvas.width - 42);
+    var t = (localX - 42) / (canvas.width - 84);
+    setCenter(domainMin + t * (domainMax - domainMin));
+  });
+
+  window.addEventListener("keydown", function (event) {
     if (event.key === "ArrowLeft") {
-      state.center = clamp(state.center - 0.08, domainMin, domainMax);
-      centerSlider.value = state.center.toFixed(2);
-      addScan();
+      setCenter(state.center - 0.08);
     } else if (event.key === "ArrowRight") {
-      state.center = clamp(state.center + 0.08, domainMin, domainMax);
-      centerSlider.value = state.center.toFixed(2);
-      addScan();
+      setCenter(state.center + 0.08);
     } else if (event.key === "ArrowUp") {
-      state.epsilon = clamp(state.epsilon * 0.92, 0.05, 1.2);
-      epsilonSlider.value = state.epsilon.toFixed(2);
-      addScan();
+      setEpsilon(state.epsilon * 0.92);
     } else if (event.key === "ArrowDown") {
-      state.epsilon = clamp(state.epsilon * 1.08, 0.05, 1.2);
-      epsilonSlider.value = state.epsilon.toFixed(2);
-      addScan();
-    } else if (event.key.toLowerCase() === "r") {
+      setEpsilon(state.epsilon * 1.08);
+    } else if ((event.key || "").toLowerCase() === "r") {
       state.reveal = !state.reveal;
       revealBtn.textContent = state.reveal ? "Hide Source" : "Reveal Source";
-    } else if (event.key.toLowerCase() === "n") {
+      refreshAll();
+    } else if ((event.key || "").toLowerCase() === "n") {
       newLevel();
     }
-    refreshReadout();
-    draw();
   });
 
   addScan();
-  refreshReadout();
-  draw();
+  refreshAll();
 })();
