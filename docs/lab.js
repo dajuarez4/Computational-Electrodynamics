@@ -189,31 +189,45 @@
 
   function drawFieldArrows() {
     var step = state.arrowStep;
-    for (var py = rect.top + 22; py < rect.bottom - 22; py += step * 2.4) {
-      for (var px = rect.left + 22; px < rect.right - 22; px += step * 2.4) {
+    var spacing = step * 2.0;
+    var charges = effectiveCharges();
+    for (var py = rect.top + 22; py < rect.bottom - 22; py += spacing) {
+      for (var px = rect.left + 22; px < rect.right - 22; px += spacing) {
         var x = toWorldX(px);
         var y = toWorldY(py);
         if (state.grounded && y < 0) continue;
+
+        var tooClose = false;
+        for (var i = 0; i < charges.length; i += 1) {
+          if (distance(x, y, charges[i].x, charges[i].y) < 0.34) {
+            tooClose = true;
+            break;
+          }
+        }
+        if (tooClose) continue;
+
         var sample = fieldAndPotential(x, y);
         var mag = Math.sqrt(sample.ex * sample.ex + sample.ey * sample.ey);
-        if (mag < 0.02) continue;
+        if (mag < 0.004) continue;
         var ux = sample.ex / mag;
         var uy = sample.ey / mag;
-        var len = clamp(10 + mag * 6, 10, 24);
+        var scaledMag = Math.log(1 + 3.2 * mag);
+        var len = clamp(7 + scaledMag * 7.5, 7, 20);
+        var alpha = clamp(0.26 + scaledMag * 0.28, 0.24, 0.82);
         var x2 = px + ux * len;
         var y2 = py - uy * len;
-        ctx.strokeStyle = "rgba(239, 246, 252, 0.75)";
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = "rgba(239, 246, 252," + alpha.toFixed(3) + ")";
+        ctx.lineWidth = 1.05;
         ctx.beginPath();
         ctx.moveTo(px, py);
         ctx.lineTo(x2, y2);
         ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - ux * 5 - uy * 4, y2 + uy * 5 - ux * 4);
-        ctx.lineTo(x2 - ux * 5 + uy * 4, y2 + uy * 5 + ux * 4);
+        ctx.lineTo(x2 - ux * 4.6 - uy * 3.2, y2 + uy * 4.6 - ux * 3.2);
+        ctx.lineTo(x2 - ux * 4.6 + uy * 3.2, y2 + uy * 4.6 + ux * 3.2);
         ctx.closePath();
-        ctx.fillStyle = "rgba(239, 246, 252, 0.78)";
+        ctx.fillStyle = "rgba(239, 246, 252," + clamp(alpha + 0.05, 0.3, 0.9).toFixed(3) + ")";
         ctx.fill();
       }
     }
