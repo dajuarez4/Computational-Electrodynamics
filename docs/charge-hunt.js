@@ -56,13 +56,15 @@
   };
 
   function gaussianDelta(x, epsilon, center) {
-    return Math.exp(-(((x - center) / epsilon) ** 2)) / (Math.sqrt(Math.PI) * epsilon);
+    const scaled = (x - center) / epsilon;
+    return Math.exp(-Math.pow(scaled, 2)) / (Math.sqrt(Math.PI) * epsilon);
   }
 
   function chargeDensity(x, charges, sigma = 0.12) {
     let total = 0;
     for (const charge of charges) {
-      total += charge.strength * Math.exp(-(((x - charge.position) / sigma) ** 2)) / (Math.sqrt(Math.PI) * sigma);
+      const scaled = (x - charge.position) / sigma;
+      total += charge.strength * Math.exp(-Math.pow(scaled, 2)) / (Math.sqrt(Math.PI) * sigma);
     }
     return total;
   }
@@ -204,7 +206,8 @@
 
     ctx.beginPath();
     xs.forEach((x, i) => {
-      const kernelPreview = 1.12 * Math.exp(-((((x - state.center) / Math.max(state.epsilon, 0.05)) ** 2)));
+      const scaled = (x - state.center) / Math.max(state.epsilon, 0.05);
+      const kernelPreview = 1.12 * Math.exp(-Math.pow(scaled, 2));
       const px = xToCanvas(x, topRect);
       const py = yToCanvas(kernelPreview, topRect, -maxAbs, maxAbs);
       if (i === 0) ctx.moveTo(px, py);
