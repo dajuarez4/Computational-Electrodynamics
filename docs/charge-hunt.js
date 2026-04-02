@@ -210,7 +210,8 @@
     var response = responseFor(state.center, state.epsilon);
     var maxAbs = maxAbsProfile();
     var topRect = { left: 42, top: 30, width: canvas.width - 84, height: 390, right: canvas.width - 42, bottom: 420 };
-    var bottomRect = { left: 42, top: 520, width: canvas.width - 84, height: 220, right: canvas.width - 42, bottom: 740 };
+    var trailRect = { left: 42, top: 520, width: canvas.width - 84, height: 170, right: canvas.width - 42, bottom: 690 };
+    var meterRect = { left: 42, top: 760, width: canvas.width - 84, height: 110, right: canvas.width - 42, bottom: 870 };
     var detectorX = xToCanvas(state.center, topRect);
     var j;
 
@@ -221,7 +222,9 @@
     ctx.fillStyle = "#0d1822";
     roundedRect(topRect.left, topRect.top, topRect.width, topRect.height, 22);
     ctx.fill();
-    roundedRect(bottomRect.left, bottomRect.top, bottomRect.width, bottomRect.height, 22);
+    roundedRect(trailRect.left, trailRect.top, trailRect.width, trailRect.height, 22);
+    ctx.fill();
+    roundedRect(meterRect.left, meterRect.top, meterRect.width, meterRect.height, 22);
     ctx.fill();
 
     ctx.strokeStyle = "rgba(179,199,218,0.14)";
@@ -308,30 +311,30 @@
 
     ctx.fillStyle = "#edf5fb";
     ctx.font = "700 18px Georgia";
-    ctx.fillText("Detector response trail", bottomRect.left + 18, bottomRect.top + 30);
+    ctx.fillText("Detector response trail", trailRect.left + 18, trailRect.top + 30);
     ctx.font = "14px Georgia";
     ctx.fillStyle = "#a8bbcf";
-    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", bottomRect.left + 18, bottomRect.top + 56);
+    ctx.fillText("Each glow marks a scan. Brighter means stronger overlap.", trailRect.left + 18, trailRect.top + 56);
 
     for (j = 0; j < state.scans.length; j += 1) {
       var scan = state.scans[j];
-      var sx = xToCanvas(scan.center, bottomRect);
+      var sx = xToCanvas(scan.center, trailRect);
       var alpha = Math.min(0.95, 0.24 + scan.response * 1.2);
       ctx.fillStyle = "rgba(236,187,134," + alpha + ")";
       ctx.beginPath();
-      ctx.arc(sx, bottomRect.top + 118, 8 + scan.response * 20, 0, Math.PI * 2);
+      ctx.arc(sx, trailRect.top + 112, 8 + scan.response * 20, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.fillStyle = "#edf5fb";
     ctx.font = "16px Georgia";
-    ctx.fillText("Response meter", bottomRect.left + 18, bottomRect.bottom - 42);
+    ctx.fillText("Response meter", meterRect.left + 18, meterRect.top + 30);
 
     ctx.fillStyle = "rgba(255,255,255,0.08)";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 28, bottomRect.width - 36, 16, 8);
+    roundedRect(meterRect.left + 18, meterRect.top + 52, meterRect.width - 36, 18, 8);
     ctx.fill();
     ctx.fillStyle = "#f5c48e";
-    roundedRect(bottomRect.left + 18, bottomRect.bottom - 28, (bottomRect.width - 36) * Math.min(1, response / 0.8), 16, 8);
+    roundedRect(meterRect.left + 18, meterRect.top + 52, (meterRect.width - 36) * Math.min(1, response / 0.8), 18, 8);
     ctx.fill();
 
     drawHeatStrip();
