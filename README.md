@@ -97,6 +97,11 @@ The animation below shows the grounded-sphere method of images: as the external 
 
 ![Method of Images Grounded Sphere](./codes/plots/method_of_images_grounded_sphere.gif)
 
+### Yee FDTD Method
+A 2D TMz Yee-grid simulation of a Gaussian pulse scattering from a dielectric disk. [Open the notebook](./notebooks/Yee_FTD_method.ipynb).
+
+![Yee FDTD TMz Animation](./codes/plots/yee_fdtd_tmz.gif)
+
 ---
 
 ## Goal
