@@ -84,13 +84,9 @@ Each topic follows a structured workflow:
 
 The repository also includes interactive and static visualizations that build intuition for how the Dirac delta function behaves as a sampling device rather than as an ordinary spike.
 
-### Dirac Delta v2: Charge Hunt
+### Mini Electrodynamics Lab
 
-The charge-density plot shows a one-dimensional localized source profile with positive and negative contributions. The heatmap shows the detector response `|∫ ρ(x) δ_ε(x-a) dx|`, which becomes strongest when the sampling point is centered on a source and the kernel is sufficiently narrow.
-
-![Dirac Delta v2 Charge Density](./codes/plots/dirac_delta_v2_charge_density.png)
-
-![Dirac Delta v2 Heatmap](./codes/plots/dirac_delta_v2_charge_hunt_heatmap.png)
+A browser-based electrostatics playground with draggable charges, field arrows, a potential heatmap, grounded-plane mode, and a test particle. [Open the live lab](https://dajuarez4.github.io/Computational-Electrodynamics/lab.html).
 
 ### Method of Images
 The animation below shows the grounded-sphere method of images: as the external source moves, the image charge changes position and magnitude so that the sphere remains at zero potential.
