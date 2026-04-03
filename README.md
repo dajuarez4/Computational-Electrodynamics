@@ -88,6 +88,8 @@ The repository also includes interactive and static visualizations that build in
 
 A browser-based electrostatics playground with draggable charges, field arrows, a potential heatmap, grounded-plane mode, and a test particle. [Open the live lab](https://dajuarez4.github.io/Computational-Electrodynamics/lab.html).
 
+![Mini Electrodynamics Lab Demo](./docs/assets/mini_electrodynamics_lab_demo.gif)
+
 ### Method of Images
 The animation below shows the grounded-sphere method of images: as the external source moves, the image charge changes position and magnitude so that the sphere remains at zero potential.
 
