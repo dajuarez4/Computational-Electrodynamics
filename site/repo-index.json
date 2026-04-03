@@ -1,0 +1,1579 @@
+{
+  "context": "site",
+  "count": 105,
+  "entries": [
+    {
+      "title": "Home",
+      "path": "site/index.html",
+      "url": "./index.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Main landing page for the course website.",
+      "aliases": [
+        "home",
+        "html",
+        "landing page",
+        "main page",
+        "page",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 130
+    },
+    {
+      "title": "Notes",
+      "path": "site/notes.html",
+      "url": "./notes.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Study notes, chapter PDFs, and reference material.",
+      "aliases": [
+        "html",
+        "page",
+        "pdf notes",
+        "revision notes",
+        "study notes",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 126
+    },
+    {
+      "title": "Topics",
+      "path": "site/topics.html",
+      "url": "./topics.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Topic directory for notebooks, notes, formula sheets, and problems.",
+      "aliases": [
+        "course topics",
+        "html",
+        "page",
+        "topic directory",
+        "topic page",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 126
+    },
+    {
+      "title": "Visuals",
+      "path": "site/visuals.html",
+      "url": "./visuals.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Animations, plots, and visual intuition for the project.",
+      "aliases": [
+        "animations",
+        "figures",
+        "html",
+        "page",
+        "visuals",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 122
+    },
+    {
+      "title": "Method of Images Notes (Chapter 2)",
+      "path": "notes-diego/chapter-2/chapter_2_notes.pdf",
+      "url": "../notes-diego/chapter-2/chapter_2_notes.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Focused Chapter 2 notes used as the method-of-images note link on the site.",
+      "aliases": [
+        "boundary methods",
+        "chapter 2 notes",
+        "diego notes",
+        "method of images",
+        "method of images notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 100
+    },
+    {
+      "title": "Electrostatics Notes (Chapter 1)",
+      "path": "notes-diego/chapter-1/chapter_1_notes.pdf",
+      "url": "../notes-diego/chapter-1/chapter_1_notes.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Focused Chapter 1 notes used as the main electrostatics note link on the site.",
+      "aliases": [
+        "chapter 1 notes",
+        "diego notes",
+        "electrostatics notes",
+        "jackson electrostatics",
+        "pdf",
+        "survival notes"
+      ],
+      "openIn": "blank",
+      "priority": 96
+    },
+    {
+      "title": "Repository README",
+      "path": "README.md",
+      "url": "../README.md",
+      "kind": "markdown",
+      "group": "Repository",
+      "description": "Project overview and topic map.",
+      "aliases": [
+        "markdown",
+        "md",
+        "overview",
+        "readme",
+        "repository",
+        "repository guide"
+      ],
+      "openIn": "blank",
+      "priority": 92
+    },
+    {
+      "title": "Dirac Delta Notes",
+      "path": "notes/Dirac_Delta_notes.pdf",
+      "url": "../notes/Dirac_Delta_notes.pdf",
+      "kind": "pdf",
+      "group": "Repo Notes",
+      "description": "Repo Notes file in the repository.",
+      "aliases": [
+        "pdf",
+        "repo notes"
+      ],
+      "openIn": "blank",
+      "priority": 90
+    },
+    {
+      "title": "Poisson Equation Notes",
+      "path": "notes/Poisson_equation_notes.pdf",
+      "url": "../notes/Poisson_equation_notes.pdf",
+      "kind": "pdf",
+      "group": "Repo Notes",
+      "description": "Repo Notes file in the repository.",
+      "aliases": [
+        "pdf",
+        "repo notes"
+      ],
+      "openIn": "blank",
+      "priority": 90
+    },
+    {
+      "title": "Calculus Theorems",
+      "path": "notes-diego/calculus-theorems/calculus_theorems.pdf",
+      "url": "../notes-diego/calculus-theorems/calculus_theorems.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 1 Markdown Notes",
+      "path": "notes-diego/chapter-1/chapter-1.md",
+      "url": "../notes-diego/chapter-1/chapter-1.md",
+      "kind": "markdown",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 1 markdown",
+        "chapter 1 source",
+        "diego notes",
+        "markdown",
+        "md"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 3",
+      "path": "notes-diego/chapter-3/chapter-3.pdf",
+      "url": "../notes-diego/chapter-3/chapter-3.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 3 Notes",
+      "path": "notes-diego/chapter-3/chapter_3_notes.pdf",
+      "url": "../notes-diego/chapter-3/chapter_3_notes.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 3 notes",
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 4",
+      "path": "notes-diego/chapter-4/chapter-4.pdf",
+      "url": "../notes-diego/chapter-4/chapter-4.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 4 Notes",
+      "path": "notes-diego/chapter-4/chapter_4_notes.pdf",
+      "url": "../notes-diego/chapter-4/chapter_4_notes.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 4 notes",
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 5",
+      "path": "notes-diego/chapter-5/chapter-5.pdf",
+      "url": "../notes-diego/chapter-5/chapter-5.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Chapter 5 Notes",
+      "path": "notes-diego/chapter-5/chapter-5_notes.pdf",
+      "url": "../notes-diego/chapter-5/chapter-5_notes.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 5 notes",
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Grounded Sphere Animation",
+      "path": "codes/plots/method_of_images_grounded_sphere.gif",
+      "url": "../codes/plots/method_of_images_grounded_sphere.gif",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "animation",
+        "code",
+        "gif",
+        "grounded sphere gif",
+        "image",
+        "method of images gif"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Jackson Chapter 1 PDF",
+      "path": "notes-diego/chapter-1/chapter-1.pdf",
+      "url": "../notes-diego/chapter-1/chapter-1.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 1 pdf",
+        "diego notes",
+        "electrostatics chapter",
+        "jackson chapter 1",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Jackson Chapter 2 PDF",
+      "path": "notes-diego/chapter-2/chapter-2.pdf",
+      "url": "../notes-diego/chapter-2/chapter-2.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "chapter 2 pdf",
+        "diego notes",
+        "jackson chapter 2",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Mini Electrodynamics Lab Notes",
+      "path": "notes-diego/mini-electrodynamics-lab-notes.tex",
+      "url": "../notes-diego/mini-electrodynamics-lab-notes.tex",
+      "kind": "latex",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Theorems From Calculus",
+      "path": "notes-diego/calculus-theorems/theorems_from_calculus.ipynb",
+      "url": "../notes-diego/calculus-theorems/theorems_from_calculus.ipynb",
+      "kind": "notebook",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "ipynb",
+        "notebook"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Vector Formulas",
+      "path": "notes-diego/vector-formulas/Vector_formulas.pdf",
+      "url": "../notes-diego/vector-formulas/Vector_formulas.pdf",
+      "kind": "pdf",
+      "group": "Diego Notes",
+      "description": "Diego Notes file in the repository.",
+      "aliases": [
+        "diego notes",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 88
+    },
+    {
+      "title": "Dielectrics in Electrostatics",
+      "path": "notebooks/Dielectrics in electrostatics.ipynb",
+      "url": "../notebooks/Dielectrics%20in%20electrostatics.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Dirac Delta Functions",
+      "path": "notebooks/Dirac delta functions.ipynb",
+      "url": "../notebooks/Dirac%20delta%20functions.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Electromagnetic Radiation",
+      "path": "notebooks/Electromagnetic Radiation.ipynb",
+      "url": "../notebooks/Electromagnetic%20Radiation.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Green's Functions in Electrostatics",
+      "path": "notebooks/Green's functions in electrostatics.ipynb",
+      "url": "../notebooks/Green%27s%20functions%20in%20electrostatics.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Laplace's Equation",
+      "path": "notebooks/Laplace's equation.ipynb",
+      "url": "../notebooks/Laplace%27s%20equation.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Method of Images in Electrostatics",
+      "path": "notebooks/Method of images in electrostatics.ipynb",
+      "url": "../notebooks/Method%20of%20images%20in%20electrostatics.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Multipole Expansion in Electrostatics",
+      "path": "notebooks/Multipole expansion in electrostatics.ipynb",
+      "url": "../notebooks/Multipole%20expansion%20in%20electrostatics.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Poisson's Equation",
+      "path": "notebooks/Poisson's equation.ipynb",
+      "url": "../notebooks/Poisson%27s%20equation.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Notebooks file in the repository.",
+      "aliases": [
+        "ipynb",
+        "notebook",
+        "notebooks"
+      ],
+      "openIn": "blank",
+      "priority": 86
+    },
+    {
+      "title": "Dirac Delta Function Notes",
+      "path": "notes/dirac_delta_function_notes.tex",
+      "url": "../notes/dirac_delta_function_notes.tex",
+      "kind": "latex",
+      "group": "Repo Notes",
+      "description": "Repo Notes file in the repository.",
+      "aliases": [
+        "latex",
+        "repo notes",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 84
+    },
+    {
+      "title": "Poisson Equation Notes",
+      "path": "notes/poisson_equation_notes.tex",
+      "url": "../notes/poisson_equation_notes.tex",
+      "kind": "latex",
+      "group": "Repo Notes",
+      "description": "Repo Notes file in the repository.",
+      "aliases": [
+        "latex",
+        "repo notes",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 84
+    },
+    {
+      "title": "Dielectrics Problems",
+      "path": "problems/dielectrics_problems.pdf",
+      "url": "../problems/dielectrics_problems.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Dielectrics Test",
+      "path": "problems/dielectrics_test.tex",
+      "url": "../problems/dielectrics_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Dirac Delta Problems",
+      "path": "problems/Dirac_Delta_problems.pdf",
+      "url": "../problems/Dirac_Delta_problems.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Dirac Delta Test",
+      "path": "problems/dirac_delta_test.tex",
+      "url": "../problems/dirac_delta_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Electro Magnetic Radiation",
+      "path": "problems/electro_magnetic_radiation.pdf",
+      "url": "../problems/electro_magnetic_radiation.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Electromagnetic Radiation Test",
+      "path": "problems/electromagnetic_radiation_test.tex",
+      "url": "../problems/electromagnetic_radiation_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Green Functions",
+      "path": "problems/Green_functions.pdf",
+      "url": "../problems/Green_functions.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Greens Functions Test",
+      "path": "problems/greens_functions_test.tex",
+      "url": "../problems/greens_functions_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Laplace Equation",
+      "path": "problems/Laplace_equation.pdf",
+      "url": "../problems/Laplace_equation.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Laplace Equation Test",
+      "path": "problems/laplace_equation_test.tex",
+      "url": "../problems/laplace_equation_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Method of Images",
+      "path": "problems/method_of_images.pdf",
+      "url": "../problems/method_of_images.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Method of Images Test",
+      "path": "problems/method_of_images_test.tex",
+      "url": "../problems/method_of_images_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Multipole Expansion",
+      "path": "problems/multipole_expansion.pdf",
+      "url": "../problems/multipole_expansion.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Multipole Expansion Test",
+      "path": "problems/multipole_expansion_test.tex",
+      "url": "../problems/multipole_expansion_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Poisson Equation",
+      "path": "problems/Poisson_equation.pdf",
+      "url": "../problems/Poisson_equation.pdf",
+      "kind": "pdf",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "pdf",
+        "problem sets"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Poisson Equation Test",
+      "path": "problems/poisson_equation_test.tex",
+      "url": "../problems/poisson_equation_test.tex",
+      "kind": "latex",
+      "group": "Problem Sets",
+      "description": "Problem Sets file in the repository.",
+      "aliases": [
+        "latex",
+        "problem sets",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 80
+    },
+    {
+      "title": "Dielectrics Formula Sheet",
+      "path": "Formula Sheet/dielectrics_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/dielectrics_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Dielectrics Formula Sheet",
+      "path": "Formula Sheet/dielectrics_formula_sheet.tex",
+      "url": "../Formula%20Sheet/dielectrics_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Dirac Delta Formula Sheet",
+      "path": "Formula Sheet/dirac_delta_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/dirac_delta_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Dirac Delta Formula Sheet",
+      "path": "Formula Sheet/dirac_delta_formula_sheet.tex",
+      "url": "../Formula%20Sheet/dirac_delta_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Electromagnetic Radiation Formula Sheet",
+      "path": "Formula Sheet/electromagnetic_radiation_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Electromagnetic Radiation Formula Sheet",
+      "path": "Formula Sheet/electromagnetic_radiation_formula_sheet.tex",
+      "url": "../Formula%20Sheet/electromagnetic_radiation_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Greens Functions Formula Sheet",
+      "path": "Formula Sheet/greens_functions_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/greens_functions_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Greens Functions Formula Sheet",
+      "path": "Formula Sheet/greens_functions_formula_sheet.tex",
+      "url": "../Formula%20Sheet/greens_functions_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Laplace Formula Sheet",
+      "path": "Formula Sheet/laplace_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/laplace_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Laplace Formula Sheet",
+      "path": "Formula Sheet/laplace_formula_sheet.tex",
+      "url": "../Formula%20Sheet/laplace_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Method of Images Formula Sheet",
+      "path": "Formula Sheet/method_of_images_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/method_of_images_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Method of Images Formula Sheet",
+      "path": "Formula Sheet/method_of_images_formula_sheet.tex",
+      "url": "../Formula%20Sheet/method_of_images_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Multipole Formula Sheet",
+      "path": "Formula Sheet/multipole_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/multipole_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Multipole Formula Sheet",
+      "path": "Formula Sheet/multipole_formula_sheet.tex",
+      "url": "../Formula%20Sheet/multipole_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Poisson Formula Sheet",
+      "path": "Formula Sheet/poisson_formula_sheet.pdf",
+      "url": "../Formula%20Sheet/poisson_formula_sheet.pdf",
+      "kind": "pdf",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Poisson Formula Sheet",
+      "path": "Formula Sheet/poisson_formula_sheet.tex",
+      "url": "../Formula%20Sheet/poisson_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Formula Sheets",
+      "description": "Formula Sheets file in the repository.",
+      "aliases": [
+        "formula sheets",
+        "latex",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 78
+    },
+    {
+      "title": "Grounded Sphere Animation Script",
+      "path": "codes/generate_method_of_images_sphere_gif.py",
+      "url": "../codes/generate_method_of_images_sphere_gif.py",
+      "kind": "script",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "method of images script",
+        "py",
+        "script",
+        "sphere gif script"
+      ],
+      "openIn": "blank",
+      "priority": 72
+    },
+    {
+      "title": "Dirac Delta Game",
+      "path": "codes/dirac_delta_game.py",
+      "url": "../codes/dirac_delta_game.py",
+      "kind": "script",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "py",
+        "script"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Dirac Delta Game V2",
+      "path": "codes/dirac_delta_game_v2.py",
+      "url": "../codes/dirac_delta_game_v2.py",
+      "kind": "script",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "py",
+        "script"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Dirac Delta V2 Charge Density",
+      "path": "codes/plots/dirac_delta_v2_charge_density.png",
+      "url": "../codes/plots/dirac_delta_v2_charge_density.png",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "image",
+        "png"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Dirac Delta V2 Charge Hunt",
+      "path": "codes/plots/dirac_delta_v2_charge_hunt.png",
+      "url": "../codes/plots/dirac_delta_v2_charge_hunt.png",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "image",
+        "png"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Dirac Delta V2 Charge Hunt Heatmap",
+      "path": "codes/plots/dirac_delta_v2_charge_hunt_heatmap.png",
+      "url": "../codes/plots/dirac_delta_v2_charge_hunt_heatmap.png",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "image",
+        "png"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Dirac Delta V2 Sampling",
+      "path": "codes/plots/dirac_delta_v2_sampling.png",
+      "url": "../codes/plots/dirac_delta_v2_sampling.png",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "image",
+        "png"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Generate Dirac Delta V2 Plots",
+      "path": "codes/generate_dirac_delta_v2_plots.py",
+      "url": "../codes/generate_dirac_delta_v2_plots.py",
+      "kind": "script",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "py",
+        "script"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Method of Images Grounded Sphere Preview",
+      "path": "codes/plots/method_of_images_grounded_sphere_preview.png",
+      "url": "../codes/plots/method_of_images_grounded_sphere_preview.png",
+      "kind": "image",
+      "group": "Code",
+      "description": "Code file in the repository.",
+      "aliases": [
+        "code",
+        "image",
+        "png"
+      ],
+      "openIn": "blank",
+      "priority": 58
+    },
+    {
+      "title": "Classical Electrodynamics Jackson 3rd",
+      "path": "Classical_Electrodynamics_Jackson_3rd_.pdf",
+      "url": "../Classical_Electrodynamics_Jackson_3rd_.pdf",
+      "kind": "pdf",
+      "group": "Repository",
+      "description": "Repository file in the repository.",
+      "aliases": [
+        "pdf",
+        "repository"
+      ],
+      "openIn": "blank",
+      "priority": 40
+    },
+    {
+      "title": "File",
+      "path": "file.txt",
+      "url": "../file.txt",
+      "kind": "text",
+      "group": "Repository",
+      "description": "Repository file in the repository.",
+      "aliases": [
+        "repository",
+        "text",
+        "txt"
+      ],
+      "openIn": "blank",
+      "priority": 40
+    },
+    {
+      "title": "Generate Maxwell Index",
+      "path": "tools/generate_maxwell_index.py",
+      "url": "../tools/generate_maxwell_index.py",
+      "kind": "script",
+      "group": "Repository",
+      "description": "Repository file in the repository.",
+      "aliases": [
+        "py",
+        "repository",
+        "script"
+      ],
+      "openIn": "blank",
+      "priority": 40
+    },
+    {
+      "title": "LICENSE",
+      "path": "LICENSE",
+      "url": "../LICENSE",
+      "kind": "file",
+      "group": "Repository",
+      "description": "Repository file in the repository.",
+      "aliases": [
+        "file",
+        "repository"
+      ],
+      "openIn": "blank",
+      "priority": 40
+    },
+    {
+      "title": "Dielectrics Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/dielectrics_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/dielectrics_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Dielectrics Problems",
+      "path": "overleaf_uploads/problems_project/dielectrics_problems.pdf",
+      "url": "../overleaf_uploads/problems_project/dielectrics_problems.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Dielectrics Test",
+      "path": "overleaf_uploads/problems_project/dielectrics_test.tex",
+      "url": "../overleaf_uploads/problems_project/dielectrics_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Dirac Delta Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/dirac_delta_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/dirac_delta_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Dirac Delta Problems",
+      "path": "overleaf_uploads/problems_project/Dirac_Delta_problems.pdf",
+      "url": "../overleaf_uploads/problems_project/Dirac_Delta_problems.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Dirac Delta Test",
+      "path": "overleaf_uploads/problems_project/dirac_delta_test.tex",
+      "url": "../overleaf_uploads/problems_project/dirac_delta_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Electro Magnetic Radiation",
+      "path": "overleaf_uploads/problems_project/electro_magnetic_radiation.pdf",
+      "url": "../overleaf_uploads/problems_project/electro_magnetic_radiation.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Electromagnetic Radiation Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/electromagnetic_radiation_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/electromagnetic_radiation_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Electromagnetic Radiation Test",
+      "path": "overleaf_uploads/problems_project/electromagnetic_radiation_test.tex",
+      "url": "../overleaf_uploads/problems_project/electromagnetic_radiation_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Green Functions",
+      "path": "overleaf_uploads/problems_project/Green_functions.pdf",
+      "url": "../overleaf_uploads/problems_project/Green_functions.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Greens Functions Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/greens_functions_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/greens_functions_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Greens Functions Test",
+      "path": "overleaf_uploads/problems_project/greens_functions_test.tex",
+      "url": "../overleaf_uploads/problems_project/greens_functions_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Laplace Equation",
+      "path": "overleaf_uploads/problems_project/Laplace_equation.pdf",
+      "url": "../overleaf_uploads/problems_project/Laplace_equation.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Laplace Equation Test",
+      "path": "overleaf_uploads/problems_project/laplace_equation_test.tex",
+      "url": "../overleaf_uploads/problems_project/laplace_equation_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Laplace Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/laplace_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/laplace_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Method of Images",
+      "path": "overleaf_uploads/problems_project/method_of_images.pdf",
+      "url": "../overleaf_uploads/problems_project/method_of_images.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Method of Images Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/method_of_images_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/method_of_images_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Method of Images Test",
+      "path": "overleaf_uploads/problems_project/method_of_images_test.tex",
+      "url": "../overleaf_uploads/problems_project/method_of_images_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Multipole Expansion",
+      "path": "overleaf_uploads/problems_project/multipole_expansion.pdf",
+      "url": "../overleaf_uploads/problems_project/multipole_expansion.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Multipole Expansion Test",
+      "path": "overleaf_uploads/problems_project/multipole_expansion_test.tex",
+      "url": "../overleaf_uploads/problems_project/multipole_expansion_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Multipole Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/multipole_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/multipole_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Poisson Equation",
+      "path": "overleaf_uploads/problems_project/Poisson_equation.pdf",
+      "url": "../overleaf_uploads/problems_project/Poisson_equation.pdf",
+      "kind": "pdf",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "overleaf uploads",
+        "pdf"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Poisson Equation Test",
+      "path": "overleaf_uploads/problems_project/poisson_equation_test.tex",
+      "url": "../overleaf_uploads/problems_project/poisson_equation_test.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Poisson Formula Sheet",
+      "path": "overleaf_uploads/formula_sheets_project/poisson_formula_sheet.tex",
+      "url": "../overleaf_uploads/formula_sheets_project/poisson_formula_sheet.tex",
+      "kind": "latex",
+      "group": "Overleaf Uploads",
+      "description": "Overleaf Uploads file in the repository.",
+      "aliases": [
+        "latex",
+        "overleaf uploads",
+        "tex"
+      ],
+      "openIn": "blank",
+      "priority": 28
+    },
+    {
+      "title": "Maxwell",
+      "path": "site/maxwell.js",
+      "url": "./maxwell.js",
+      "kind": "script",
+      "group": "Website",
+      "description": "Internal script from the website.",
+      "aliases": [
+        "js",
+        "script",
+        "website"
+      ],
+      "openIn": "blank",
+      "priority": 24
+    },
+    {
+      "title": "Styles",
+      "path": "site/styles.css",
+      "url": "./styles.css",
+      "kind": "style",
+      "group": "Website",
+      "description": "Internal style from the website.",
+      "aliases": [
+        "css",
+        "style",
+        "website"
+      ],
+      "openIn": "blank",
+      "priority": 24
+    },
+    {
+      "title": "Cooming Soon",
+      "path": "Jackson-problems/Cooming_soon.md",
+      "url": "../Jackson-problems/Cooming_soon.md",
+      "kind": "markdown",
+      "group": "Jackson Problems",
+      "description": "Jackson Problems file in the repository.",
+      "aliases": [
+        "jackson problems",
+        "markdown",
+        "md"
+      ],
+      "openIn": "blank",
+      "priority": 20
+    }
+  ]
+}
