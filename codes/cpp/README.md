@@ -11,6 +11,10 @@ The Python visualization helper for the 2D solver is:
 
 - `codes/plot_yee_fdtd_cpp_output.py`
 
+There is also a notebook for the 3D output:
+
+- `notebooks/Visualizing 3D Yee FDTD Output.ipynb`
+
 ## Requirements
 
 You need:
@@ -23,7 +27,7 @@ You need:
 ## Folder Layout
 
 ```text
-cpp/
+codes/cpp/
   README.md
   yee_fdtd/
     Makefile
@@ -36,7 +40,7 @@ cpp/
 From the repository root:
 
 ```bash
-cd cpp/yee_fdtd
+cd codes/cpp/yee_fdtd
 make
 ```
 
@@ -54,13 +58,13 @@ The 2D solver matches the setup used in `notebooks/Yee_FTD_method.ipynb`.
 From the repository root:
 
 ```bash
-cd cpp/yee_fdtd
+cd codes/cpp/yee_fdtd
 make yee_fdtd_tmz
 ```
 
 ### Run the 2D Solver
 
-From `cpp/yee_fdtd`:
+From `codes/cpp/yee_fdtd`:
 
 ```bash
 ./yee_fdtd_tmz
@@ -68,17 +72,17 @@ From `cpp/yee_fdtd`:
 
 This writes output into:
 
-- `cpp/yee_fdtd/output/Ez_final.csv`
-- `cpp/yee_fdtd/output/eps_r.csv`
-- `cpp/yee_fdtd/output/Ez_final.vtk`
-- `cpp/yee_fdtd/output/eps_r.vtk`
-- `cpp/yee_fdtd/output/source_history.csv`
-- `cpp/yee_fdtd/output/run_summary.txt`
-- `cpp/yee_fdtd/output/vtk/frame_XXXX.vtk`
+- `codes/cpp/yee_fdtd/output/Ez_final.csv`
+- `codes/cpp/yee_fdtd/output/eps_r.csv`
+- `codes/cpp/yee_fdtd/output/Ez_final.vtk`
+- `codes/cpp/yee_fdtd/output/eps_r.vtk`
+- `codes/cpp/yee_fdtd/output/source_history.csv`
+- `codes/cpp/yee_fdtd/output/run_summary.txt`
+- `codes/cpp/yee_fdtd/output/vtk/frame_XXXX.vtk`
 
 ### Useful 2D Options
 
-Run from `cpp/yee_fdtd`:
+Run from `codes/cpp/yee_fdtd`:
 
 ```bash
 ./yee_fdtd_tmz --nsteps 500 --save-every 5 --output output --vtk 1
@@ -97,7 +101,7 @@ After running the solver, go back to the repository root:
 
 ```bash
 cd ../..
-python3 codes/plot_yee_fdtd_cpp_output.py --output-dir cpp/yee_fdtd/output
+python3 codes/plot_yee_fdtd_cpp_output.py --output-dir codes/cpp/yee_fdtd/output
 ```
 
 That script reads:
@@ -117,8 +121,8 @@ From the repository root:
 
 ```bash
 python3 codes/plot_yee_fdtd_cpp_output.py \
-  --output-dir cpp/yee_fdtd/output \
-  --save cpp/yee_fdtd/output/yee_fdtd_cpp_plot.png
+  --output-dir codes/cpp/yee_fdtd/output \
+  --save codes/cpp/yee_fdtd/output/yee_fdtd_cpp_plot.png
 ```
 
 ## 3D Solver
@@ -135,13 +139,13 @@ The 3D solver is the volumetric version of the same idea:
 From the repository root:
 
 ```bash
-cd cpp/yee_fdtd
+cd codes/cpp/yee_fdtd
 make yee_fdtd_3d
 ```
 
 ### Run the 3D Solver
 
-From `cpp/yee_fdtd`:
+From `codes/cpp/yee_fdtd`:
 
 ```bash
 ./yee_fdtd_3d
@@ -149,16 +153,16 @@ From `cpp/yee_fdtd`:
 
 Default output goes to:
 
-- `cpp/yee_fdtd/output_3d/E_final.vti`
-- `cpp/yee_fdtd/output_3d/material_map.vti`
-- `cpp/yee_fdtd/output_3d/frames/frame_XXXX.vti`
-- `cpp/yee_fdtd/output_3d/frames.pvd`
-- `cpp/yee_fdtd/output_3d/source_history.csv`
-- `cpp/yee_fdtd/output_3d/run_summary.txt`
+- `codes/cpp/yee_fdtd/output_3d/E_final.vti`
+- `codes/cpp/yee_fdtd/output_3d/material_map.vti`
+- `codes/cpp/yee_fdtd/output_3d/frames/frame_XXXX.vti`
+- `codes/cpp/yee_fdtd/output_3d/frames.pvd`
+- `codes/cpp/yee_fdtd/output_3d/source_history.csv`
+- `codes/cpp/yee_fdtd/output_3d/run_summary.txt`
 
 ### Useful 3D Options
 
-Run from `cpp/yee_fdtd`:
+Run from `codes/cpp/yee_fdtd`:
 
 ```bash
 ./yee_fdtd_3d --nx 48 --ny 48 --nz 48 --nsteps 160 --save-every 20 --output output_3d
@@ -176,7 +180,7 @@ After running the 3D solver:
 
 1. Open ParaView.
 2. Choose `File -> Open`.
-3. Open `cpp/yee_fdtd/output_3d/frames.pvd` for the time series.
+3. Open `codes/cpp/yee_fdtd/output_3d/frames.pvd` for the time series.
 4. Click `Apply`.
 5. In the coloring menu, choose `E_magnitude` to see field intensity.
 6. Use `Slice`, `Contour`, or `Volume Rendering` depending on what you want to inspect.
@@ -192,9 +196,9 @@ Useful files:
 If you want the cleanest comparison workflow:
 
 1. Run the 2D notebook version.
-2. Run `cpp/yee_fdtd/yee_fdtd_tmz`.
+2. Run `codes/cpp/yee_fdtd/yee_fdtd_tmz`.
 3. Plot the C++ 2D result with `codes/plot_yee_fdtd_cpp_output.py`.
-4. Run `cpp/yee_fdtd/yee_fdtd_3d`.
+4. Run `codes/cpp/yee_fdtd/yee_fdtd_3d`.
 5. Open `frames.pvd` in ParaView.
 
 ## Notes
@@ -202,3 +206,4 @@ If you want the cleanest comparison workflow:
 - Run the Python plotting script from the repository root so the relative paths stay simple.
 - The current Python helper is for the 2D solver.
 - The 3D workflow is intended for ParaView rather than Matplotlib.
+- If you want a pure-Python view of the 3D output, open `notebooks/Visualizing 3D Yee FDTD Output.ipynb`.

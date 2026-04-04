@@ -18,7 +18,7 @@ The 2D standalone C++ solver matches the setup used in [notebooks/Yee_FTD_method
 
 ## Build
 
-From [`cpp/yee_fdtd`](.) run:
+From [`codes/cpp/yee_fdtd`](.) run:
 
 ```bash
 make
@@ -60,7 +60,13 @@ The solver writes:
 From the repository root you can preview the final field with:
 
 ```bash
-python3 codes/plot_yee_fdtd_cpp_output.py --output-dir cpp/yee_fdtd/output
+python3 codes/plot_yee_fdtd_cpp_output.py --output-dir codes/cpp/yee_fdtd/output
+```
+
+If ParaView is inconvenient, you can also inspect the 3D results in:
+
+```bash
+notebooks/Visualizing 3D Yee FDTD Output.ipynb
 ```
 
 ## 3D Solver
