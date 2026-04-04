@@ -1,0 +1,411 @@
+\documentclass[hidelinks]{article}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage[unicode]{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{physics}
+\usepackage{mathtools}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,frame=single,breaklines=true,showstringspaces=false}
+
+\title{\textbf{Electrostatics --- Conductors and Gauss's Law}}
+\author{Diego Juarez}
+\date{April 2026}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Electrostatics}
+\fancyhead[R]{Jackson-style Solution}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+\hypersetup{bookmarksnumbered=true}
+\pagecolor{black}
+\color{white}
+\maketitle
+
+\begin{Large}
+\tableofcontents
+\end{Large}
+\pagebreak
+
+\section{Problem Statement}
+
+Use Gauss's theorem [and Eq.\ (1.21) if necessary] to prove the following:
+
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Any excess charge placed on a conductor must lie entirely on its surface. (A conductor by definition contains charges capable of moving freely under the action of applied electric fields.)
+
+    \item A closed, hollow conductor shields its interior from fields due to charges outside, but does not shield its exterior from the fields due to charges placed inside it.
+
+    \item The electric field at the surface of a conductor is normal to the surface and has a magnitude $\sigma/\varepsilon_0$, where $\sigma$ is the charge density per unit area on the surface.
+\end{enumerate}
+
+\section{Physical Principles to Be Used}
+
+Before proving each statement, let us state the key physical fact about a conductor in electrostatic equilibrium.
+
+A conductor contains free charges. If an electric field existed inside the conducting material, these charges would feel a force
+\[
+\mathbf{F} = q\mathbf{E},
+\]
+and they would move. But in electrostatic equilibrium no macroscopic motion of charge occurs. Therefore the electric field inside the conductor must vanish:
+
+\[
+\boxed{\mathbf{E}=0 \quad \text{inside the conducting material.}}
+\]
+
+This immediately implies that the potential is constant throughout the conductor. Indeed, using
+\[
+V(\mathbf{b})-V(\mathbf{a})=-\int_{\mathbf{a}}^{\mathbf{b}} \mathbf{E}\cdot d\mathbf{l},
+\]
+if $\mathbf{E}=0$ everywhere inside the conductor, then
+\[
+V(\mathbf{b})-V(\mathbf{a})=0.
+\]
+Hence
+\[
+\boxed{V=\text{constant throughout the conductor.}}
+\]
+
+These two facts will be the basis of all three proofs.
+
+\section{Part (a): Excess Charge Resides on the Surface}
+
+\subsection{Step 1: Choose a Gaussian Surface Inside the Conductor}
+
+Take any closed Gaussian surface $S$ lying entirely within the conducting material.
+
+Since the conductor is in electrostatic equilibrium,
+\[
+\mathbf{E}=0
+\quad \text{everywhere on } S.
+\]
+
+Therefore the flux through $S$ is
+\[
+\oint_S \mathbf{E}\cdot d\mathbf{a}=0.
+\]
+
+By Gauss's law,
+\[
+\oint_S \mathbf{E}\cdot d\mathbf{a}=\frac{Q_{\mathrm{enc}}}{\varepsilon_0},
+\]
+so
+\[
+\frac{Q_{\mathrm{enc}}}{\varepsilon_0}=0
+\qquad \Rightarrow \qquad
+Q_{\mathrm{enc}}=0.
+\]
+
+Thus any closed surface taken entirely inside the conductor encloses zero net charge.
+
+\subsection{Step 2: Eliminate the Possibility of Interior Excess Charge}
+
+Suppose, for contradiction, that some excess charge were located somewhere in the interior of the conductor. Then one could draw a Gaussian surface entirely inside the conductor that encloses that excess charge.
+
+But Gauss's law would then require
+\[
+Q_{\mathrm{enc}}\neq 0,
+\]
+which contradicts the result just obtained:
+\[
+Q_{\mathrm{enc}}=0.
+\]
+
+Therefore no excess charge can remain in the bulk of the conductor.
+
+\subsection{Step 3: Conclude Where the Charge Must Be}
+
+If excess charge is added to a conductor, and none of it can remain in the interior, then it must all reside on the surface. Hence
+
+\[
+\boxed{\text{Any excess charge placed on a conductor lies entirely on its surface.}}
+\]
+
+\subsection{Physical Interpretation}
+
+This is exactly what we expect physically. If charge were left in the interior, it would create an electric field within the conductor, and that field would push the mobile charges until they rearranged themselves. Equilibrium is achieved only when the interior field vanishes, which occurs when all excess charge has moved to the surface.
+
+\section{Part (b): Shielding Properties of a Closed Hollow Conductor}
+
+This statement has two parts, and they must be proved separately.
+
+\subsection{Part (b1): A Hollow Conductor Shields Its Interior from Outside Fields}
+
+Consider a closed hollow conductor with an empty cavity inside it. External charges may be present outside the conductor.
+
+We want to prove that the electric field inside the cavity is zero.
+
+\subsubsection{Step 1: The Conductor Is an Equipotential}
+
+Since
+\[
+\mathbf{E}=0
+\quad \text{inside the conducting material},
+\]
+the conductor is at one constant potential:
+\[
+V=V_0.
+\]
+
+In particular, the inner surface of the cavity is also at potential $V_0$.
+
+\subsubsection{Step 2: Equation Satisfied Inside the Empty Cavity}
+
+Since the cavity contains no charge,
+\[
+\rho=0
+\quad \text{inside the cavity.}
+\]
+
+Therefore the potential inside the cavity satisfies Laplace's equation:
+\[
+\nabla^2 V=0.
+\]
+
+The boundary condition on the cavity wall is
+\[
+V=V_0=\text{constant}.
+\]
+
+A constant function
+\[
+V(\mathbf{r})=V_0
+\]
+clearly satisfies Laplace's equation and the boundary condition. By uniqueness of the solution, this must be the only solution.
+
+Therefore inside the cavity,
+\[
+V=V_0,
+\]
+and hence
+\[
+\mathbf{E}=-\nabla V=0.
+\]
+
+So the cavity is field-free:
+\[
+\boxed{\mathbf{E}=0 \quad \text{inside the empty cavity.}}
+\]
+
+Thus the closed hollow conductor shields its interior from electric fields due to outside charges.
+
+\subsubsection{Physical Interpretation}
+
+Outside charges may induce a redistribution of charge on the \emph{outer} surface of the conductor, but the conductor rearranges these charges in such a way that the field inside the metal vanishes. Since the inner wall is then an equipotential boundary and the cavity is empty, no electric field survives inside the cavity.
+
+\subsection{Part (b2): A Hollow Conductor Does Not Shield the Exterior from Charges Inside}
+
+Now place a charge $q$ inside the cavity.
+
+We want to show that the electric field outside the conductor is, in general, not zero.
+
+\subsubsection{Step 1: Use a Gaussian Surface in the Metal}
+
+Draw a closed Gaussian surface lying entirely inside the conducting material and surrounding the cavity.
+
+Since this Gaussian surface lies in the conductor,
+\[
+\mathbf{E}=0
+\quad \text{everywhere on it.}
+\]
+
+Therefore
+\[
+\oint \mathbf{E}\cdot d\mathbf{a}=0.
+\]
+
+By Gauss's law,
+\[
+\frac{Q_{\mathrm{enc}}}{\varepsilon_0}=0
+\qquad \Rightarrow \qquad
+Q_{\mathrm{enc}}=0.
+\]
+
+The enclosed charge consists of:
+\begin{itemize}
+    \item the point charge $q$ inside the cavity,
+    \item the induced charge $Q_{\mathrm{inner}}$ on the inner surface.
+\end{itemize}
+
+Thus
+\[
+q+Q_{\mathrm{inner}}=0,
+\]
+so
+\[
+\boxed{Q_{\mathrm{inner}}=-q.}
+\]
+
+\subsubsection{Step 2: Determine the Charge on the Outer Surface}
+
+If the conductor as a whole was initially neutral, its total charge remains zero. Since the inner surface now carries charge $-q$, the outer surface must carry charge
+\[
+\boxed{Q_{\mathrm{outer}}=+q.}
+\]
+
+\subsubsection{Step 3: Infer the Exterior Field}
+
+A nonzero charge on the outer surface produces an electric field in the region outside the conductor. Therefore the outside world does feel the effect of the charge placed in the cavity.
+
+Hence the conductor does \emph{not} shield the exterior from charges inside.
+
+So we conclude:
+
+\[
+\boxed{\text{A closed hollow conductor shields its cavity from outside charges,}}
+\]
+but
+\[
+\boxed{\text{it does not shield the outside from charges placed inside the cavity.}}
+\]
+
+\subsubsection{Physical Interpretation}
+
+The conductor only enforces the condition that the field vanish inside the conducting material itself. To achieve that, it induces charges on its surfaces. If there is a charge in the cavity, the outer surface generally acquires charge too, and that outer charge produces an external field.
+
+\section{Part (c): Field at the Surface of a Conductor}
+
+We now prove two statements:
+
+\begin{enumerate}
+    \item the electric field at the surface is perpendicular to the surface;
+    \item its magnitude just outside is $\sigma/\varepsilon_0$.
+\end{enumerate}
+
+\subsection{Step 1: Show That the Tangential Component Must Vanish}
+
+Suppose there were a tangential component of the electric field at the conductor surface:
+\[
+\mathbf{E}_{\parallel}\neq 0.
+\]
+
+Then a charge on the surface would feel a tangential force
+\[
+\mathbf{F}_{\parallel}=q\mathbf{E}_{\parallel},
+\]
+so free charges would move along the surface.
+
+But in electrostatic equilibrium, charges are not moving. Therefore this is impossible. Hence
+\[
+\boxed{\mathbf{E}_{\parallel}=0.}
+\]
+
+Thus the electric field at the surface has no tangential part and must be purely normal to the surface:
+
+\[
+\boxed{\mathbf{E} \text{ is normal to the surface of a conductor.}}
+\]
+
+\subsection{Step 2: Construct a Pillbox Gaussian Surface}
+
+To find the magnitude of the normal field, consider a very small cylindrical Gaussian surface (a pillbox) centered on the conductor surface:
+
+\begin{itemize}
+    \item the top face lies just outside the conductor,
+    \item the bottom face lies just inside the conductor,
+    \item the curved side connects them.
+\end{itemize}
+
+Let each flat face have area $A$.
+
+\subsection{Step 3: Compute the Flux}
+
+Because the field is normal to the surface, it is approximately perpendicular to the top face. Also, inside the conductor,
+\[
+\mathbf{E}=0.
+\]
+
+Therefore:
+
+\paragraph{Flux through the bottom face:}
+Since it lies inside the conductor,
+\[
+\Phi_{\text{bottom}}=0.
+\]
+
+\paragraph{Flux through the side surface:}
+For an infinitesimally thin pillbox, the side contribution vanishes:
+\[
+\Phi_{\text{side}}=0.
+\]
+
+\paragraph{Flux through the top face:}
+If the field just outside has magnitude $E_{\perp}^{\text{out}}$, then
+\[
+\Phi_{\text{top}}=E_{\perp}^{\text{out}}A.
+\]
+
+So the total flux is
+\[
+\oint \mathbf{E}\cdot d\mathbf{a}=E_{\perp}^{\text{out}}A.
+\]
+
+\subsection{Step 4: Enclosed Charge}
+
+The pillbox encloses a small patch of surface charge. If the surface charge density is $\sigma$, then the enclosed charge is
+\[
+Q_{\mathrm{enc}}=\sigma A.
+\]
+
+Applying Gauss's law,
+\[
+E_{\perp}^{\text{out}}A=\frac{\sigma A}{\varepsilon_0}.
+\]
+
+Canceling $A$, we obtain
+\[
+E_{\perp}^{\text{out}}=\frac{\sigma}{\varepsilon_0}.
+\]
+
+Thus the magnitude of the electric field just outside the surface is
+\[
+\boxed{|\mathbf{E}|=\frac{\sigma}{\varepsilon_0}.}
+\]
+
+Since the field is normal to the surface, in vector form:
+\[
+\boxed{\mathbf{E}_{\text{outside}}=\frac{\sigma}{\varepsilon_0}\hat{\mathbf{n}},}
+\]
+where $\hat{\mathbf{n}}$ is the outward normal unit vector.
+
+\subsection{Physical Interpretation}
+
+The field inside the conductor is forced to zero by charge rearrangement. At the surface, the remaining field is entirely due to the surface charge layer. Any tangential component would make charges continue moving, so the only allowed equilibrium field is perpendicular to the surface.
+
+\section{Final Summary}
+
+We have proved the following results:
+
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Since $\mathbf{E}=0$ inside a conductor in electrostatic equilibrium, Gauss's law implies that any Gaussian surface lying entirely in the conductor encloses zero net charge. Therefore all excess charge resides on the surface:
+    \[
+    \boxed{\text{Excess charge on a conductor lies entirely on its surface.}}
+    \]
+
+    \item A closed hollow conductor is an equipotential. Hence an empty cavity inside it has constant potential and therefore zero electric field:
+    \[
+    \boxed{\text{The cavity is shielded from outside electric fields.}}
+    \]
+    However, if a charge is placed inside the cavity, induced charges appear on the inner and outer surfaces, and the outer surface produces an external field:
+    \[
+    \boxed{\text{The exterior is not shielded from charges inside.}}
+    \]
+
+    \item At the surface of a conductor, the tangential electric field must vanish, so the field is normal to the surface. A pillbox Gaussian surface then gives
+    \[
+    \boxed{\mathbf{E}=\frac{\sigma}{\varepsilon_0}\hat{\mathbf{n}}}
+    \]
+    just outside the conductor.
+\end{enumerate}
+
+\end{document}
