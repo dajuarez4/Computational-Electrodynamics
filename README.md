@@ -29,6 +29,7 @@ Each topic follows a structured workflow:
 ## Repository Structure
 
 - `notebooks/` — Theory, derivations, and computational explorations  
+- `cpp/` — Standalone solvers for larger numerical experiments and cross-language comparisons  
 - `problems/` — Topic-based problem sets in LaTeX and PDF  
 - `Formula Sheet/` — One-page quad-chart formula sheets in LaTeX and PDF  
 - `notes-diego/` — Personal study notes, chapter PDFs, and support materials  
@@ -50,6 +51,7 @@ Each topic follows a structured workflow:
 ## Tools & Technologies
 
 - Python (NumPy, SciPy, Matplotlib)
+- C++ (standalone FDTD solvers)
 - Jupyter Notebook
 - LaTeX (for mathematical derivations)
 
@@ -99,6 +101,12 @@ The animation below shows the grounded-sphere method of images: as the external 
 A 2D TMz Yee-grid simulation of a Gaussian pulse scattering from a dielectric disk. [Open the notebook](./notebooks/Yee_FTD_method.ipynb).
 
 ![Yee FDTD TMz Animation](./codes/plots/yee_fdtd_tmz.gif)
+
+### C++ Yee FDTD Solver
+A standalone 2D TMz Yee-grid solver that matches the notebook setup and writes CSV plus VTK output for direct comparison and later ParaView workflows. [Open the solver](./codes/cpp/yee_fdtd/yee_fdtd_tmz.cpp).
+
+### 3D Yee FDTD Solver
+A volumetric 3D Yee-grid solver with a dielectric sphere, Gaussian pulse source, and ParaView-ready `.vti` plus `.pvd` outputs. [Open the 3D solver](./codes/cpp/yee_fdtd/yee_fdtd_3d.cpp).
 
 ---
 
