@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D FFT Poisson Viewer | Computational Electrodynamics</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./index.html">Home</a>
+        </div>
+      </nav>
+      <div class="subhero-copy">
+        <p class="eyebrow">Numerical Electrostatics</p>
+        <h1>3D FFT Poisson Viewer</h1>
+        <p class="lede">
+          An interactive Plotly view of the periodic 3D Poisson solve. The orange and blue
+          surfaces mark positive and negative charge density, while the translucent surfaces
+          show the equipotential structure recovered by the Fourier-space solver.
+        </p>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="section">
+        <div class="dual-grid">
+          <article class="resource-panel emphasis">
+            <h3>What this page shows</h3>
+            <p>
+              This is the static electrostatics counterpart to the FDTD pages: a volumetric
+              solution of Poisson's equation in a periodic box, exported from C++ and rendered
+              directly in the browser.
+            </p>
+            <div class="stacked-links">
+              <a href="./fft_poisson_3d.html">Open standalone HTML viewer</a>
+              <a href="../notebooks/Visualizing%203D%20FFT%20Poisson%20Output.ipynb">Open visualization notebook</a>
+              <a href="../codes/cpp/fft_poisson/fft_poisson_3d.cpp">Open C++ solver</a>
+            </div>
+          </article>
+          <article class="resource-panel">
+            <h3>Why it matters</h3>
+            <p>
+              The solver diagonalizes the Laplacian in Fourier space instead of iterating a
+              relaxation scheme. That makes the static potential problem fast, clean, and ideal
+              for comparing numerical electrostatics with the time-dependent Yee solvers.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Embedded Viewer</p>
+          <h2>Interact with the 3D solution</h2>
+        </div>
+        <div class="embed-panel">
+          <iframe
+            class="embed-frame"
+            src="./fft_poisson_3d.html"
+            title="3D FFT Poisson interactive viewer"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Built from the notebook-exported Plotly HTML and served locally with the rest of the site.</p>
+    </footer>
+  </div>
+  <script src="./maxwell.js"></script>
+</body>
+</html>

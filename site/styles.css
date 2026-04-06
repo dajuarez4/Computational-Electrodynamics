@@ -379,6 +379,25 @@ code {
   color: var(--muted);
 }
 
+.embed-panel {
+  padding: 0.9rem;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(15, 94, 140, 0.05), rgba(255, 255, 255, 0)),
+    var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--soft-shadow);
+}
+
+.embed-frame {
+  display: block;
+  width: 100%;
+  min-height: 780px;
+  border: 0;
+  border-radius: 18px;
+  background: #eef3f8;
+}
+
 .maxwell-shell {
   position: fixed;
   left: 18px;

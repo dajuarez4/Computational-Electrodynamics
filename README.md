@@ -109,6 +109,9 @@ A standalone 2D TMz Yee-grid solver that matches the notebook setup and writes C
 ### 3D Yee FDTD Solver
 A volumetric 3D Yee-grid solver with a dielectric sphere, Gaussian pulse source, and ParaView-ready `.vti` plus `.pvd` outputs. [Open the 3D solver](./codes/cpp/yee_fdtd/yee_fdtd_3d.cpp).
 
+### 3D FFT Poisson Viewer
+An interactive 3D view of the periodic FFT Poisson solution, showing charge-density isosurfaces and equipotential structure exported from the C++ solver. [Open the live viewer](https://dajuarez4.github.io/Computational-Electrodynamics/fft-poisson.html), [Visualization notebook](./notebooks/Visualizing%203D%20FFT%20Poisson%20Output.ipynb), [C++ solver](./codes/cpp/fft_poisson/fft_poisson_3d.cpp).
+
 ---
 
 ## Goal

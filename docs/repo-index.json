@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 116,
+  "count": 117,
   "entries": [
     {
       "title": "Home",
@@ -110,6 +110,26 @@
       ],
       "openIn": "self",
       "priority": 122
+    },
+    {
+      "title": "3D FFT Poisson Viewer",
+      "path": "docs/fft-poisson.html",
+      "url": "./fft-poisson.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Interactive Plotly page for the 3D FFT Poisson electrostatics solution.",
+      "aliases": [
+        "fft poisson",
+        "3d poisson",
+        "poisson viewer",
+        "fft viewer",
+        "numerical methods",
+        "html",
+        "page",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 121
     },
     {
       "title": "Method of Images Notes (Chapter 2)",

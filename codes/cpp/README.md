@@ -6,6 +6,7 @@ Current solver set:
 
 - `yee_fdtd/yee_fdtd_tmz.cpp` for the 2D TMz Yee FDTD problem that matches the notebook
 - `yee_fdtd/yee_fdtd_3d.cpp` for the 3D Yee FDTD version with ParaView output
+- `fft_poisson/fft_poisson_3d.cpp` for a 3D periodic FFT Poisson solver with ParaView output
 
 The Python visualization helper for the 2D solver is:
 
@@ -29,6 +30,9 @@ You need:
 ```text
 codes/cpp/
   README.md
+  fft_poisson/
+    Makefile
+    fft_poisson_3d.cpp
   yee_fdtd/
     Makefile
     yee_fdtd_tmz.cpp
@@ -48,6 +52,13 @@ That builds:
 
 - `yee_fdtd_tmz`
 - `yee_fdtd_3d`
+
+From the repository root, build the 3D FFT Poisson solver with:
+
+```bash
+cd codes/cpp/fft_poisson
+make
+```
 
 ## 2D Solver
 
@@ -207,3 +218,29 @@ If you want the cleanest comparison workflow:
 - The current Python helper is for the 2D solver.
 - The 3D workflow is intended for ParaView rather than Matplotlib.
 - If you want a pure-Python view of the 3D output, open `notebooks/Visualizing 3D Yee FDTD Output.ipynb`.
+
+## 3D FFT Poisson Solver
+
+The FFT Poisson solver handles static electrostatics on a periodic 3D box rather than time-dependent wave propagation.
+
+From the repository root:
+
+```bash
+cd codes/cpp/fft_poisson
+make
+./fft_poisson_3d
+```
+
+Useful runs:
+
+```bash
+./fft_poisson_3d --case gaussians
+./fft_poisson_3d --case benchmark
+```
+
+It writes:
+
+- `codes/cpp/fft_poisson/output_3d/solution.vti`
+- `codes/cpp/fft_poisson/output_3d/run_summary.txt`
+
+Open `solution.vti` in ParaView and color by `phi`, `rho`, or `E_magnitude`.
