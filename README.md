@@ -31,6 +31,7 @@ Each topic follows a structured workflow:
 - `notebooks/` — Theory, derivations, and computational explorations  
 - `cpp/` — Standalone solvers for larger numerical experiments and cross-language comparisons  
 - `problems/` — Topic-based problem sets in LaTeX and PDF  
+- `Jackson-problems/` — Chapter-based Jackson problem and solution sets  
 - `Formula Sheet/` — One-page quad-chart formula sheets in LaTeX and PDF  
 - `notes-diego/` — Personal study notes, chapter PDFs, and support materials  
 
@@ -73,7 +74,7 @@ Each topic follows a structured workflow:
 
 - `Vector Formulas`: [Reference PDF](./notes-diego/vector-formulas/Vector_formulas.pdf)
 - `Calculus Theorems`: [PDF](./notes-diego/calculus-theorems/calculus_theorems.pdf), [Notebook](./notes-diego/calculus-theorems/theorems_from_calculus.ipynb)
-- `Chapter 1`: [Jackson-PDF](./notes-diego/chapter-1/chapter-1.pdf), [Notes PDF](./notes-diego/chapter-1/chapter_1_notes.pdf)
+- `Chapter 1`: [Jackson-PDF](./notes-diego/chapter-1/chapter-1.pdf), [Notes PDF](./notes-diego/chapter-1/chapter_1_notes.pdf), [Jackson Problems and Solutions](./Jackson-problems/chapter_1_jackson_problems.pdf)
 - `Chapter 2`: [Jackson-PDF](./notes-diego/chapter-2/chapter-2.pdf), [Notes PDF](./notes-diego/chapter-2/chapter_2_notes.pdf)
 - `Chapter 3`: [Jackson-PDF](./notes-diego/chapter-3/chapter-3.pdf), [Notes PDF](./notes-diego/chapter-3/chapter_3_notes.pdf)
 - `Chapter 4`: [Jackson-PDF](./notes-diego/chapter-4/chapter-4.pdf), [Notes PDF](./notes-diego/chapter-4/chapter_4_notes.pdf)

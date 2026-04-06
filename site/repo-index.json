@@ -1561,19 +1561,21 @@
       "priority": 24
     },
     {
-      "title": "Cooming Soon",
-      "path": "Jackson-problems/Cooming_soon.md",
-      "url": "../Jackson-problems/Cooming_soon.md",
-      "kind": "markdown",
+      "title": "Chapter 1 Jackson Problems and Solutions",
+      "path": "Jackson-problems/chapter_1_jackson_problems.pdf",
+      "url": "../Jackson-problems/chapter_1_jackson_problems.pdf",
+      "kind": "pdf",
       "group": "Jackson Problems",
-      "description": "Jackson Problems file in the repository.",
+      "description": "Chapter 1 Jackson problem and solution set in PDF form.",
       "aliases": [
         "jackson problems",
-        "markdown",
-        "md"
+        "chapter 1 problems",
+        "chapter 1 solutions",
+        "jackson chapter 1 problems",
+        "jackson chapter 1 solutions"
       ],
       "openIn": "blank",
-      "priority": 20
+      "priority": 22
     }
   ]
 }
