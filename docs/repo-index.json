@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 119,
+  "count": 120,
   "entries": [
     {
       "title": "Home",
@@ -515,6 +515,24 @@
         "cylinder poisson kernel",
         "separation of variables cylinder",
         "laplace cylinder"
+      ],
+      "openIn": "blank",
+      "priority": 87
+    },
+    {
+      "title": "Jackson 2.3 Line Charge Near Intersecting Grounded Planes",
+      "path": "notebooks/Jackson 2.3 Line Charge Near Intersecting Grounded Planes.ipynb",
+      "url": "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notebooks/Jackson%202.3%20Line%20Charge%20Near%20Intersecting%20Grounded%20Planes.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Jackson Chapter 2.3 notebook using the method of images for a line charge near intersecting grounded planes.",
+      "aliases": [
+        "jackson 2.3",
+        "chapter 2.3",
+        "intersecting grounded planes",
+        "line charge wedge",
+        "method of images wedge",
+        "grounded planes line charge"
       ],
       "openIn": "blank",
       "priority": 87
