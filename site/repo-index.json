@@ -1,6 +1,6 @@
 {
   "context": "site",
-  "count": 109,
+  "count": 110,
   "entries": [
     {
       "title": "Home",
@@ -496,6 +496,24 @@
         "line charge wedge",
         "method of images wedge",
         "grounded planes line charge"
+      ],
+      "openIn": "blank",
+      "priority": 87
+    },
+    {
+      "title": "Jackson 2.11 Line Charge Outside a Conducting Cylinder",
+      "path": "notebooks/Jackson 2.11 Line Charge Outside a Conducting Cylinder.ipynb",
+      "url": "../notebooks/Jackson%202.11%20Line%20Charge%20Outside%20a%20Conducting%20Cylinder.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Jackson Chapter 2.11 notebook for the image-line solution outside a conducting cylinder, including surface charge and force plots.",
+      "aliases": [
+        "jackson 2.11",
+        "chapter 2.11",
+        "conducting cylinder line charge",
+        "line charge outside cylinder",
+        "cylinder image charge",
+        "method of images cylinder"
       ],
       "openIn": "blank",
       "priority": 87
