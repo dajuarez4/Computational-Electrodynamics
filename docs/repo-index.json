@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 121,
+  "count": 123,
   "entries": [
     {
       "title": "Home",
@@ -551,6 +551,42 @@
         "line charge outside cylinder",
         "cylinder image charge",
         "method of images cylinder"
+      ],
+      "openIn": "blank",
+      "priority": 87
+    },
+    {
+      "title": "Jackson 2.23 Potential in a Conducting Cube",
+      "path": "notebooks/Jackson 2.23 Potential in a Conducting Cube.ipynb",
+      "url": "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notebooks/Jackson%202.23%20Potential%20in%20a%20Conducting%20Cube.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Jackson Chapter 2.23 notebook solving Laplace's equation in a conducting cube and analyzing the center potential and top-face surface charge.",
+      "aliases": [
+        "jackson 2.23",
+        "chapter 2.23",
+        "conducting cube",
+        "cube laplace",
+        "cube potential",
+        "surface charge top face"
+      ],
+      "openIn": "blank",
+      "priority": 87
+    },
+    {
+      "title": "Jackson 2.28 Average Potential at the Center of a Regular Polyhedron",
+      "path": "notebooks/Jackson 2.28 Average Potential at the Center of a Regular Polyhedron.ipynb",
+      "url": "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notebooks/Jackson%202.28%20Average%20Potential%20at%20the%20Center%20of%20a%20Regular%20Polyhedron.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Jackson Chapter 2.28 notebook proving that the center potential of a regular polyhedron equals the average of the face potentials, with a cube demonstration.",
+      "aliases": [
+        "jackson 2.28",
+        "chapter 2.28",
+        "regular polyhedron",
+        "average potential center",
+        "cube center average",
+        "harmonic mean faces"
       ],
       "openIn": "blank",
       "priority": 87
