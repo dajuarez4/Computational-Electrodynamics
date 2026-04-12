@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 117,
+  "count": 119,
   "entries": [
     {
       "title": "Home",
@@ -500,6 +500,24 @@
       ],
       "openIn": "blank",
       "priority": 86
+    },
+    {
+      "title": "Jackson 2.12 Poisson Integral for a Cylinder",
+      "path": "notebooks/Jackson 2.12 Poisson Integral for a Cylinder.ipynb",
+      "url": "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notebooks/Jackson%202.12%20Poisson%20Integral%20for%20a%20Cylinder.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Jackson Chapter 2.12 notebook deriving Poisson's integral for a circular cylinder and plotting interior and exterior solutions.",
+      "aliases": [
+        "jackson 2.12",
+        "chapter 2.12",
+        "poisson integral cylinder",
+        "cylinder poisson kernel",
+        "separation of variables cylinder",
+        "laplace cylinder"
+      ],
+      "openIn": "blank",
+      "priority": 87
     },
     {
       "title": "Method of Images in Electrostatics",
@@ -1764,6 +1782,23 @@
         "chapter 1 solutions",
         "jackson chapter 1 problems",
         "jackson chapter 1 solutions"
+      ],
+      "openIn": "blank",
+      "priority": 22
+    },
+    {
+      "title": "Chapter 2 Jackson Problems and Solutions",
+      "path": "Jackson-problems/chapter_2_jackson_problems.pdf",
+      "url": "https://raw.githubusercontent.com/dajuarez4/Computational-Electrodynamics/main/Jackson-problems/chapter_2_jackson_problems.pdf",
+      "kind": "pdf",
+      "group": "Jackson Problems",
+      "description": "Chapter 2 Jackson problem and solution set in PDF form.",
+      "aliases": [
+        "jackson problems",
+        "chapter 2 problems",
+        "chapter 2 solutions",
+        "jackson chapter 2 problems",
+        "jackson chapter 2 solutions"
       ],
       "openIn": "blank",
       "priority": 22
