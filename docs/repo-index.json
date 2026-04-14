@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 123,
+  "count": 124,
   "entries": [
     {
       "title": "Home",
@@ -470,6 +470,26 @@
       ],
       "openIn": "blank",
       "priority": 86
+    },
+    {
+      "title": "Rectangular Waveguide Modes",
+      "path": "notebooks/Rectangular Waveguide Modes.ipynb",
+      "url": "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notebooks/Rectangular%20Waveguide%20Modes.ipynb",
+      "kind": "notebook",
+      "group": "Notebooks",
+      "description": "Guided-wave notebook on rectangular waveguide TE/TM modes, cutoff, and dispersion.",
+      "aliases": [
+        "guided waves",
+        "ipynb",
+        "mode cutoff",
+        "notebook",
+        "notebooks",
+        "rectangular guide",
+        "waveguide",
+        "wr-90"
+      ],
+      "openIn": "blank",
+      "priority": 88
     },
     {
       "title": "Green's Functions in Electrostatics",

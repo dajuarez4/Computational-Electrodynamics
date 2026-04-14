@@ -46,6 +46,7 @@ Each topic follows a structured workflow:
 - Multipole expansion  
 - Dielectrics  
 - Electromagnetic radiation  
+- Rectangular waveguide modes  
 
 ---
 
@@ -67,6 +68,7 @@ Each topic follows a structured workflow:
 - `Multipole Expansion`: [Notebook](./notebooks/Multipole%20expansion%20in%20electrostatics.ipynb), [Problem Set](./problems/multipole_expansion.pdf), [Formula Sheet](./Formula%20Sheet/multipole_formula_sheet.pdf)
 - `Dielectrics`: [Notebook](./notebooks/Dielectrics%20in%20electrostatics.ipynb), [Problem Set](./problems/dielectrics_problems.pdf), [Formula Sheet](./Formula%20Sheet/dielectrics_formula_sheet.pdf)
 - `Electromagnetic Radiation`: [Notebook](./notebooks/Electromagnetic%20Radiation.ipynb), [Problem Set](./problems/electro_magnetic_radiation.pdf), [Formula Sheet](./Formula%20Sheet/electromagnetic_radiation_formula_sheet.pdf)
+- `Rectangular Waveguide Modes`: [Notebook](./notebooks/Rectangular%20Waveguide%20Modes.ipynb)
 
 ---
 
