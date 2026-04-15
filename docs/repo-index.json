@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 124,
+  "count": 125,
   "entries": [
     {
       "title": "Home",
@@ -85,6 +85,26 @@
       "aliases": [
         "charge hunt game",
         "dirac delta game",
+        "game",
+        "html",
+        "page",
+        "website"
+      ],
+      "openIn": "self",
+      "priority": 122
+    },
+    {
+      "title": "Flux Box",
+      "path": "docs/flux-box.html",
+      "url": "./flux-box.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Interactive Gauss's-law game with a draggable Gaussian surface.",
+      "aliases": [
+        "flux box",
+        "flux game",
+        "gauss game",
+        "gauss law",
         "game",
         "html",
         "page",
