@@ -34,6 +34,7 @@ Each topic follows a structured workflow:
 - `Jackson-problems/` — Chapter-based Jackson problem and solution sets  
 - `Formula Sheet/` — One-page quad-chart formula sheets in LaTeX and PDF  
 - `notes-diego/` — Personal study notes, chapter PDFs, and support materials  
+- `repo-mindmap.md` — High-level visual map of the repository  
 
 ---
 
