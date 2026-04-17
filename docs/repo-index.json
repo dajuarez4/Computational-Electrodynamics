@@ -1,6 +1,6 @@
 {
   "context": "docs",
-  "count": 125,
+  "count": 126,
   "entries": [
     {
       "title": "Home",
@@ -19,6 +19,26 @@
       ],
       "openIn": "self",
       "priority": 130
+    },
+    {
+      "title": "3D Repo Mindmap",
+      "path": "docs/repo-mindmap.html",
+      "url": "./repo-mindmap.html",
+      "kind": "page",
+      "group": "Website",
+      "description": "Interactive yarnball-style 3D map of the repository structure.",
+      "aliases": [
+        "3d map",
+        "3d repo map",
+        "html",
+        "mindmap",
+        "page",
+        "repo map",
+        "website",
+        "yarnball"
+      ],
+      "openIn": "self",
+      "priority": 128
     },
     {
       "title": "Notes",

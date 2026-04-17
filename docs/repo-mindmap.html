@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Repo Mindmap</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .map-subhero {
+      padding-bottom: 2.2rem;
+    }
+
+    .map-subhero .lede {
+      max-width: 860px;
+    }
+
+    .map-shell {
+      margin-top: -1.2rem;
+    }
+
+    .map-section {
+      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .map-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .map-stage {
+      position: relative;
+      min-height: 72vh;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(236, 187, 134, 0.18), transparent 18%),
+        radial-gradient(circle at 84% 22%, rgba(15, 94, 140, 0.22), transparent 22%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05), transparent 50%),
+        linear-gradient(160deg, #0a1926 0%, #0d2b40 45%, #09131c 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 22px 44px rgba(11, 32, 48, 0.24);
+    }
+
+    .map-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(transparent 0%, rgba(255, 255, 255, 0.04) 50%, transparent 100%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 62%);
+      pointer-events: none;
+    }
+
+    #repo-map-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+
+    #repo-map-canvas.is-dragging {
+      cursor: grabbing;
+    }
+
+    .map-overlay {
+      position: absolute;
+      inset: auto 1rem 1rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: end;
+      pointer-events: none;
+    }
+
+    .map-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .map-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.48rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #edf5fb;
+      font-size: 0.84rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .map-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .map-panel {
+      border-radius: 24px;
+      padding: 1rem;
+      background: rgba(255, 252, 247, 0.96);
+      border: 1px solid rgba(22, 32, 42, 0.07);
+      box-shadow: 0 18px 34px rgba(22, 32, 42, 0.08);
+      display: grid;
+      gap: 0.95rem;
+      align-content: start;
+    }
+
+    .map-panel h2 {
+      font-size: clamp(1.4rem, 2vw, 1.95rem);
+    }
+
+    .map-panel p,
+    .map-panel li {
+      color: var(--muted);
+    }
+
+    .map-meta {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .map-card {
+      padding: 0.9rem;
+      border-radius: 18px;
+      background: rgba(243, 237, 228, 0.56);
+      border: 1px solid rgba(22, 32, 42, 0.06);
+    }
+
+    .map-card .mini-label {
+      color: var(--accent-2);
+      margin-bottom: 0.35rem;
+    }
+
+    .map-card h3 {
+      margin: 0 0 0.25rem 0;
+    }
+
+    .map-path {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.84rem;
+      color: #3c4b5a;
+      word-break: break-word;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.8rem 1rem;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #f6fbff;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease;
+    }
+
+    .map-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      background: #0d6c9f;
+    }
+
+    .map-link[disabled] {
+      cursor: default;
+      opacity: 0.45;
+      transform: none;
+    }
+
+    .map-list {
+      margin: 0;
+      padding-left: 1rem;
+    }
+
+    .map-note {
+      font-size: 0.93rem;
+      color: #5c6875;
+    }
+
+    @media (max-width: 980px) {
+      .map-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .map-stage {
+        min-height: 62vh;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .map-stage {
+        min-height: 56vh;
+      }
+
+      .map-overlay {
+        position: static;
+        padding: 1rem;
+        display: block;
+      }
+
+      .map-overlay .map-chip-row {
+        margin-top: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="corner-counter" href="https://hitscounter.dev/history?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2Frepo-mindmap.html" aria-label="Website views">
+    <img alt="Website views" src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2Frepo-mindmap.html&label=Views&icon=eye&color=%23198754&message=&style=flat&tz=America%2FDenver">
+  </a>
+
+  <div class="site-shell">
+    <header class="subhero map-subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./repo-mindmap.html">3D Map</a>
+          <a href="./lab.html">Lab</a>
+          <a href="https://github.com/dajuarez4/Computational-Electrodynamics">GitHub</a>
+        </div>
+      </nav>
+
+      <div class="subhero-copy">
+        <p class="eyebrow">Interactive Structure View</p>
+        <h1>3D repo mindmap</h1>
+        <p class="lede">
+          A yarnball-style view of the project: theory, notebooks, problems, notes, code, site pages,
+          publishing exports, and textbook references connected as one rotating structure.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/dajuarez4/Computational-Electrodynamics">Open GitHub Repo</a>
+          <a class="button secondary" href="./topics.html">Open Topics</a>
+          <a class="button secondary" href="./repo-mindmap.html">Reset View</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-wrap map-shell">
+      <section class="section map-section">
+        <div class="map-layout">
+          <div class="map-stage">
+            <canvas id="repo-map-canvas" aria-label="Interactive 3D repository mindmap"></canvas>
+            <div class="map-overlay">
+              <div class="map-chip-row">
+                <span class="map-chip"><span class="map-dot" style="background:#ecbb86;"></span> Root and category hubs</span>
+                <span class="map-chip"><span class="map-dot" style="background:#7fc4ff;"></span> Study content</span>
+                <span class="map-chip"><span class="map-dot" style="background:#8ce2a8;"></span> Code and interactive pages</span>
+                <span class="map-chip"><span class="map-dot" style="background:#ffd98a;"></span> Reference / publishing</span>
+              </div>
+              <div class="map-chip-row">
+                <span class="map-chip">Drag to orbit</span>
+                <span class="map-chip">Scroll to zoom</span>
+                <span class="map-chip">Click a node to open it</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="map-panel">
+            <div class="section-heading" style="margin-bottom:0;">
+              <p class="eyebrow">Node Inspector</p>
+              <h2 id="map-node-title">Computational-Electrodynamics-</h2>
+            </div>
+
+            <div class="map-meta">
+              <div class="map-card">
+                <p class="mini-label">Section</p>
+                <h3 id="map-node-group">Repository Root</h3>
+                <p id="map-node-description">The full project graph. Hover or tap a node to inspect a specific part of the repo.</p>
+              </div>
+
+              <div class="map-card">
+                <p class="mini-label">Path</p>
+                <div id="map-node-path" class="map-path">/Users/dajuarez4/Computational-Electrodynamics-</div>
+              </div>
+
+              <div class="map-card">
+                <p class="mini-label">Connected To</p>
+                <ul id="map-node-links" class="map-list">
+                  <li>Theory and notebooks</li>
+                  <li>Problems and homework scaffolds</li>
+                  <li>Notes, formula sheets, and slides</li>
+                  <li>Code, website pages, and publishing exports</li>
+                </ul>
+              </div>
+            </div>
+
+            <button id="map-open-button" class="map-link" type="button">Open selected node</button>
+
+            <p class="map-note">
+              This is a curated map, not a raw file tree. It emphasizes the study workflow:
+              theory to notes to code to visualization to publishing.
+            </p>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./repo-mindmap.js"></script>
+</body>
+</html>
