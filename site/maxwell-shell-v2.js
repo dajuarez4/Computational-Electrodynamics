@@ -751,6 +751,7 @@
   }
 
   function inferKindFromPath(path) {
+    if (/\.pdf$/i.test(path)) return "pdf";
     if (/\.ipynb$/i.test(path)) return "notebook";
     if (/\.md$/i.test(path)) return "markdown";
     if (/\.tex$/i.test(path)) return "latex";

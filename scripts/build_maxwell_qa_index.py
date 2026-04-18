@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 from html import unescape
 from pathlib import Path
 from typing import Iterable, List
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PDF_EXTRACTOR = ROOT / "scripts" / "extract_pdf_text.swift"
 OUTPUTS = [
     ROOT / "docs" / "maxwell-qa-index.json",
     ROOT / "site" / "maxwell-qa-index.json",
@@ -29,6 +32,7 @@ TEXT_PATTERNS = [
     "Griffiths-problems/**/*.tex",
     "codes/cpp/**/README.md",
     "notebooks/*.ipynb",
+    "**/*.pdf",
 ]
 
 LATEX_SECTION_PATTERNS = [
@@ -132,6 +136,40 @@ def notebook_paragraphs(path: Path) -> List[str]:
     return paragraphs
 
 
+def has_source_sibling(path: Path) -> bool:
+    return any(path.with_suffix(ext).exists() for ext in [".tex", ".md", ".ipynb", ".html"])
+
+
+def should_index_pdf(path: Path) -> bool:
+    if path.name.startswith("."):
+        return False
+    if has_source_sibling(path):
+        return False
+    return True
+
+
+def extract_pdf_text(path: Path) -> str:
+    module_cache = Path("/tmp/swift-module-cache")
+    module_cache.mkdir(parents=True, exist_ok=True)
+
+    result = subprocess.run(
+        ["swift", "-module-cache-path", str(module_cache), str(PDF_EXTRACTOR), str(path)],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=os.environ.copy(),
+    )
+    return result.stdout
+
+
+def pdf_file_paragraphs(path: Path) -> List[str]:
+    try:
+        text = extract_pdf_text(path)
+    except subprocess.CalledProcessError:
+        return []
+    return split_paragraphs(text)
+
+
 def text_file_paragraphs(path: Path) -> List[str]:
     text = path.read_text(encoding="utf-8", errors="ignore")
     suffix = path.suffix.lower()
@@ -214,13 +252,19 @@ def gather_source_files() -> List[Path]:
     files = set()
     for pattern in TEXT_PATTERNS:
         files.update(ROOT.glob(pattern))
-    return sorted(path for path in files if path.is_file())
+    return sorted(
+        path
+        for path in files
+        if path.is_file() and (path.suffix.lower() != ".pdf" or should_index_pdf(path))
+    )
 
 
 def source_type(path: Path) -> str:
     suffix = path.suffix.lower()
     if suffix == ".ipynb":
         return "notebook"
+    if suffix == ".pdf":
+        return "pdf"
     if suffix == ".md":
         return "markdown"
     if suffix == ".tex":
@@ -239,6 +283,8 @@ def build_index() -> dict:
         relative_path = path.relative_to(ROOT).as_posix()
         if path.suffix.lower() == ".ipynb":
             paragraphs = notebook_paragraphs(path)
+        elif path.suffix.lower() == ".pdf":
+            paragraphs = pdf_file_paragraphs(path)
         else:
             paragraphs = text_file_paragraphs(path)
 
