@@ -12,6 +12,7 @@
     qaPromise: null,
     lastQuestion: "",
     lastResolvedQuestion: "",
+    lastScope: null,
     open: false,
     booted: false,
     history: [],
@@ -149,6 +150,89 @@
     why: 1,
     with: 1
   };
+
+  var QUESTION_SCOPES = [
+    {
+      label: "Notes",
+      aliases: ["notes", "note"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return path.indexOf("notes/") === 0 || path.indexOf("notes-diego/") === 0;
+      }
+    },
+    {
+      label: "Notebooks",
+      aliases: ["notebooks", "notebook"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return path.indexOf("notebooks/") === 0;
+      }
+    },
+    {
+      label: "Slides",
+      aliases: ["slides", "slide"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return path.indexOf("slides/") === 0;
+      }
+    },
+    {
+      label: "Formula Sheets",
+      aliases: ["formula sheets", "formula sheet", "formulas", "formula"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return path.indexOf("formula sheet/") === 0;
+      }
+    },
+    {
+      label: "Problems",
+      aliases: ["problems", "problem sets", "problem set"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return (
+          path.indexOf("problems/") === 0 ||
+          path.indexOf("overleaf_uploads/problems_project/") === 0 ||
+          path.indexOf("jackson-problems/") === 0 ||
+          path.indexOf("griffiths-problems/") === 0
+        );
+      }
+    },
+    {
+      label: "Griffiths",
+      aliases: ["griffiths"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return path === "griffiths_4ed.pdf" || path.indexOf("griffiths-problems/") === 0;
+      }
+    },
+    {
+      label: "Jackson",
+      aliases: ["jackson"],
+      test: function (path) {
+        path = String(path || "").toLowerCase();
+        return (
+          path === "classical_electrodynamics_jackson_3rd_.pdf" ||
+          path.indexOf("jackson-problems/") === 0 ||
+          path.indexOf("notes-diego/") === 0
+        );
+      }
+    }
+  ];
+
+  QUESTION_SCOPES.forEach(function (scope) {
+    scope._aliases = scope.aliases
+      .map(function (alias) {
+        var normalizedAlias = normalize(alias);
+        return {
+          raw: alias,
+          norm: normalizedAlias,
+          words: normalizedAlias ? normalizedAlias.split(" ").length : 0
+        };
+      })
+      .sort(function (a, b) {
+        return b.norm.length - a.norm.length;
+      });
+  });
 
   function uniqueStrings(values) {
     var seen = {};
@@ -611,6 +695,55 @@
     return String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
+  function canonicalizeQuestionText(text) {
+    return String(text || "")
+      .replace(/\bwhat'?s\b/gi, "what is")
+      .replace(/\bwhats\b/gi, "what is")
+      .replace(/\bhow'?s\b/gi, "how is");
+  }
+
+  function parseScopedQuestion(question) {
+    var raw = canonicalizeQuestionText(String(question || "").trim());
+    var normalizedQuestion = normalize(raw);
+    var remainderNorm;
+    var rawWords;
+    var matchScope = null;
+    var matchAlias = null;
+
+    if (normalizedQuestion.indexOf("from ") !== 0) {
+      return {
+        query: raw,
+        scope: null
+      };
+    }
+
+    remainderNorm = normalizedQuestion.slice(5).trim();
+    rawWords = raw.split(/\s+/);
+
+    QUESTION_SCOPES.some(function (scope) {
+      return scope._aliases.some(function (alias) {
+        if (remainderNorm === alias.norm || remainderNorm.indexOf(alias.norm + " ") === 0) {
+          matchScope = scope;
+          matchAlias = alias;
+          return true;
+        }
+        return false;
+      });
+    });
+
+    if (!matchScope || !matchAlias) {
+      return {
+        query: raw,
+        scope: null
+      };
+    }
+
+    return {
+      query: canonicalizeQuestionText(rawWords.slice(1 + matchAlias.words).join(" ").trim()),
+      scope: matchScope
+    };
+  }
+
   function isDefinitionQuestionNormalized(normalizedQuestion) {
     return /^(what is|define|explain)\b/.test(normalizedQuestion);
   }
@@ -752,7 +885,7 @@
     return score;
   }
 
-  function retrieveQaMatches(question, limit) {
+  function retrieveQaMatches(question, limit, scope) {
     var normalizedQuestion = normalize(question);
     var questionTokens = tokenizeQuestion(question);
 
@@ -760,6 +893,7 @@
 
     return state.qaChunks
       .map(function (chunk) {
+        if (scope && !scope.test(chunk.path)) return null;
         var score = scoreQaChunk(chunk, normalizedQuestion, questionTokens);
         if (!score) return null;
         chunk._qaScore = score;
@@ -884,25 +1018,41 @@
   }
 
   function answerQuestion(question) {
-    var resolvedQuestion = resolveQuestionWithContext(question);
+    var parsed = parseScopedQuestion(question);
+    var baseQuestion = parsed.query;
+    var followUp = isFollowUpQuestion(normalize(baseQuestion));
+    var effectiveScope = parsed.scope || (followUp ? state.lastScope : null);
+    var resolvedQuestion = resolveQuestionWithContext(baseQuestion);
+
+    if (!baseQuestion) {
+      appendWarning("Add a question after the source filter.");
+      return;
+    }
 
     loadQaIndex()
       .then(function () {
-        var matches = retrieveQaMatches(resolvedQuestion, 5);
+        var matches = retrieveQaMatches(resolvedQuestion, 5, effectiveScope);
         var lines;
         var sources;
 
         if (!matches.length) {
-          appendWarning("No grounded local answer for \"" + question + "\".");
+          if (effectiveScope) {
+            appendWarning('No grounded local answer in ' + effectiveScope.label + ' for "' + baseQuestion + '".');
+          } else {
+            appendWarning('No grounded local answer for "' + baseQuestion + '".');
+          }
           appendSystem("Try a narrower question or use find <topic>.");
           return;
         }
 
-        lines = selectAnswerLines(matches, question);
+        lines = selectAnswerLines(matches, baseQuestion);
         sources = sourceEntriesFromMatches(matches);
 
-        if (resolvedQuestion !== question) {
+        if (resolvedQuestion !== baseQuestion) {
           appendSystem('Using context from "' + state.lastQuestion + '".');
+        }
+        if (effectiveScope) {
+          appendSystem("Source filter: " + effectiveScope.label + ".");
         }
 
         appendSystem("Local answer from your repo:");
@@ -910,14 +1060,17 @@
           appendSystem("  " + line);
         });
 
-        state.lastQuestion = question;
+        state.lastQuestion = baseQuestion;
         state.lastResolvedQuestion = resolvedQuestion;
+        state.lastScope = effectiveScope;
 
         if (sources.length) {
           showResults(
-            "Sources for \"" + question + "\".",
+            'Sources for "' + baseQuestion + '".',
             sources,
-            "Grounded in local notes, notebooks, slides, and repo text."
+            effectiveScope
+              ? "Grounded in local " + effectiveScope.label.toLowerCase() + " sources."
+              : "Grounded in local notes, notebooks, slides, and repo text."
           );
         }
       })
@@ -948,6 +1101,7 @@
   function clearContext() {
     state.lastQuestion = "";
     state.lastResolvedQuestion = "";
+    state.lastScope = null;
     appendSystem("Question context cleared.");
   }
 
@@ -1022,7 +1176,7 @@
       normalized === "que puedes hacer"
     ) {
       appendSystem("I can answer from local repo sources, list pages, notes, notebooks, formulas, scripts, search the repo, and open matches.");
-      appendSystem("Try: ask what is the method of images, then ask and when does it work?");
+      appendSystem("Try: ask what is the method of images, from notes what is Poisson's equation, or from jackson boundary conditions.");
       return true;
     }
 
@@ -1106,6 +1260,7 @@
       "hello | hi | hey | hola",
       "help",
       "ask <question>",
+      "from <source> <question>",
       "context | clear context",
       "pages | notes | notebooks | problems | formula | scripts",
       "find <query>",
@@ -1128,7 +1283,7 @@
     } else {
       appendSystem("Repository index still loading...");
     }
-    appendSystem("Try: ask what is the method of images, pages, notes, open lab");
+    appendSystem("Try: ask what is the method of images, from notes what is Poisson's equation, open lab");
   }
 
   function executeCommand(rawValue, fromShortcut) {
@@ -1149,6 +1304,11 @@
 
     if (askMatch) {
       answerQuestion(askMatch[2].trim());
+      return;
+    }
+
+    if (/^from\s+/i.test(raw)) {
+      answerQuestion(raw);
       return;
     }
 
