@@ -174,29 +174,18 @@
     "  </header>",
     '  <div class="maxwell-body">',
     '    <aside class="maxwell-sidecar">',
-    '      <div class="maxwell-sidecar__hero">',
-    '        <div class="maxwell-sidecar__eyebrow">Navigator</div>',
-    '        <h3 class="maxwell-sidecar__title">Search when you know the file. Use topic, study, and review when you need direction.</h3>',
-    '        <p class="maxwell-sidecar__text">The index stays static, but Maxwell now organizes it into useful paths through the repo.</p>',
+    '      <div class="maxwell-sidecar__row">',
+    '        <pre class="maxwell-ascii">   /-\\\\\n  / o \\\\\n /| | |\\\\\n  | | |\n /_/_\\\\_\\\\\n Maxwell</pre>',
+    '        <div class="maxwell-sidecar__hero">',
+    '          <div class="maxwell-sidecar__eyebrow">Quick Paths</div>',
+    '          <h3 class="maxwell-sidecar__title">Topics, notes, visuals, or search.</h3>',
+    "        </div>",
     "      </div>",
     '      <div class="maxwell-shortcuts">',
     '        <button class="maxwell-chip" type="button" data-command="help">help</button>',
     '        <button class="maxwell-chip" type="button" data-command="topics">topics</button>',
-    '        <button class="maxwell-chip" type="button" data-command="study electrostatics">study electrostatics</button>',
-    '        <button class="maxwell-chip" type="button" data-command="study method of images">study images</button>',
-    '        <button class="maxwell-chip" type="button" data-command="review poisson">review poisson</button>',
+    '        <button class="maxwell-chip" type="button" data-command="notes">notes</button>',
     '        <button class="maxwell-chip" type="button" data-command="visuals">visuals</button>',
-    '        <button class="maxwell-chip" type="button" data-command="recent">recent</button>',
-    '        <button class="maxwell-chip" type="button" data-command="pin">pin</button>',
-    "      </div>",
-    '      <div class="maxwell-topic-pulse"></div>',
-    '      <div class="maxwell-memory-panel">',
-    '        <div class="maxwell-memory-panel__label">Pinned</div>',
-    '        <div class="maxwell-memory" data-memory="pins"></div>',
-    "      </div>",
-    '      <div class="maxwell-memory-panel">',
-    '        <div class="maxwell-memory-panel__label">Recent</div>',
-    '        <div class="maxwell-memory" data-memory="recent"></div>',
     "      </div>",
     "    </aside>",
     '    <div class="maxwell-console">',
@@ -560,7 +549,7 @@
       var emptyBody = document.createElement("p");
       emptyBody.className = "maxwell-preview__description";
       emptyBody.textContent =
-        "Try topic electrostatics, study method of images, review poisson, or hover a search result to inspect it here before opening it.";
+        "Try topics, notes, visuals, or a direct search. Maxwell will keep the next step simple.";
 
       empty.appendChild(emptyTitle);
       empty.appendChild(emptyBody);
@@ -569,9 +558,6 @@
     }
 
     var topic = getTopic(entry._primaryTopic || entry._topics[0]);
-    var related = getRelatedEntries(entry, 3);
-    var pinned = state.pinnedPaths.indexOf(entry.path) !== -1;
-
     previewStatus.textContent = sourceLabel || "Preview";
     previewContent.innerHTML = "";
 
@@ -606,29 +592,9 @@
     description.className = "maxwell-preview__description";
     description.textContent = entry._previewDescription;
 
-    var facts = document.createElement("div");
-    facts.className = "maxwell-preview__facts";
-
     var pathLine = document.createElement("div");
-    pathLine.className = "maxwell-preview__fact";
-    pathLine.innerHTML = '<span class="maxwell-preview__fact-label">Path</span><span class="maxwell-preview__fact-value"></span>';
-    pathLine.querySelector(".maxwell-preview__fact-value").textContent = entry.path;
-    facts.appendChild(pathLine);
-
-    var useLine = document.createElement("div");
-    useLine.className = "maxwell-preview__fact";
-    useLine.innerHTML = '<span class="maxwell-preview__fact-label">Best for</span><span class="maxwell-preview__fact-value"></span>';
-    useLine.querySelector(".maxwell-preview__fact-value").textContent = bestUse(entry);
-    facts.appendChild(useLine);
-
-    if (topic) {
-      var modeLine = document.createElement("div");
-      modeLine.className = "maxwell-preview__fact";
-      modeLine.innerHTML = '<span class="maxwell-preview__fact-label">Study path</span><span class="maxwell-preview__fact-value"></span>';
-      modeLine.querySelector(".maxwell-preview__fact-value").textContent =
-        "study " + topic.label.toLowerCase() + " or review " + topic.label.toLowerCase();
-      facts.appendChild(modeLine);
-    }
+    pathLine.className = "maxwell-preview__path";
+    pathLine.textContent = entry.path;
 
     var actions = document.createElement("div");
     actions.className = "maxwell-preview__actions";
@@ -640,13 +606,6 @@
     openButton.textContent = "Open";
     actions.appendChild(openButton);
 
-    var pinButton = document.createElement("button");
-    pinButton.type = "button";
-    pinButton.className = "maxwell-action maxwell-action--soft";
-    pinButton.setAttribute("data-preview-pin", entry.path);
-    pinButton.textContent = pinned ? "Unpin" : "Pin";
-    actions.appendChild(pinButton);
-
     if (topic) {
       var studyButton = document.createElement("button");
       studyButton.type = "button";
@@ -654,45 +613,13 @@
       studyButton.setAttribute("data-command-run", "study " + topic.label.toLowerCase());
       studyButton.textContent = "Study";
       actions.appendChild(studyButton);
-
-      var reviewButton = document.createElement("button");
-      reviewButton.type = "button";
-      reviewButton.className = "maxwell-action maxwell-action--soft";
-      reviewButton.setAttribute("data-command-run", "review " + topic.label.toLowerCase());
-      reviewButton.textContent = "Review";
-      actions.appendChild(reviewButton);
     }
 
     card.appendChild(title);
     card.appendChild(meta);
     card.appendChild(description);
-    card.appendChild(facts);
+    card.appendChild(pathLine);
     card.appendChild(actions);
-
-    if (related.length) {
-      var relatedBlock = document.createElement("div");
-      relatedBlock.className = "maxwell-preview__related";
-
-      var relatedLabel = document.createElement("div");
-      relatedLabel.className = "maxwell-memory-panel__label";
-      relatedLabel.textContent = "Nearby resources";
-      relatedBlock.appendChild(relatedLabel);
-
-      var relatedList = document.createElement("div");
-      relatedList.className = "maxwell-preview__related-list";
-
-      related.forEach(function (candidate) {
-        var relatedButton = document.createElement("button");
-        relatedButton.type = "button";
-        relatedButton.className = "maxwell-memory-item";
-        relatedButton.setAttribute("data-preview-path", candidate.path);
-        relatedButton.textContent = candidate.title;
-        relatedList.appendChild(relatedButton);
-      });
-
-      relatedBlock.appendChild(relatedList);
-      card.appendChild(relatedBlock);
-    }
 
     previewContent.appendChild(card);
   }
