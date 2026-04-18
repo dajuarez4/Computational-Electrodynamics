@@ -10,6 +10,8 @@
     qaChunks: [],
     qaReady: false,
     qaPromise: null,
+    lastQuestion: "",
+    lastResolvedQuestion: "",
     open: false,
     booted: false,
     history: [],
@@ -86,6 +88,9 @@
     "scripts",
     "clear",
     "close",
+    "context",
+    "reset context",
+    "clear context",
     "exit",
     "open",
     "go",
@@ -803,9 +808,11 @@
   }
 
   function answerQuestion(question) {
+    var resolvedQuestion = resolveQuestionWithContext(question);
+
     loadQaIndex()
       .then(function () {
-        var matches = retrieveQaMatches(question, 5);
+        var matches = retrieveQaMatches(resolvedQuestion, 5);
         var lines;
         var sources;
 
@@ -818,10 +825,17 @@
         lines = selectAnswerLines(matches, question);
         sources = sourceEntriesFromMatches(matches);
 
+        if (resolvedQuestion !== question) {
+          appendSystem('Using context from "' + state.lastQuestion + '".');
+        }
+
         appendSystem("Local answer from your repo:");
         lines.forEach(function (line) {
           appendSystem("  " + line);
         });
+
+        state.lastQuestion = question;
+        state.lastResolvedQuestion = resolvedQuestion;
 
         if (sources.length) {
           showResults(
@@ -834,6 +848,31 @@
       .catch(function () {
         appendWarning("Local retrieval is unavailable right now.");
       });
+  }
+
+  function isFollowUpQuestion(normalizedQuestion) {
+    return /^(and|also|what about|how about|why|when|where|compare|same for|same with|does that|does it|can it|can you expand|go deeper|more on)\b/.test(normalizedQuestion);
+  }
+
+  function resolveQuestionWithContext(question) {
+    var normalizedQuestion = normalize(question);
+    if (!state.lastResolvedQuestion) return question;
+    if (!isFollowUpQuestion(normalizedQuestion)) return question;
+    return state.lastResolvedQuestion + " " + question;
+  }
+
+  function showContext() {
+    if (!state.lastQuestion) {
+      appendSystem("No active question context.");
+      return;
+    }
+    appendSystem('Current context: "' + state.lastQuestion + '"');
+  }
+
+  function clearContext() {
+    state.lastQuestion = "";
+    state.lastResolvedQuestion = "";
+    appendSystem("Question context cleared.");
   }
 
   function startsWithAny(normalized, candidates) {
@@ -906,8 +945,8 @@
       normalized === "what do you do" ||
       normalized === "que puedes hacer"
     ) {
-      appendSystem("I can list pages, notes, notebooks, formulas, scripts, search the repo, and open matches.");
-      appendSystem("Try: help, pages, notes, notebooks, find method of images, or open lab.");
+      appendSystem("I can answer from local repo sources, list pages, notes, notebooks, formulas, scripts, search the repo, and open matches.");
+      appendSystem("Try: ask what is the method of images, then ask and when does it work?");
       return true;
     }
 
@@ -991,6 +1030,7 @@
       "hello | hi | hey | hola",
       "help",
       "ask <question>",
+      "context | clear context",
       "pages | notes | notebooks | problems | formula | scripts",
       "find <query>",
       "open <query>",
@@ -1050,6 +1090,16 @@
 
     if (normalized === "clear") {
       clearConsole();
+      return;
+    }
+
+    if (normalized === "context") {
+      showContext();
+      return;
+    }
+
+    if (normalized === "clear context" || normalized === "reset context") {
+      clearContext();
       return;
     }
 
