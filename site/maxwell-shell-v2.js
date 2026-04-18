@@ -73,6 +73,123 @@
       .trim();
   }
 
+  var COMMAND_CANONICAL = [
+    "help",
+    "pages",
+    "notes",
+    "notebooks",
+    "problems",
+    "formula",
+    "scripts",
+    "clear",
+    "close",
+    "exit",
+    "open",
+    "go",
+    "read",
+    "find",
+    "search",
+    "list"
+  ];
+
+  var COMMAND_REWRITES = {
+    page: "pages",
+    note: "notes",
+    notebook: "notebooks",
+    problem: "problems",
+    problemset: "problems",
+    formulae: "formula",
+    formulas: "formula",
+    script: "scripts"
+  };
+
+  function uniqueStrings(values) {
+    var seen = {};
+    return values.filter(function (value) {
+      if (!value || seen[value]) return false;
+      seen[value] = true;
+      return true;
+    });
+  }
+
+  function allowedDistance(value) {
+    var length = String(value || "").length;
+    if (length <= 4) return 1;
+    if (length <= 8) return 2;
+    if (length <= 14) return 3;
+    return 4;
+  }
+
+  function editDistance(a, b, maxDistance) {
+    if (a === b) return 0;
+
+    var aLength = a.length;
+    var bLength = b.length;
+    var limit = typeof maxDistance === "number" ? maxDistance : Infinity;
+    var previous;
+    var current;
+    var rowMin;
+    var i;
+    var j;
+    var cost;
+
+    if (Math.abs(aLength - bLength) > limit) return limit + 1;
+
+    previous = [];
+    for (j = 0; j <= bLength; j += 1) previous[j] = j;
+
+    for (i = 1; i <= aLength; i += 1) {
+      current = [i];
+      rowMin = current[0];
+
+      for (j = 1; j <= bLength; j += 1) {
+        cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+        current[j] = Math.min(
+          previous[j] + 1,
+          current[j - 1] + 1,
+          previous[j - 1] + cost
+        );
+        if (current[j] < rowMin) rowMin = current[j];
+      }
+
+      if (rowMin > limit) return limit + 1;
+      previous = current;
+    }
+
+    return previous[bLength];
+  }
+
+  function findClosestLiteral(query, candidates, maxDistance) {
+    var normalizedQuery = normalize(query);
+    var limit = typeof maxDistance === "number" ? maxDistance : allowedDistance(normalizedQuery);
+    var best = null;
+    var bestDistance = Infinity;
+    var secondDistance = Infinity;
+
+    candidates.forEach(function (candidate) {
+      var distance;
+      var normalizedCandidate = normalize(candidate);
+      if (!normalizedCandidate) return;
+
+      distance = editDistance(normalizedQuery, normalizedCandidate, Math.min(limit, bestDistance));
+      if (distance < bestDistance) {
+        secondDistance = bestDistance;
+        bestDistance = distance;
+        best = candidate;
+      } else if (distance < secondDistance) {
+        secondDistance = distance;
+      }
+    });
+
+    if (!best || bestDistance > limit) return null;
+    if (secondDistance === bestDistance) return null;
+
+    return {
+      value: best,
+      distance: bestDistance
+    };
+  }
+
   function isInternalNonPage(entry) {
     return entry.path.indexOf(state.context + "/") === 0 && entry.kind !== "page";
   }
@@ -301,9 +418,8 @@
     };
   }
 
-  function resolveBuiltInRoute(query) {
-    var normalizedQuery = normalize(query);
-    var routes = {
+  function getBuiltInRoutes() {
+    return {
       home: { file: "index.html", title: "Home" },
       index: { file: "index.html", title: "Home" },
       notes: { file: "notes.html", title: "Notes" },
@@ -317,6 +433,11 @@
       "charge-hunt": { file: "charge-hunt.html", title: "Charge Hunt", fallbackPath: "docs/charge-hunt.html" },
       game: { file: "charge-hunt.html", title: "Charge Hunt", fallbackPath: "docs/charge-hunt.html" }
     };
+  }
+
+  function resolveBuiltInRoute(query) {
+    var normalizedQuery = normalize(query);
+    var routes = getBuiltInRoutes();
     var route = routes[normalizedQuery];
     var localPath;
     if (!route) return null;
@@ -325,6 +446,108 @@
     if (state.entryMap[localPath]) return state.entryMap[localPath];
     if (route.fallbackPath) return makeFallbackPage(route.fallbackPath, route.title);
     return null;
+  }
+
+  function resolveFuzzyBuiltInRoute(query) {
+    var normalizedQuery = normalize(query);
+    var routes = getBuiltInRoutes();
+    var match = findClosestLiteral(normalizedQuery, Object.keys(routes), allowedDistance(normalizedQuery));
+    var route;
+    var localPath;
+
+    if (!match || normalize(match.value) === normalizedQuery) return null;
+
+    route = routes[match.value];
+    localPath = state.context + "/" + route.file;
+    if (state.entryMap[localPath]) return state.entryMap[localPath];
+    if (route.fallbackPath) return makeFallbackPage(route.fallbackPath, route.title);
+    return null;
+  }
+
+  function rewriteApproximateCommand(normalized) {
+    var parts = normalized.split(" ").filter(Boolean);
+    var head;
+    var match;
+
+    if (!parts.length) return "";
+    head = COMMAND_REWRITES[parts[0]] || parts[0];
+
+    if (parts.length === 1) {
+      match = findClosestLiteral(head, COMMAND_CANONICAL, allowedDistance(head));
+      if (match && normalize(match.value) !== head) return match.value;
+      return COMMAND_REWRITES[head] || "";
+    }
+
+    match = findClosestLiteral(head, COMMAND_CANONICAL, allowedDistance(head));
+    if (!match || normalize(match.value) === head) return "";
+
+    parts[0] = match.value;
+    return parts.join(" ");
+  }
+
+  function entryFuzzyCandidates(entry) {
+    return uniqueStrings(
+      [entry._titleNorm]
+        .concat(entry._aliasesNormList)
+        .concat(entry._titleNorm.split(" ").filter(function (token) { return token.length >= 4; }))
+        .concat(entry._aliasNorm.split(" ").filter(function (token) { return token.length >= 4; }))
+    );
+  }
+
+  function fuzzySearchEntries(query, limit) {
+    var normalizedQuery = normalize(query);
+    var maxDistance = allowedDistance(normalizedQuery);
+    var results;
+
+    if (!normalizedQuery) return [];
+
+    results = state.entries
+      .map(function (entry) {
+        var bestDistance = Infinity;
+        var candidates = entryFuzzyCandidates(entry);
+
+        candidates.forEach(function (candidate) {
+          var candidateLimit = maxDistance + (candidate.indexOf(" ") !== -1 ? 1 : 0);
+          var distance = editDistance(
+            normalizedQuery,
+            candidate,
+            Math.min(candidateLimit, bestDistance)
+          );
+          if (distance < bestDistance) bestDistance = distance;
+        });
+
+        if (!isFinite(bestDistance)) return null;
+        if (bestDistance > maxDistance + (normalizedQuery.indexOf(" ") !== -1 ? 1 : 0)) return null;
+
+        entry._score = 220 - bestDistance * 40 + entry.priority * 0.2 + (entry.kind === "page" ? 8 : 0);
+        entry._fuzzyDistance = bestDistance;
+        return {
+          entry: entry,
+          score: entry._score,
+          distance: bestDistance
+        };
+      })
+      .filter(Boolean)
+      .sort(function (a, b) {
+        if (a.distance !== b.distance) return a.distance - b.distance;
+        if (b.score !== a.score) return b.score - a.score;
+        return a.entry.title.localeCompare(b.entry.title);
+      })
+      .slice(0, limit || 8)
+      .map(function (item) {
+        return item.entry;
+      });
+
+    return results;
+  }
+
+  function hasConfidentFuzzyWinner(results) {
+    var top = results[0];
+    var second = results[1];
+    if (!top) return false;
+    if (top._fuzzyDistance > 2) return false;
+    if (!second) return true;
+    return top._fuzzyDistance + 2 <= second._fuzzyDistance;
   }
 
   function startsWithAny(normalized, candidates) {
@@ -413,6 +636,8 @@
   function tryOpenQuery(query) {
     var ordinalMatch = getResultByOrdinal(query);
     var builtInRoute = resolveBuiltInRoute(query);
+    var fuzzyRoute;
+    var fuzzyResults;
     if (ordinalMatch) {
       openEntry(ordinalMatch);
       return;
@@ -425,7 +650,30 @@
 
     var results = searchEntries(query, 8);
     if (!results.length) {
-      appendWarning("No repo match for \"" + query + "\".");
+      fuzzyRoute = resolveFuzzyBuiltInRoute(query);
+      if (fuzzyRoute) {
+        appendSystem("Assuming you meant \"" + fuzzyRoute.title + "\".");
+        openEntry(fuzzyRoute);
+        return;
+      }
+
+      fuzzyResults = fuzzySearchEntries(query, 8);
+      if (!fuzzyResults.length) {
+        appendWarning("No repo match for \"" + query + "\".");
+        return;
+      }
+
+      if (hasConfidentFuzzyWinner(fuzzyResults)) {
+        appendSystem("Assuming you meant \"" + fuzzyResults[0].title + "\".");
+        openEntry(fuzzyResults[0]);
+        return;
+      }
+
+      showResults(
+        "Closest matches for \"" + query + "\".",
+        fuzzyResults,
+        "No exact repo match. Use open 1, open 2, or click a result."
+      );
       return;
     }
 
@@ -492,6 +740,13 @@
     var listMatch = normalized.match(/^list\s+(.+)$/);
 
     if (handleSmallTalk(raw, normalized)) {
+      return;
+    }
+
+    var correctedCommand = rewriteApproximateCommand(normalized);
+    if (correctedCommand) {
+      appendSystem("Assuming you meant \"" + correctedCommand + "\".");
+      executeCommand(correctedCommand, true);
       return;
     }
 
@@ -584,6 +839,15 @@
     if (findMatch) {
       var searchResults = searchEntries(findMatch[2], 8);
       if (!searchResults.length) {
+        var fuzzySearchResults = fuzzySearchEntries(findMatch[2], 8);
+        if (fuzzySearchResults.length) {
+          showResults(
+            "Closest matches for \"" + findMatch[2] + "\".",
+            fuzzySearchResults,
+            "No exact repo match. Use open 1, open 2, or click a result."
+          );
+          return;
+        }
         appendWarning("No repo match for \"" + findMatch[2] + "\".");
         return;
       }
@@ -607,7 +871,21 @@
 
     var fallbackResults = searchEntries(raw, 8);
     if (!fallbackResults.length) {
+      var fuzzyFallbackResults = fuzzySearchEntries(raw, 8);
+      var commandSuggestion = findClosestLiteral(normalized, COMMAND_CANONICAL, allowedDistance(normalized));
+      if (fuzzyFallbackResults.length) {
+        showResults(
+          "Closest matches for \"" + raw + "\".",
+          fuzzyFallbackResults,
+          "No exact repo match. Use open 1, open 2, or click a result."
+        );
+        return;
+      }
       appendWarning("Unknown command or no matches for \"" + raw + "\".");
+      if (commandSuggestion && normalize(commandSuggestion.value) !== normalized) {
+        appendSystem("Did you mean \"" + commandSuggestion.value + "\"?");
+        return;
+      }
       appendSystem("Type help to see commands.");
       return;
     }
