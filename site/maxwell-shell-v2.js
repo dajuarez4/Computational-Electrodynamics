@@ -391,7 +391,7 @@
       var button = document.createElement("button");
       button.type = "button";
       button.className = "maxwell-result";
-      button.setAttribute("data-open-path", entry.path);
+      button.setAttribute("data-open-path", entry.openKey || entry.path);
 
       var left = document.createElement("span");
       left.className = "maxwell-result__main";
@@ -409,7 +409,7 @@
 
       var path = document.createElement("span");
       path.className = "maxwell-result__path";
-      path.textContent = entry.path;
+      path.textContent = entry.path + (entry.locator ? " · " + entry.locator : "");
 
       meta.appendChild(label);
       meta.appendChild(path);
@@ -913,6 +913,120 @@
       .match(/[^.!?]+[.!?]?/g) || [];
   }
 
+  function chunkLocator(chunk) {
+    if (!chunk) return "";
+    if (chunk.locator) return chunk.locator;
+    if (chunk.page_start) return "p. " + chunk.page_start;
+    if (chunk.cell_start) return "cell " + chunk.cell_start;
+    if (chunk.chunk_index) return "chunk " + chunk.chunk_index;
+    return "";
+  }
+
+  function normalizeAnswerText(text) {
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/\*+/g, "")
+      .trim();
+  }
+
+  function findEquationItem(matches, questionTokens) {
+    var best = null;
+
+    matches.slice(0, 4).forEach(function (chunk) {
+      String(chunk.text || "")
+        .split(/\n+/)
+        .forEach(function (line) {
+          var cleaned = normalizeAnswerText(line);
+          var normalizedLine = normalize(cleaned);
+          var score = 0;
+
+          if (cleaned.length < 12 || cleaned.length > 220) return;
+          if (!/(=|\\nabla|∇|rho|phi|varepsilon|epsilon|laplace|laplacian)/i.test(cleaned)) return;
+
+          questionTokens.forEach(function (token) {
+            if (normalizedLine.indexOf(token) !== -1) score += 10;
+          });
+
+          if (/[=]/.test(cleaned)) score += 18;
+          if (/(poisson|laplace|phi|rho|epsilon|varepsilon|nabla|∇)/i.test(cleaned)) score += 18;
+          score += Math.min(30, chunk._qaScore || 0);
+
+          if (!best || score > best.score) {
+            best = {
+              kind: "equation",
+              text: cleaned,
+              score: score,
+              chunk: chunk
+            };
+          }
+        });
+    });
+
+    return best;
+  }
+
+  function buildAnswerItems(matches, question) {
+    var normalizedQuestion = normalize(question);
+    var questionTokens = tokenizeQuestion(question);
+    var definitionQuestion = isDefinitionQuestionNormalized(normalizedQuestion);
+    var seen = {};
+    var sentenceCandidates = [];
+    var items = [];
+    var equationItem;
+
+    matches.slice(0, 4).forEach(function (chunk) {
+      splitSentences(chunk.text).forEach(function (sentence) {
+        var cleaned = normalizeAnswerText(sentence);
+        var normalizedSentence = normalize(cleaned);
+        var sentenceScore = 0;
+
+        if (cleaned.length < 50) return;
+        if (sentenceLooksNoisy(normalizedSentence)) return;
+
+        if (normalizedSentence.indexOf(normalizedQuestion) !== -1) sentenceScore += 90;
+        questionTokens.forEach(function (token) {
+          if (normalizedSentence.indexOf(token) !== -1) sentenceScore += 12;
+        });
+        if (definitionQuestion) sentenceScore += definitionPatternScore(normalizedSentence, questionTokens);
+        if (/\bsolution\b|\bproblem\b|\bcontents\b/.test(normalizedSentence)) sentenceScore -= 18;
+        if (chunk._pathNorm.indexOf("problems") === 0 || chunk._pathNorm.indexOf("jackson problems") === 0 || chunk._pathNorm.indexOf("griffiths problems") === 0) {
+          sentenceScore -= 10;
+        }
+        sentenceScore += Math.min(40, chunk._qaScore || 0);
+
+        sentenceCandidates.push({
+          kind: "summary",
+          text: cleaned,
+          score: sentenceScore,
+          chunk: chunk
+        });
+      });
+    });
+
+    sentenceCandidates.sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    sentenceCandidates.forEach(function (candidate) {
+      var key = normalize(candidate.text);
+      if (seen[key]) return;
+      if (items.length >= 2) return;
+      seen[key] = true;
+      items.push(candidate);
+    });
+
+    equationItem = findEquationItem(matches, questionTokens);
+    if (equationItem && !seen[normalize(equationItem.text)]) {
+      if (items.length >= 2) {
+        items.splice(1, 0, equationItem);
+      } else {
+        items.push(equationItem);
+      }
+    }
+
+    return items.slice(0, 3);
+  }
+
   function selectAnswerLines(matches, question) {
     var normalizedQuestion = normalize(question);
     var questionTokens = tokenizeQuestion(question);
@@ -968,11 +1082,12 @@
     return "file";
   }
 
-  function makeSourceEntry(path, title) {
+  function makeSourceEntry(path, title, locator, pageStart, ref) {
     var isDocsPage = path.indexOf("docs/") === 0 && /\.html$/i.test(path);
     var url;
     var openIn = "blank";
     var entry;
+    var openKey = path + (locator ? "::" + locator : "");
 
     if (isDocsPage) {
       url = "./" + path.replace(/^docs\//, "");
@@ -981,9 +1096,15 @@
       url = "../" + path;
     }
 
+    if (/\.pdf$/i.test(path) && pageStart) {
+      url += "#page=" + pageStart;
+    }
+
     entry = {
-      title: title || path.split("/").slice(-1)[0],
+      title: (ref ? "[" + ref + "] " : "") + (title || path.split("/").slice(-1)[0]),
       path: path,
+      locator: locator || "",
+      openKey: openKey,
       url: url,
       kind: inferKindFromPath(path),
       group: "Source",
@@ -999,22 +1120,47 @@
     entry._aliasesNormList = [];
     entry._descriptionNorm = normalize(entry.description);
     entry._searchNorm = normalize(entry.title + " " + entry.path + " " + entry.description);
-    state.entryMap[path] = entry;
+    state.entryMap[openKey] = entry;
+    if (!state.entryMap[path]) state.entryMap[path] = entry;
     return entry;
   }
 
-  function sourceEntriesFromMatches(matches) {
+  function sourceEntriesFromAnswerItems(items, matches) {
     var seen = {};
-    return matches
-      .map(function (chunk) {
-        return state.entryMap[chunk.path] || makeSourceEntry(chunk.path, chunk.title);
-      })
-      .filter(function (entry) {
-        if (!entry || seen[entry.path]) return false;
-        seen[entry.path] = true;
-        return true;
-      })
-      .slice(0, 5);
+    var entries = [];
+
+    items.forEach(function (item, index) {
+      var chunk = item.chunk;
+      var key = chunk.path + "::" + chunkLocator(chunk);
+      if (seen[key]) return;
+      seen[key] = true;
+      entries.push(
+        makeSourceEntry(
+          chunk.path,
+          chunk.title,
+          chunkLocator(chunk),
+          chunk.page_start,
+          index + 1
+        )
+      );
+    });
+
+    matches.forEach(function (chunk) {
+      var key = chunk.path + "::" + chunkLocator(chunk);
+      if (seen[key] || entries.length >= 5) return;
+      seen[key] = true;
+      entries.push(
+        makeSourceEntry(
+          chunk.path,
+          chunk.title,
+          chunkLocator(chunk),
+          chunk.page_start,
+          null
+        )
+      );
+    });
+
+    return entries.slice(0, 5);
   }
 
   function answerQuestion(question) {
@@ -1032,7 +1178,7 @@
     loadQaIndex()
       .then(function () {
         var matches = retrieveQaMatches(resolvedQuestion, 5, effectiveScope);
-        var lines;
+        var items;
         var sources;
 
         if (!matches.length) {
@@ -1045,8 +1191,17 @@
           return;
         }
 
-        lines = selectAnswerLines(matches, baseQuestion);
-        sources = sourceEntriesFromMatches(matches);
+        items = buildAnswerItems(matches, baseQuestion);
+        if (!items.length) {
+          items = selectAnswerLines(matches, baseQuestion).map(function (line, index) {
+            return {
+              kind: "summary",
+              text: line,
+              chunk: matches[index] || matches[0]
+            };
+          });
+        }
+        sources = sourceEntriesFromAnswerItems(items, matches);
 
         if (resolvedQuestion !== baseQuestion) {
           appendSystem('Using context from "' + state.lastQuestion + '".');
@@ -1056,8 +1211,9 @@
         }
 
         appendSystem("Local answer from your repo:");
-        lines.forEach(function (line) {
-          appendSystem("  " + line);
+        items.forEach(function (item, index) {
+          var prefix = item.kind === "equation" ? "Key relation: " : "";
+          appendSystem("  [" + (index + 1) + "] " + prefix + item.text);
         });
 
         state.lastQuestion = baseQuestion;

@@ -8,7 +8,7 @@ import re
 import subprocess
 from html import unescape
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -162,12 +162,75 @@ def extract_pdf_text(path: Path) -> str:
     return result.stdout
 
 
-def pdf_file_paragraphs(path: Path) -> List[str]:
-    try:
-        text = extract_pdf_text(path)
-    except subprocess.CalledProcessError:
+def extract_pdf_pages(path: Path) -> List[dict]:
+    payload = extract_pdf_text(path)
+    pages = json.loads(payload)
+    if not isinstance(pages, list):
         return []
-    return split_paragraphs(text)
+    return pages
+
+
+def chunk_records_from_paragraphs(paragraphs: List[str], locator_prefix: str, extra: Optional[dict] = None) -> List[dict]:
+    records: List[dict] = []
+    for index, text in enumerate(chunk_paragraphs(paragraphs), start=1):
+        if is_noise_chunk(text):
+            continue
+        locator = locator_prefix if index == 1 else f"{locator_prefix}, part {index}"
+        record = {
+            "text": text,
+            "locator": locator,
+        }
+        if extra:
+            record.update(extra)
+        records.append(record)
+    return records
+
+
+def notebook_chunk_records(path: Path) -> List[dict]:
+    notebook = json.loads(path.read_text(encoding="utf-8"))
+    records: List[dict] = []
+
+    for cell_index, cell in enumerate(notebook.get("cells", []), start=1):
+        if cell.get("cell_type") not in {"markdown", "raw"}:
+            continue
+        source = "".join(cell.get("source", []))
+        cleaned = clean_markdown(source)
+        paragraphs = split_paragraphs(cleaned)
+        if not paragraphs:
+            continue
+        records.extend(
+            chunk_records_from_paragraphs(
+                paragraphs,
+                f"cell {cell_index}",
+                {"cell_start": cell_index, "cell_end": cell_index},
+            )
+        )
+
+    return records
+
+
+def pdf_chunk_records(path: Path) -> List[dict]:
+    try:
+        pages = extract_pdf_pages(path)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return []
+
+    records: List[dict] = []
+    for page in pages:
+        text = page.get("text", "")
+        page_number = int(page.get("page", 0) or 0)
+        paragraphs = split_paragraphs(text)
+        if not paragraphs or page_number <= 0:
+            continue
+        records.extend(
+            chunk_records_from_paragraphs(
+                paragraphs,
+                f"p. {page_number}",
+                {"page_start": page_number, "page_end": page_number},
+            )
+        )
+
+    return records
 
 
 def text_file_paragraphs(path: Path) -> List[str]:
@@ -282,21 +345,24 @@ def build_index() -> dict:
     for path in files:
         relative_path = path.relative_to(ROOT).as_posix()
         if path.suffix.lower() == ".ipynb":
-            paragraphs = notebook_paragraphs(path)
+            chunk_records = notebook_chunk_records(path)
         elif path.suffix.lower() == ".pdf":
-            paragraphs = pdf_file_paragraphs(path)
+            chunk_records = pdf_chunk_records(path)
         else:
             paragraphs = text_file_paragraphs(path)
+            if not paragraphs:
+                continue
+            chunk_records = chunk_records_from_paragraphs(paragraphs, "chunk 1")
+            for index, record in enumerate(chunk_records, start=1):
+                record["locator"] = f"chunk {index}"
 
-        if not paragraphs:
+        if not chunk_records:
             continue
 
         title = humanize_title(path)
-        file_chunks = chunk_paragraphs(paragraphs)
 
-        for index, text in enumerate(file_chunks, start=1):
-            if is_noise_chunk(text):
-                continue
+        for index, record in enumerate(chunk_records, start=1):
+            text = record["text"]
             chunks.append(
                 {
                     "id": chunk_id,
@@ -304,6 +370,11 @@ def build_index() -> dict:
                     "title": title,
                     "source_type": source_type(path),
                     "chunk_index": index,
+                    "locator": record.get("locator"),
+                    "page_start": record.get("page_start"),
+                    "page_end": record.get("page_end"),
+                    "cell_start": record.get("cell_start"),
+                    "cell_end": record.get("cell_end"),
                     "text": text,
                 }
             )
