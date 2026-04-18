@@ -1140,3 +1140,531 @@ code {
   }
 }
 
+/* Maxwell v2 overrides */
+.maxwell-panel {
+  width: min(720px, calc(100vw - 36px));
+  height: min(760px, 88vh);
+  border-color: rgba(120, 255, 212, 0.16);
+}
+
+.maxwell-header__subtitle {
+  color: rgba(173, 214, 228, 0.88);
+}
+
+.maxwell-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "console"
+    "preview"
+    "side";
+  grid-template-rows: minmax(270px, 1.15fr) minmax(230px, 1fr) auto;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.maxwell-sidecar {
+  grid-area: side;
+  padding: 0.88rem;
+  border-radius: 20px;
+  border: 1px solid rgba(120, 255, 212, 0.08);
+  background:
+    linear-gradient(180deg, rgba(7, 25, 34, 0.92), rgba(5, 18, 26, 0.8)),
+    radial-gradient(circle at top left, rgba(120, 255, 212, 0.08), transparent 40%);
+  gap: 0.72rem;
+}
+
+.maxwell-sidecar__row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.maxwell-ascii {
+  margin: 0;
+  color: #88ffd6;
+  font-size: 0.66rem;
+  line-height: 1.05;
+  text-shadow: 0 0 14px rgba(114, 255, 208, 0.18);
+}
+
+.maxwell-sidecar__hero {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.maxwell-sidecar__eyebrow {
+  color: #8ff5d1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.maxwell-sidecar__title {
+  margin: 0;
+  color: #f0fbf8;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.maxwell-sidecar__text {
+  color: #9ab5c2;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.maxwell-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.maxwell-chip {
+  padding: 0.42rem 0.68rem;
+  border-radius: 999px;
+  border-color: rgba(120, 255, 212, 0.13);
+  background: rgba(11, 39, 50, 0.84);
+  color: #d8f4eb;
+  font-size: 0.76rem;
+}
+
+.maxwell-chip,
+.maxwell-mini-chip {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.maxwell-topic-pulse,
+.maxwell-memory-panel {
+  display: none;
+}
+
+.maxwell-mini-chip {
+  font: inherit;
+  padding: 0.34rem 0.58rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 195, 123, 0.14);
+  background: rgba(255, 195, 123, 0.08);
+  color: #ffd4a5;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.maxwell-mini-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 195, 123, 0.26);
+  background: rgba(255, 195, 123, 0.12);
+}
+
+.maxwell-memory-panel__label {
+  color: #9fd2c1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.maxwell-memory {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.maxwell-memory-item {
+  width: 100%;
+  font: inherit;
+  padding: 0.58rem 0.66rem;
+  border: 1px solid rgba(120, 255, 212, 0.1);
+  border-radius: 14px;
+  background: rgba(7, 30, 40, 0.78);
+  color: #e8f7f2;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.maxwell-memory-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120, 255, 212, 0.24);
+  background: rgba(10, 36, 47, 0.92);
+}
+
+.maxwell-memory-empty {
+  color: #7f99a5;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.maxwell-console {
+  grid-area: console;
+  border-radius: 22px;
+  min-height: 250px;
+}
+
+.maxwell-log {
+  padding: 1rem;
+  gap: 0.7rem;
+}
+
+.maxwell-result {
+  padding: 0.76rem 0.84rem;
+  border-radius: 18px;
+}
+
+.maxwell-result.is-active {
+  border-color: rgba(120, 255, 212, 0.3);
+  background:
+    linear-gradient(135deg, rgba(20, 56, 66, 0.98), rgba(10, 34, 44, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(120, 255, 212, 0.08);
+}
+
+.maxwell-result__title {
+  line-height: 1.4;
+}
+
+.maxwell-preview {
+  grid-area: preview;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid rgba(120, 255, 212, 0.1);
+  background:
+    linear-gradient(180deg, rgba(6, 21, 30, 0.92), rgba(5, 17, 25, 0.84)),
+    radial-gradient(circle at top right, rgba(255, 195, 123, 0.08), transparent 30%);
+  overflow: hidden;
+}
+
+.maxwell-preview__status {
+  padding: 0.88rem 1rem 0.72rem 1rem;
+  border-bottom: 1px solid rgba(120, 255, 212, 0.08);
+  color: #9fd2c1;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.maxwell-preview__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.92rem;
+}
+
+.maxwell-preview-card {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.maxwell-preview__title {
+  margin: 0;
+  color: #f0fbf8;
+  font-size: 0.98rem;
+  line-height: 1.32;
+}
+
+.maxwell-preview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+}
+
+.maxwell-preview__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 255, 212, 0.12);
+  background: rgba(8, 33, 43, 0.86);
+  color: #d9f6ec;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.maxwell-preview__badge--topic {
+  border-color: rgba(255, 195, 123, 0.16);
+  background: rgba(255, 195, 123, 0.08);
+  color: #ffd1a0;
+}
+
+.maxwell-preview__description {
+  margin: 0;
+  color: #c2d6de;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.maxwell-preview__path {
+  color: #8ca8b3;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.maxwell-preview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.maxwell-action {
+  font: inherit;
+  padding: 0.48rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 255, 212, 0.18);
+  background: rgba(18, 63, 76, 0.92);
+  color: #f1fbf8;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.maxwell-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(120, 255, 212, 0.28);
+  background: rgba(22, 74, 89, 0.98);
+}
+
+.maxwell-action--soft {
+  background: rgba(255, 195, 123, 0.08);
+  border-color: rgba(255, 195, 123, 0.14);
+  color: #ffd09c;
+}
+
+.maxwell-action--soft:hover {
+  border-color: rgba(255, 195, 123, 0.28);
+  background: rgba(255, 195, 123, 0.14);
+}
+
+.maxwell-preview__related {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.maxwell-preview__related-list {
+  display: grid;
+  gap: 0.42rem;
+}
+
+@media (max-width: 1100px) {
+  .maxwell-panel {
+    width: min(680px, calc(100vw - 30px));
+  }
+}
+
+@media (max-width: 720px) {
+  .maxwell-panel {
+    width: calc(100vw - 20px);
+    height: min(88vh, 760px);
+  }
+
+  .maxwell-body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "console"
+      "preview"
+      "side";
+    grid-template-rows: minmax(240px, 1.1fr) minmax(220px, 1fr) auto;
+    padding: 0.78rem;
+    gap: 0.72rem;
+  }
+
+  .maxwell-sidecar,
+  .maxwell-console,
+  .maxwell-preview {
+    min-width: 0;
+  }
+
+  .maxwell-console,
+  .maxwell-preview {
+    min-height: 220px;
+  }
+
+  .maxwell-log,
+  .maxwell-preview__content {
+    min-height: 0;
+  }
+
+  .maxwell-sidecar {
+    padding: 0.82rem;
+    gap: 0.72rem;
+  }
+
+  .maxwell-sidecar__hero {
+    gap: 0.42rem;
+  }
+
+  .maxwell-sidecar__title {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .maxwell-sidecar__text {
+    font-size: 0.76rem;
+  }
+
+  .maxwell-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .maxwell-chip,
+  .maxwell-mini-chip {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .maxwell-topic-pulse,
+  .maxwell-memory-panel {
+    display: none;
+  }
+
+  .maxwell-sidecar__row {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  .maxwell-ascii {
+    font-size: 0.6rem;
+  }
+
+  .maxwell-preview__content {
+    padding: 0.88rem;
+  }
+}
+
+/* Maxwell v1 shell restored with v2 commands */
+.maxwell-panel {
+  width: min(540px, calc(100vw - 36px));
+  height: min(650px, 80vh);
+}
+
+.maxwell-header__subtitle {
+  color: rgba(159, 194, 208, 0.85);
+}
+
+.maxwell-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr);
+  grid-template-areas: none;
+  grid-template-rows: none;
+  gap: 0.95rem;
+  padding: 1rem;
+}
+
+.maxwell-sidecar {
+  display: grid;
+  align-content: start;
+  gap: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(120, 255, 212, 0.1);
+  background:
+    linear-gradient(180deg, rgba(7, 25, 34, 0.88), rgba(6, 20, 29, 0.72));
+}
+
+.maxwell-sidecar__row,
+.maxwell-sidecar__hero,
+.maxwell-sidecar__eyebrow,
+.maxwell-sidecar__title {
+  display: none;
+}
+
+.maxwell-ascii {
+  display: block;
+  margin: 0;
+  color: #88ffd6;
+  font-size: 0.86rem;
+  line-height: 1.1;
+  text-shadow: 0 0 18px rgba(114, 255, 208, 0.24);
+}
+
+.maxwell-sidecar__text {
+  display: block;
+  margin: 0;
+  color: #9db7c4;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.maxwell-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.maxwell-chip,
+.maxwell-mini-chip {
+  width: auto;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.maxwell-topic-pulse,
+.maxwell-memory-panel,
+.maxwell-preview {
+  display: none !important;
+}
+
+.maxwell-console {
+  grid-area: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
+.maxwell-log {
+  padding: 1rem;
+  gap: 0.62rem;
+}
+
+.maxwell-result {
+  padding: 0.72rem 0.8rem;
+  border-radius: 16px;
+}
+
+.maxwell-result.is-active {
+  border-color: rgba(120, 255, 212, 0.11);
+  background:
+    linear-gradient(135deg, rgba(13, 39, 48, 0.92), rgba(9, 28, 38, 0.92));
+  box-shadow: none;
+}
+
+@media (max-width: 1100px) {
+  .maxwell-body {
+    grid-template-columns: 1fr;
+  }
+
+  .maxwell-sidecar {
+    grid-template-columns: 140px 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 720px) {
+  .maxwell-panel {
+    width: calc(100vw - 20px);
+    height: min(78vh, 680px);
+  }
+
+  .maxwell-body {
+    padding: 0.78rem;
+  }
+
+  .maxwell-sidecar {
+    grid-template-columns: 1fr;
+  }
+
+  .maxwell-form {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+}
