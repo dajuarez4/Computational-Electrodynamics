@@ -607,6 +607,71 @@
     );
   }
 
+  function escapeRegex(text) {
+    return String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function isDefinitionQuestionNormalized(normalizedQuestion) {
+    return /^(what is|define|explain)\b/.test(normalizedQuestion);
+  }
+
+  function conceptPattern(questionTokens) {
+    if (!questionTokens.length) return null;
+    return new RegExp(
+      questionTokens
+        .slice(0, Math.min(4, questionTokens.length))
+        .map(escapeRegex)
+        .join("(?:\\s+[a-z0-9]+)?\\s+")
+    );
+  }
+
+  function definitionPatternScore(textNorm, questionTokens) {
+    var concept = conceptPattern(questionTokens);
+    var score = 0;
+
+    if (!concept || !textNorm) return 0;
+
+    if (concept.test(textNorm)) score += 12;
+    if (new RegExp(concept.source + "\\s+(is|are|means|denotes|expresses|describes)\\b").test(textNorm)) score += 40;
+    if (new RegExp("\\b(is|are|means|denotes|expresses|describes)\\b.{0,40}" + concept.source).test(textNorm)) score += 28;
+    if (/\bcentral\b|\bfoundation\b|\blocal differential form\b|\bsource free limit\b/.test(textNorm)) score += 10;
+
+    return score;
+  }
+
+  function chunkSourceBias(chunk, definitionQuestion) {
+    var path = chunk._pathNorm;
+    var text = chunk._textNorm;
+    var score = 0;
+
+    if (/^notes\b/.test(path) || /^notes diego\b/.test(path)) score += 34;
+    if (/^notebooks\b/.test(path)) score += 32;
+    if (/^slides\b/.test(path)) score += 12;
+    if (path === "readme md") score += 12;
+    if (/^formula sheet\b/.test(path)) score += 8;
+
+    if (definitionQuestion) {
+      if (/^problems\b/.test(path) || /^jackson problems\b/.test(path) || /^griffiths problems\b/.test(path) || /^overleaf uploads problems project\b/.test(path)) {
+        score -= 40;
+      }
+      if (/\bcontents\b|\bproblem statement\b|\bsolution\b|\bsource notebook\b/.test(text)) score -= 24;
+      if (/\bproblem\b/.test(text)) score -= 12;
+    } else {
+      if (/^problems\b/.test(path) || /^jackson problems\b/.test(path) || /^griffiths problems\b/.test(path) || /^overleaf uploads problems project\b/.test(path)) {
+        score -= 8;
+      }
+    }
+
+    return score;
+  }
+
+  function sentenceLooksNoisy(normalizedSentence) {
+    if (!normalizedSentence) return true;
+    if (/^(problem|contents|usage notes|source notebook)\b/.test(normalizedSentence)) return true;
+    if (/\bcontents\b|\bproblem statement\b/.test(normalizedSentence)) return true;
+    return false;
+  }
+
   function prepareQaChunks(payload) {
     state.qaChunks = (payload.chunks || []).map(function (chunk) {
       chunk._titleNorm = normalize(chunk.title || "");
@@ -647,6 +712,7 @@
     var matched = 0;
     var matchedTokens = {};
     var requiredMatches = questionTokens.length >= 4 ? 3 : questionTokens.length >= 2 ? 2 : 1;
+    var definitionQuestion = isDefinitionQuestionNormalized(normalizedQuestion);
     var phraseHit = chunk._textNorm.indexOf(normalizedQuestion) !== -1;
     var index;
     var phrase;
@@ -680,6 +746,8 @@
     }
 
     if (!phraseHit && matched < requiredMatches) return 0;
+    if (definitionQuestion) score += definitionPatternScore(chunk._textNorm, questionTokens);
+    score += chunkSourceBias(chunk, definitionQuestion);
     score += Math.max(0, 20 - Math.floor((chunk.text || "").length / 140));
     return score;
   }
@@ -714,6 +782,7 @@
   function selectAnswerLines(matches, question) {
     var normalizedQuestion = normalize(question);
     var questionTokens = tokenizeQuestion(question);
+    var definitionQuestion = isDefinitionQuestionNormalized(normalizedQuestion);
     var chosen = [];
     var seen = {};
 
@@ -726,10 +795,16 @@
         var sentenceScore = 0;
 
         if (sentence.length < 50) return;
+        if (sentenceLooksNoisy(normalizedSentence)) return;
         if (normalizedSentence.indexOf(normalizedQuestion) !== -1) sentenceScore += 90;
         questionTokens.forEach(function (token) {
           if (normalizedSentence.indexOf(token) !== -1) sentenceScore += 12;
         });
+        if (definitionQuestion) sentenceScore += definitionPatternScore(normalizedSentence, questionTokens);
+        if (/\bsolution\b|\bproblem\b|\bcontents\b/.test(normalizedSentence)) sentenceScore -= 18;
+        if (chunk._pathNorm.indexOf("problems") === 0 || chunk._pathNorm.indexOf("jackson problems") === 0 || chunk._pathNorm.indexOf("griffiths problems") === 0) {
+          sentenceScore -= 10;
+        }
 
         if (sentenceScore > bestScore) {
           bestScore = sentenceScore;
