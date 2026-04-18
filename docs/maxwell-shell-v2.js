@@ -7,6 +7,9 @@
     count: 0,
     entries: [],
     entryMap: {},
+    qaChunks: [],
+    qaReady: false,
+    qaPromise: null,
     open: false,
     booted: false,
     history: [],
@@ -47,7 +50,7 @@
     '      <div class="maxwell-log" aria-live="polite"></div>',
     '      <form class="maxwell-form">',
     '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
-    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="find method of images, open notes, open 1">',
+    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="ask what is the method of images, find notes, open 1">',
     "      </form>",
     "    </div>",
     "  </div>",
@@ -89,7 +92,9 @@
     "read",
     "find",
     "search",
-    "list"
+    "list",
+    "ask",
+    "explain"
   ];
 
   var COMMAND_REWRITES = {
@@ -100,7 +105,44 @@
     problemset: "problems",
     formulae: "formula",
     formulas: "formula",
-    script: "scripts"
+    script: "scripts",
+    explain: "ask"
+  };
+
+  var QA_STOPWORDS = {
+    a: 1,
+    an: 1,
+    and: 1,
+    are: 1,
+    as: 1,
+    at: 1,
+    be: 1,
+    by: 1,
+    can: 1,
+    do: 1,
+    does: 1,
+    for: 1,
+    from: 1,
+    how: 1,
+    i: 1,
+    in: 1,
+    is: 1,
+    it: 1,
+    of: 1,
+    on: 1,
+    or: 1,
+    show: 1,
+    tell: 1,
+    that: 1,
+    the: 1,
+    this: 1,
+    to: 1,
+    what: 1,
+    where: 1,
+    which: 1,
+    who: 1,
+    why: 1,
+    with: 1
   };
 
   function uniqueStrings(values) {
@@ -550,6 +592,250 @@
     return top._fuzzyDistance + 2 <= second._fuzzyDistance;
   }
 
+  function tokenizeQuestion(text) {
+    return uniqueStrings(
+      normalize(text)
+        .split(" ")
+        .filter(function (token) {
+          return token.length >= 3 && !QA_STOPWORDS[token];
+        })
+    );
+  }
+
+  function prepareQaChunks(payload) {
+    state.qaChunks = (payload.chunks || []).map(function (chunk) {
+      chunk._titleNorm = normalize(chunk.title || "");
+      chunk._pathNorm = normalize(chunk.path || "");
+      chunk._textNorm = normalize(chunk.text || "");
+      return chunk;
+    });
+    state.qaReady = true;
+    return state.qaChunks;
+  }
+
+  function loadQaIndex() {
+    if (state.qaReady) return Promise.resolve(state.qaChunks);
+    if (state.qaPromise) return state.qaPromise;
+
+    appendSystem("Loading local knowledge index...");
+    state.qaPromise = fetch("./maxwell-qa-index.json")
+      .then(function (response) {
+        if (!response.ok) throw new Error("QA index fetch failed.");
+        return response.json();
+      })
+      .then(function (payload) {
+        prepareQaChunks(payload);
+        appendSystem("Local knowledge index ready. " + state.qaChunks.length + " passages loaded.");
+        return state.qaChunks;
+      })
+      .catch(function (error) {
+        state.qaPromise = null;
+        appendWarning("Maxwell could not load maxwell-qa-index.json.");
+        throw error;
+      });
+
+    return state.qaPromise;
+  }
+
+  function scoreQaChunk(chunk, normalizedQuestion, questionTokens) {
+    var score = 0;
+    var matched = 0;
+    var matchedTokens = {};
+    var requiredMatches = questionTokens.length >= 4 ? 3 : questionTokens.length >= 2 ? 2 : 1;
+    var phraseHit = chunk._textNorm.indexOf(normalizedQuestion) !== -1;
+    var index;
+    var phrase;
+
+    if (chunk._titleNorm.indexOf(normalizedQuestion) !== -1) score += 90;
+    if (chunk._pathNorm.indexOf(normalizedQuestion) !== -1) score += 70;
+    if (phraseHit) score += 120;
+
+    questionTokens.forEach(function (token) {
+      var tokenMatched = false;
+      if (chunk._titleNorm.indexOf(token) !== -1) {
+        score += 20;
+        tokenMatched = true;
+      }
+      if (chunk._pathNorm.indexOf(token) !== -1) {
+        score += 12;
+      }
+      if (chunk._textNorm.indexOf(token) !== -1) {
+        score += 14;
+        tokenMatched = true;
+      }
+      if (tokenMatched && !matchedTokens[token]) {
+        matchedTokens[token] = true;
+        matched += 1;
+      }
+    });
+
+    for (index = 0; index < questionTokens.length - 1; index += 1) {
+      phrase = questionTokens[index] + " " + questionTokens[index + 1];
+      if (chunk._textNorm.indexOf(phrase) !== -1) score += 18;
+    }
+
+    if (!phraseHit && matched < requiredMatches) return 0;
+    score += Math.max(0, 20 - Math.floor((chunk.text || "").length / 140));
+    return score;
+  }
+
+  function retrieveQaMatches(question, limit) {
+    var normalizedQuestion = normalize(question);
+    var questionTokens = tokenizeQuestion(question);
+
+    if (!normalizedQuestion) return [];
+
+    return state.qaChunks
+      .map(function (chunk) {
+        var score = scoreQaChunk(chunk, normalizedQuestion, questionTokens);
+        if (!score) return null;
+        chunk._qaScore = score;
+        return chunk;
+      })
+      .filter(Boolean)
+      .sort(function (a, b) {
+        if (b._qaScore !== a._qaScore) return b._qaScore - a._qaScore;
+        return a.path.localeCompare(b.path);
+      })
+      .slice(0, limit || 5);
+  }
+
+  function splitSentences(text) {
+    return (text || "")
+      .replace(/\s+/g, " ")
+      .match(/[^.!?]+[.!?]?/g) || [];
+  }
+
+  function selectAnswerLines(matches, question) {
+    var normalizedQuestion = normalize(question);
+    var questionTokens = tokenizeQuestion(question);
+    var chosen = [];
+    var seen = {};
+
+    matches.slice(0, 3).forEach(function (chunk) {
+      var bestSentence = "";
+      var bestScore = 0;
+
+      splitSentences(chunk.text).forEach(function (sentence) {
+        var normalizedSentence = normalize(sentence);
+        var sentenceScore = 0;
+
+        if (sentence.length < 50) return;
+        if (normalizedSentence.indexOf(normalizedQuestion) !== -1) sentenceScore += 90;
+        questionTokens.forEach(function (token) {
+          if (normalizedSentence.indexOf(token) !== -1) sentenceScore += 12;
+        });
+
+        if (sentenceScore > bestScore) {
+          bestScore = sentenceScore;
+          bestSentence = sentence.trim();
+        }
+      });
+
+      if (!bestSentence) {
+        bestSentence = (chunk.text || "").split("\n")[0].trim();
+      }
+
+      if (!bestSentence) return;
+      if (seen[normalize(bestSentence)]) return;
+      seen[normalize(bestSentence)] = true;
+      chosen.push(bestSentence);
+    });
+
+    return chosen.slice(0, 3);
+  }
+
+  function inferKindFromPath(path) {
+    if (/\.ipynb$/i.test(path)) return "notebook";
+    if (/\.md$/i.test(path)) return "markdown";
+    if (/\.tex$/i.test(path)) return "latex";
+    if (/\.html$/i.test(path)) return "page";
+    return "file";
+  }
+
+  function makeSourceEntry(path, title) {
+    var isDocsPage = path.indexOf("docs/") === 0 && /\.html$/i.test(path);
+    var url;
+    var openIn = "blank";
+    var entry;
+
+    if (isDocsPage) {
+      url = "./" + path.replace(/^docs\//, "");
+      openIn = "self";
+    } else {
+      url = "../" + path;
+    }
+
+    entry = {
+      title: title || path.split("/").slice(-1)[0],
+      path: path,
+      url: url,
+      kind: inferKindFromPath(path),
+      group: "Source",
+      description: "Local retrieval source.",
+      aliases: [],
+      openIn: openIn,
+      priority: 120
+    };
+
+    entry._titleNorm = normalize(entry.title);
+    entry._pathNorm = normalize(entry.path);
+    entry._aliasNorm = "";
+    entry._aliasesNormList = [];
+    entry._descriptionNorm = normalize(entry.description);
+    entry._searchNorm = normalize(entry.title + " " + entry.path + " " + entry.description);
+    state.entryMap[path] = entry;
+    return entry;
+  }
+
+  function sourceEntriesFromMatches(matches) {
+    var seen = {};
+    return matches
+      .map(function (chunk) {
+        return state.entryMap[chunk.path] || makeSourceEntry(chunk.path, chunk.title);
+      })
+      .filter(function (entry) {
+        if (!entry || seen[entry.path]) return false;
+        seen[entry.path] = true;
+        return true;
+      })
+      .slice(0, 5);
+  }
+
+  function answerQuestion(question) {
+    loadQaIndex()
+      .then(function () {
+        var matches = retrieveQaMatches(question, 5);
+        var lines;
+        var sources;
+
+        if (!matches.length) {
+          appendWarning("No grounded local answer for \"" + question + "\".");
+          appendSystem("Try a narrower question or use find <topic>.");
+          return;
+        }
+
+        lines = selectAnswerLines(matches, question);
+        sources = sourceEntriesFromMatches(matches);
+
+        appendSystem("Local answer from your repo:");
+        lines.forEach(function (line) {
+          appendSystem("  " + line);
+        });
+
+        if (sources.length) {
+          showResults(
+            "Sources for \"" + question + "\".",
+            sources,
+            "Grounded in local notes, notebooks, slides, and repo text."
+          );
+        }
+      })
+      .catch(function () {
+        appendWarning("Local retrieval is unavailable right now.");
+      });
+  }
+
   function startsWithAny(normalized, candidates) {
     return candidates.some(function (candidate) {
       return normalized === candidate || normalized.indexOf(candidate + " ") === 0;
@@ -704,6 +990,7 @@
       "Commands:",
       "hello | hi | hey | hola",
       "help",
+      "ask <question>",
       "pages | notes | notebooks | problems | formula | scripts",
       "find <query>",
       "open <query>",
@@ -725,7 +1012,7 @@
     } else {
       appendSystem("Repository index still loading...");
     }
-    appendSystem("Try: help, pages, notes, notebooks, open lab, find method of images");
+    appendSystem("Try: ask what is the method of images, pages, notes, open lab");
   }
 
   function executeCommand(rawValue, fromShortcut) {
@@ -735,11 +1022,17 @@
     if (!fromShortcut) appendUser(raw);
 
     var normalized = normalize(raw);
+    var askMatch = raw.match(/^(ask|explain)\s+(.+)$/i);
     var openMatch = normalized.match(/^(open|go|read)\s+(.+)$/);
     var findMatch = normalized.match(/^(find|search)\s+(.+)$/);
     var listMatch = normalized.match(/^list\s+(.+)$/);
 
     if (handleSmallTalk(raw, normalized)) {
+      return;
+    }
+
+    if (askMatch) {
+      answerQuestion(askMatch[2].trim());
       return;
     }
 
@@ -866,6 +1159,11 @@
 
     if (getResultByOrdinal(normalized)) {
       openEntry(getResultByOrdinal(normalized));
+      return;
+    }
+
+    if (/\?$/.test(raw) || /^(what|why|how|where|when|explain|define)\b/i.test(raw)) {
+      answerQuestion(raw);
       return;
     }
 

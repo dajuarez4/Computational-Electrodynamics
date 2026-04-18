@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
+import json
+import re
+from html import unescape
+from pathlib import Path
+from typing import Iterable, List
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUTS = [
+    ROOT / "docs" / "maxwell-qa-index.json",
+    ROOT / "site" / "maxwell-qa-index.json",
+]
+
+TEXT_PATTERNS = [
+    "README.md",
+    "repo-mindmap.md",
+    "Formula Sheet/**/*.tex",
+    "Formula Sheet/**/*.md",
+    "notes/**/*.tex",
+    "notes/**/*.md",
+    "notes-diego/**/*.tex",
+    "notes-diego/**/*.md",
+    "problems/**/*.tex",
+    "slides/**/*.tex",
+    "Griffiths-problems/**/*.tex",
+    "codes/cpp/**/README.md",
+    "notebooks/*.ipynb",
+]
+
+LATEX_SECTION_PATTERNS = [
+    r"\\chapter\*?\{([^{}]*)\}",
+    r"\\section\*?\{([^{}]*)\}",
+    r"\\subsection\*?\{([^{}]*)\}",
+    r"\\subsubsection\*?\{([^{}]*)\}",
+]
+
+LATEX_SIMPLE_COMMANDS = [
+    "textbf",
+    "textit",
+    "emph",
+    "mathbf",
+    "mathrm",
+    "mathit",
+    "operatorname",
+    "underline",
+    "texttt",
+    "large",
+    "Large",
+    "LARGE",
+]
+
+
+def normalize_space(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def split_paragraphs(text: str) -> List[str]:
+    parts = re.split(r"\n\s*\n+", text)
+    return [normalize_space(part) for part in parts if normalize_space(part)]
+
+
+def clean_markdown(text: str) -> str:
+    text = re.sub(r"```.*?```", " ", text, flags=re.S)
+    text = re.sub(r"`([^`]*)`", r" \1 ", text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r" \1 ", text)
+    text = re.sub(r"^\s{0,3}#{1,6}\s*", "", text, flags=re.M)
+    text = re.sub(r"^\s*[-*+]\s+", "", text, flags=re.M)
+    text = re.sub(r"^\s*>\s?", "", text, flags=re.M)
+    text = re.sub(r"\|", " ", text)
+    return text
+
+
+def clean_html(text: str) -> str:
+    text = re.sub(r"<script.*?>.*?</script>", " ", text, flags=re.S | re.I)
+    text = re.sub(r"<style.*?>.*?</style>", " ", text, flags=re.S | re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
+    return unescape(text)
+
+
+def strip_latex_wrappers(text: str) -> str:
+    document_match = re.search(r"\\begin\{document\}(.*)\\end\{document\}", text, flags=re.S)
+    if document_match:
+        text = document_match.group(1)
+
+    for command in LATEX_SIMPLE_COMMANDS:
+        pattern = re.compile(rf"\\{command}\{{([^{{}}]*)\}}")
+        while pattern.search(text):
+            text = pattern.sub(r" \1 ", text)
+
+    for pattern in LATEX_SECTION_PATTERNS:
+        text = re.sub(pattern, r"\n\n\1\n\n", text)
+
+    text = re.sub(r"(?<!\\)%.*", "", text)
+    text = re.sub(r"\\newcommand\s*\{[^}]+\}\s*(\[[^\]]+\])?\s*\{.*?\}", " ", text, flags=re.S)
+    text = re.sub(r"\\(?:documentclass|usepackage|usetikzlibrary|title|subtitle|author|institute|date|keywords)\b(?:\[[^\]]*\])?\{.*?\}", " ", text, flags=re.S)
+    text = re.sub(r"\\(?:maketitle|tableofcontents|clearpage|newpage|FloatBarrier|onecolumn|twocolumn)\b", " ", text)
+    text = re.sub(r"\\(?:coordinate|draw|fill)\b[^;]*;", " ", text, flags=re.S)
+    text = re.sub(r"\\node\b(?!\s*\{)[^;]*;", " ", text, flags=re.S)
+    text = re.sub(r"\\item", "\n", text)
+    text = re.sub(r"\\begin\{[^}]+\}", "\n", text)
+    text = re.sub(r"\\end\{[^}]+\}", "\n", text)
+    text = re.sub(r"\\\[", " ", text)
+    text = re.sub(r"\\\]", " ", text)
+    text = re.sub(r"\$\$(.*?)\$\$", r" \1 ", text, flags=re.S)
+    text = re.sub(r"\$(.*?)\$", r" \1 ", text, flags=re.S)
+    text = re.sub(r"\\([A-Za-z]+)\*?(?:\[[^\]]*\])?\{([^{}]*)\}", r" \2 ", text)
+    text = re.sub(r"\\([A-Za-z]+)", r" \1 ", text)
+    text = text.replace("{", " ").replace("}", " ")
+    text = text.replace("\\", " ")
+    return text
+
+
+def humanize_title(path: Path) -> str:
+    stem = path.stem.replace("_", " ").replace("-", " ")
+    return normalize_space(stem)
+
+
+def notebook_paragraphs(path: Path) -> List[str]:
+    notebook = json.loads(path.read_text(encoding="utf-8"))
+    paragraphs: List[str] = []
+    for cell in notebook.get("cells", []):
+        if cell.get("cell_type") not in {"markdown", "raw"}:
+            continue
+        source = "".join(cell.get("source", []))
+        cleaned = clean_markdown(source)
+        paragraphs.extend(split_paragraphs(cleaned))
+    return paragraphs
+
+
+def text_file_paragraphs(path: Path) -> List[str]:
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    suffix = path.suffix.lower()
+
+    if suffix == ".md":
+        text = clean_markdown(text)
+    elif suffix == ".tex":
+        text = strip_latex_wrappers(text)
+    elif suffix == ".html":
+        text = clean_html(text)
+
+    return split_paragraphs(text)
+
+
+def split_long_paragraph(paragraph: str, target: int = 950) -> List[str]:
+    if len(paragraph) <= target * 1.35:
+        return [paragraph]
+
+    sentences = re.findall(r"[^.!?]+[.!?]?", paragraph)
+    chunks: List[str] = []
+    current = ""
+
+    for sentence in sentences:
+        sentence = normalize_space(sentence)
+        if not sentence:
+            continue
+        if current and len(current) + len(sentence) + 1 > target:
+            chunks.append(current)
+            current = sentence
+        else:
+            current = (current + " " + sentence).strip()
+
+    if current:
+        chunks.append(current)
+
+    return chunks or [paragraph]
+
+
+def chunk_paragraphs(paragraphs: Iterable[str], target: int = 1100) -> List[str]:
+    expanded: List[str] = []
+    for paragraph in paragraphs:
+        expanded.extend(split_long_paragraph(paragraph, target=950))
+
+    chunks: List[str] = []
+    current = ""
+
+    for paragraph in expanded:
+        if len(paragraph) < 40:
+            continue
+        if current and len(current) + len(paragraph) + 2 > target:
+            chunks.append(current.strip())
+            current = paragraph
+        else:
+            current = (current + "\n\n" + paragraph).strip() if current else paragraph
+
+    if current:
+        chunks.append(current.strip())
+
+    return chunks
+
+
+def is_noise_chunk(text: str) -> bool:
+    normalized = normalize_space(text).lower()
+    markers = [
+        "remember picture",
+        "current page",
+        "anchor north west",
+        "rounded corners",
+        "minimum width",
+        "minimum height",
+        "line width",
+        "xshift",
+        "yshift",
+    ]
+    score = sum(1 for marker in markers if marker in normalized)
+    return score >= 3
+
+
+def gather_source_files() -> List[Path]:
+    files = set()
+    for pattern in TEXT_PATTERNS:
+        files.update(ROOT.glob(pattern))
+    return sorted(path for path in files if path.is_file())
+
+
+def source_type(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix == ".ipynb":
+        return "notebook"
+    if suffix == ".md":
+        return "markdown"
+    if suffix == ".tex":
+        return "latex"
+    if suffix == ".html":
+        return "page"
+    return "text"
+
+
+def build_index() -> dict:
+    files = gather_source_files()
+    chunks = []
+    chunk_id = 1
+
+    for path in files:
+        relative_path = path.relative_to(ROOT).as_posix()
+        if path.suffix.lower() == ".ipynb":
+            paragraphs = notebook_paragraphs(path)
+        else:
+            paragraphs = text_file_paragraphs(path)
+
+        if not paragraphs:
+            continue
+
+        title = humanize_title(path)
+        file_chunks = chunk_paragraphs(paragraphs)
+
+        for index, text in enumerate(file_chunks, start=1):
+            if is_noise_chunk(text):
+                continue
+            chunks.append(
+                {
+                    "id": chunk_id,
+                    "path": relative_path,
+                    "title": title,
+                    "source_type": source_type(path),
+                    "chunk_index": index,
+                    "text": text,
+                }
+            )
+            chunk_id += 1
+
+    return {
+        "generated_from": "local repository files",
+        "chunk_count": len(chunks),
+        "source_count": len(files),
+        "chunks": chunks,
+    }
+
+
+def main() -> None:
+    payload = build_index()
+    serialized = json.dumps(payload, indent=2, ensure_ascii=True)
+    for output in OUTPUTS:
+        output.write_text(serialized + "\n", encoding="utf-8")
+    print(
+        "Wrote local QA index with",
+        payload["chunk_count"],
+        "chunks from",
+        payload["source_count"],
+        "sources.",
+    )
+
+
+if __name__ == "__main__":
+    main()
