@@ -168,37 +168,29 @@
     '    <div class="maxwell-header__meta">',
     '      <span class="maxwell-dot"></span>',
     '      <span class="maxwell-header__title">MAXWELL TERMINAL</span>',
-    '      <span class="maxwell-header__subtitle">guided repo navigator v2</span>',
+    '      <span class="maxwell-header__subtitle">repo navigator v2</span>',
     "    </div>",
     '    <button class="maxwell-close" type="button" aria-label="Close Maxwell">ESC</button>',
     "  </header>",
     '  <div class="maxwell-body">',
     '    <aside class="maxwell-sidecar">',
-    '      <div class="maxwell-sidecar__row">',
-    '        <pre class="maxwell-ascii">   /-\\\\\n  / o \\\\\n /| | |\\\\\n  | | |\n /_/_\\\\_\\\\\n Maxwell</pre>',
-    '        <div class="maxwell-sidecar__hero">',
-    '          <div class="maxwell-sidecar__eyebrow">Quick Paths</div>',
-    '          <h3 class="maxwell-sidecar__title">Topics, notes, visuals, or search.</h3>',
-    "        </div>",
-    "      </div>",
+    '      <pre class="maxwell-ascii">  __\n /__\\\\\n(•‿•)\n /|∞|\\\\\n  | |\n /   \\\\\n\n Maxwell</pre>',
+    '      <p class="maxwell-sidecar__text">Guided terminal for pages, notes, visuals, and topic paths.</p>',
     '      <div class="maxwell-shortcuts">',
     '        <button class="maxwell-chip" type="button" data-command="help">help</button>',
     '        <button class="maxwell-chip" type="button" data-command="topics">topics</button>',
     '        <button class="maxwell-chip" type="button" data-command="notes">notes</button>',
     '        <button class="maxwell-chip" type="button" data-command="visuals">visuals</button>',
+    '        <button class="maxwell-chip" type="button" data-command="open lab">open lab</button>',
     "      </div>",
     "    </aside>",
     '    <div class="maxwell-console">',
-    '      <div class="maxwell-log" aria-live="polite"></div>',
-    '      <form class="maxwell-form">',
-    '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
-    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="study electrostatics, review poisson, open lab, find waveguide">',
-    "      </form>",
+      '      <div class="maxwell-log" aria-live="polite"></div>',
+      '      <form class="maxwell-form">',
+      '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
+      '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="topics, study electrostatics, open lab, find waveguide">',
+      "      </form>",
     "    </div>",
-    '    <aside class="maxwell-preview">',
-    '      <div class="maxwell-preview__status">Preview panel</div>',
-    '      <div class="maxwell-preview__content"></div>',
-    "    </aside>",
     "  </div>",
     "</section>"
   ].join("");
@@ -532,6 +524,7 @@
   }
 
   function setPreview(entry, sourceLabel) {
+    if (!previewStatus || !previewContent) return;
     state.previewPath = entry ? entry.path : "";
     refreshResultHighlights();
 
@@ -1172,9 +1165,8 @@
       "  topics | topic <name>",
       "  study <name> | review <name>",
       "  find <query> | open <query> | open 1",
-      "  preview <query> | related [query]",
+      "  related [query]",
       "  pages | notes | notebooks | problems | formula | scripts | visuals",
-      "  recent | pins | pin [query] | unpin [query]",
       "  clear | close"
     ].forEach(function (line) {
       appendSystem(line);
