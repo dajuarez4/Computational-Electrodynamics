@@ -1,0 +1,503 @@
+{
+  "generated_from": "curated Maxwell topics manifest",
+  "topic_count": 14,
+  "topics": [
+    {
+      "id": "repo",
+      "label": "Repo Navigation",
+      "aliases": [
+        "repo",
+        "repository",
+        "website",
+        "home",
+        "navigation"
+      ],
+      "keywords": [
+        "repo",
+        "repository",
+        "website",
+        "home",
+        "topics",
+        "notes page"
+      ],
+      "intro": "Main entry pages and the high-level structure of the project.",
+      "path_prefixes": [
+        "docs/",
+        "README.md",
+        "repo-mindmap.md"
+      ],
+      "study_paths": [
+        "docs/index.html",
+        "docs/topics.html",
+        "docs/notes.html"
+      ],
+      "review_paths": [
+        "README.md",
+        "docs/repo-mindmap.html"
+      ],
+      "hints": [
+        "Start from a page before diving into raw files. The repo is easier to navigate page-first than folder-first.",
+        "Use Topics when you want a course-like path, Notes when you want chapter references, and Visuals when you want intuition first.",
+        "If Maxwell returns too many results, narrow the question by source: from notes, from notebooks, from jackson, or from griffiths."
+      ]
+    },
+    {
+      "id": "vector-analysis",
+      "label": "Vector Analysis",
+      "aliases": [
+        "vector analysis",
+        "vector calculus",
+        "calculus theorems"
+      ],
+      "keywords": [
+        "vector analysis",
+        "vector calculus",
+        "divergence",
+        "curl",
+        "gradient",
+        "stokes",
+        "gauss theorem"
+      ],
+      "intro": "Foundational calculus tools used throughout electrodynamics.",
+      "path_prefixes": [
+        "notes-diego/calculus-theorems/",
+        "notes-diego/chapter-1/",
+        "Jackson-problems/chapter_1"
+      ],
+      "study_paths": [
+        "notes-diego/calculus-theorems/calculus_theorems.pdf",
+        "notes-diego/chapter-1/chapter_1_notes.pdf"
+      ],
+      "review_paths": [
+        "notes-diego/vector-formulas/Vector_formulas.pdf"
+      ],
+      "hints": [
+        "Before computing anything, identify whether the question is about gradient, divergence, curl, line integrals, surface integrals, or volume integrals.",
+        "Check symmetry first. Many vector-analysis exercises collapse if the geometry forces one component or one coordinate dependence.",
+        "If an identity is requested, verify both sides by expanding components or by applying the relevant theorem with the correct orientation."
+      ]
+    },
+    {
+      "id": "electrostatics",
+      "label": "Electrostatics",
+      "aliases": [
+        "electrostatics",
+        "electric field",
+        "coulomb law"
+      ],
+      "keywords": [
+        "electrostatics",
+        "electric field",
+        "coulomb",
+        "gauss law",
+        "potential"
+      ],
+      "intro": "Charge, field, potential, and capacitance foundations.",
+      "path_prefixes": [
+        "notes-diego/chapter-1/",
+        "slides/Coulombs Law"
+      ],
+      "study_paths": [
+        "notes-diego/chapter-1/chapter_1_notes.pdf",
+        "slides/Coulombs Law, Electric potential and capacitance.pdf"
+      ],
+      "review_paths": [
+        "docs/notes.html",
+        "docs/topics.html"
+      ],
+      "hints": [
+        "Decide whether force, field, potential, or energy is the cleanest variable. Converting too early often makes the algebra worse.",
+        "Use Gauss's law only when symmetry is strong enough to determine the field from the flux integral.",
+        "When a conductor appears, separate what is fixed by electrostatic equilibrium from what still must be solved from boundary data."
+      ]
+    },
+    {
+      "id": "dirac-delta",
+      "label": "Dirac Delta",
+      "aliases": [
+        "dirac delta",
+        "delta function",
+        "dirac"
+      ],
+      "keywords": [
+        "dirac delta",
+        "delta function",
+        "sampling",
+        "distribution"
+      ],
+      "intro": "Distribution-based notes, problems, and interactive intuition builders.",
+      "path_prefixes": [
+        "notes/",
+        "problems/dirac_delta",
+        "Formula Sheet/dirac_delta",
+        "docs/charge-hunt.html"
+      ],
+      "study_paths": [
+        "notes/Dirac_Delta_notes.pdf",
+        "notebooks/Dirac delta functions.ipynb",
+        "docs/charge-hunt.html"
+      ],
+      "review_paths": [
+        "Formula Sheet/dirac_delta_formula_sheet.pdf",
+        "problems/Dirac_Delta_problems.pdf"
+      ],
+      "hints": [
+        "Always ask what object the delta is acting on. The delta is defined by how it samples a test function under an integral.",
+        "Match the dimensionality correctly: one-dimensional, surface, and volume deltas are not interchangeable.",
+        "If coordinates change, include the Jacobian factor. Most mistakes come from forgetting the measure attached to the integral."
+      ]
+    },
+    {
+      "id": "poisson",
+      "label": "Poisson Equation",
+      "aliases": [
+        "poisson",
+        "poisson equation"
+      ],
+      "keywords": [
+        "poisson equation",
+        "source term",
+        "charge density",
+        "laplacian"
+      ],
+      "intro": "Potential problems with explicit sources.",
+      "path_prefixes": [
+        "notes/poisson",
+        "problems/Poisson",
+        "Formula Sheet/poisson",
+        "notebooks/Poisson",
+        "docs/fft-poisson"
+      ],
+      "study_paths": [
+        "notes/Poisson_equation_notes.pdf",
+        "notebooks/Poisson's equation.ipynb",
+        "docs/fft-poisson.html"
+      ],
+      "review_paths": [
+        "Formula Sheet/poisson_formula_sheet.pdf",
+        "problems/Poisson_equation.pdf"
+      ],
+      "hints": [
+        "Write the source first and only then choose coordinates. The coordinate system should make the source and boundaries simpler, not just the Laplacian prettier.",
+        "Separate the problem into equation plus boundary conditions. Poisson's equation alone is not enough to determine a unique solution.",
+        "Check the source-free limit. If setting rho to zero does not reduce your setup to Laplace's equation cleanly, something upstream is wrong."
+      ]
+    },
+    {
+      "id": "laplace",
+      "label": "Laplace Equation",
+      "aliases": [
+        "laplace",
+        "laplace equation"
+      ],
+      "keywords": [
+        "laplace equation",
+        "harmonic",
+        "source free",
+        "boundary value"
+      ],
+      "intro": "Boundary-value problems in source-free regions.",
+      "path_prefixes": [
+        "problems/Laplace",
+        "Formula Sheet/laplace",
+        "notebooks/Laplace",
+        "slides/Laplaces"
+      ],
+      "study_paths": [
+        "notebooks/Laplace's equation.ipynb",
+        "slides/Laplaces eq, Uniqe and Images.pdf"
+      ],
+      "review_paths": [
+        "Formula Sheet/laplace_formula_sheet.pdf",
+        "problems/Laplace_equation.pdf"
+      ],
+      "hints": [
+        "Start by identifying the geometry and which coordinates allow separation of variables or symmetry reduction.",
+        "In source-free regions, uniqueness theorems are your safety check. If two candidate answers satisfy the same boundary data, only one can survive.",
+        "Use boundary behavior to kill nonphysical terms early, especially singular terms or modes that blow up in the wrong region."
+      ]
+    },
+    {
+      "id": "method-of-images",
+      "label": "Method of Images",
+      "aliases": [
+        "method of images",
+        "images",
+        "image charges"
+      ],
+      "keywords": [
+        "method of images",
+        "image charge",
+        "grounded plane",
+        "grounded sphere",
+        "conducting plane"
+      ],
+      "intro": "Image-charge intuition, grounded conductors, and boundary matching.",
+      "path_prefixes": [
+        "problems/method_of_images",
+        "Formula Sheet/method_of_images",
+        "notebooks/Method of images",
+        "docs/visuals.html"
+      ],
+      "study_paths": [
+        "notebooks/Method of images in electrostatics.ipynb",
+        "docs/visuals.html"
+      ],
+      "review_paths": [
+        "Formula Sheet/method_of_images_formula_sheet.pdf",
+        "problems/method_of_images.pdf"
+      ],
+      "hints": [
+        "State the physical region and the boundary condition before placing any image charge.",
+        "Every image charge must live outside the physical region. Its job is only to enforce the boundary exactly.",
+        "After constructing the image system, verify the boundary explicitly and compute forces using only real charges acted on by image fields."
+      ]
+    },
+    {
+      "id": "green-functions",
+      "label": "Green's Functions",
+      "aliases": [
+        "green functions",
+        "greens functions",
+        "green's functions"
+      ],
+      "keywords": [
+        "green function",
+        "greens function",
+        "kernel",
+        "boundary integral"
+      ],
+      "intro": "Kernel methods for electrostatic boundary-value problems.",
+      "path_prefixes": [
+        "problems/Green",
+        "Formula Sheet/greens",
+        "notebooks/Green",
+        "slides/Greens function"
+      ],
+      "study_paths": [
+        "notebooks/Green's functions in electrostatics.ipynb",
+        "slides/Greens function.pdf"
+      ],
+      "review_paths": [
+        "Formula Sheet/greens_functions_formula_sheet.pdf",
+        "problems/Green_functions.pdf"
+      ],
+      "hints": [
+        "Identify the operator, the source term, and the boundary condition before writing any Green function.",
+        "The free-space kernel is only the starting point. The boundary-adapted Green function must reflect the geometry of the problem.",
+        "When using the final integral representation, track carefully which terms come from volume sources and which come from boundary data."
+      ]
+    },
+    {
+      "id": "multipole",
+      "label": "Multipole Expansion",
+      "aliases": [
+        "multipole",
+        "multipole expansion",
+        "dipole",
+        "quadrupole"
+      ],
+      "keywords": [
+        "multipole",
+        "dipole",
+        "quadrupole",
+        "far field",
+        "legendre"
+      ],
+      "intro": "Far-field approximations and angular structure.",
+      "path_prefixes": [
+        "problems/multipole",
+        "Formula Sheet/multipole",
+        "notebooks/Multipole"
+      ],
+      "study_paths": [
+        "notebooks/Multipole expansion in electrostatics.ipynb",
+        "notes-diego/chapter-3/chapter_3_notes.pdf"
+      ],
+      "review_paths": [
+        "Formula Sheet/multipole_formula_sheet.pdf",
+        "problems/multipole_expansion.pdf"
+      ],
+      "hints": [
+        "Choose the expansion center first. A bad origin can hide symmetry and make lower moments appear unnecessarily.",
+        "Work in orders: monopole, dipole, quadrupole. Stop once the first nonzero moment that answers the question is identified.",
+        "Always check the regime of validity. Multipole expansions are asymptotic in the far field, not exact everywhere."
+      ]
+    },
+    {
+      "id": "dielectrics",
+      "label": "Dielectrics",
+      "aliases": [
+        "dielectrics",
+        "polarization",
+        "electric fields in matter"
+      ],
+      "keywords": [
+        "dielectrics",
+        "polarization",
+        "bound charge",
+        "electric fields in matter"
+      ],
+      "intro": "Electric fields in matter and polarization-based reasoning.",
+      "path_prefixes": [
+        "problems/dielectrics",
+        "Formula Sheet/dielectrics",
+        "notebooks/Dielectrics",
+        "notes-diego/chapter-4/"
+      ],
+      "study_paths": [
+        "notebooks/Dielectrics in electrostatics.ipynb",
+        "notes-diego/chapter-4/chapter_4_notes.pdf"
+      ],
+      "review_paths": [
+        "Formula Sheet/dielectrics_formula_sheet.pdf",
+        "problems/dielectrics_problems.pdf"
+      ],
+      "hints": [
+        "Separate free charge from bound charge at the start. Mixing them usually breaks the boundary conditions.",
+        "Use D when free charge is the clean input, and use polarization P when the material response itself is the quantity of interest.",
+        "At interfaces, track which normal and tangential components are constrained. Most dielectric problems are won or lost there."
+      ]
+    },
+    {
+      "id": "magnetostatics",
+      "label": "Magnetostatics",
+      "aliases": [
+        "magnetostatics",
+        "magnetic fields",
+        "magnetization"
+      ],
+      "keywords": [
+        "magnetostatics",
+        "biot savart",
+        "ampere law",
+        "magnetization",
+        "bound current"
+      ],
+      "intro": "Steady-current magnetic fields and magnetic matter.",
+      "path_prefixes": [
+        "notes-diego/chapter-5/",
+        "Griffiths-problems/griffiths_problem_index_aa.tex"
+      ],
+      "study_paths": [
+        "notes-diego/chapter-5/chapter-5_notes.pdf",
+        "Griffiths-problems/griffiths_problem_index_aa.tex"
+      ],
+      "review_paths": [
+        "docs/notes.html"
+      ],
+      "hints": [
+        "Decide whether the problem is easier from Biot-Savart, Ampere's law, vector potential, or magnetic scalar potential.",
+        "If matter is present, separate free current from bound current before applying constitutive relations.",
+        "Use symmetry aggressively. Magnetostatic integrals become much simpler once the surviving field direction is fixed."
+      ]
+    },
+    {
+      "id": "radiation",
+      "label": "Electromagnetic Radiation",
+      "aliases": [
+        "radiation",
+        "electromagnetic radiation",
+        "waves"
+      ],
+      "keywords": [
+        "radiation",
+        "electromagnetic radiation",
+        "waves",
+        "retarded potential"
+      ],
+      "intro": "Time-dependent fields, propagation, and emission.",
+      "path_prefixes": [
+        "problems/electro_magnetic_radiation",
+        "Formula Sheet/electromagnetic_radiation",
+        "notebooks/Electromagnetic Radiation"
+      ],
+      "study_paths": [
+        "notebooks/Electromagnetic Radiation.ipynb",
+        "slides/Coulombs Law, Electric potential and capacitance.pdf"
+      ],
+      "review_paths": [
+        "Formula Sheet/electromagnetic_radiation_formula_sheet.pdf",
+        "problems/electro_magnetic_radiation.pdf"
+      ],
+      "hints": [
+        "Separate near-zone intuition from radiation-zone behavior. They are governed by different distance scalings.",
+        "Track time dependence before simplifying the spatial structure. Retardation changes the logic of the problem.",
+        "If the question is about power or angular pattern, identify the dominant time-dependent multipole first."
+      ]
+    },
+    {
+      "id": "waveguides",
+      "label": "Waveguides",
+      "aliases": [
+        "waveguide",
+        "waveguides",
+        "rectangular waveguide"
+      ],
+      "keywords": [
+        "waveguide",
+        "waveguides",
+        "rectangular waveguide",
+        "te mode",
+        "tm mode"
+      ],
+      "intro": "Guided modes, cutoff, and dispersion in bounded geometries.",
+      "path_prefixes": [
+        "notebooks/Rectangular Waveguide Modes.ipynb"
+      ],
+      "study_paths": [
+        "notebooks/Rectangular Waveguide Modes.ipynb"
+      ],
+      "review_paths": [
+        "docs/topics.html"
+      ],
+      "hints": [
+        "Impose the conducting-wall boundary conditions first. Allowed modes come from those constraints, not from the wave equation alone.",
+        "Separate longitudinal and transverse structure carefully. TE and TM labels refer to the vanishing longitudinal component.",
+        "Once the mode numbers are set, read cutoff and dispersion from the resulting separation constants."
+      ]
+    },
+    {
+      "id": "visuals",
+      "label": "Visuals & Simulations",
+      "aliases": [
+        "visuals",
+        "simulations",
+        "lab",
+        "viewer",
+        "game"
+      ],
+      "keywords": [
+        "visuals",
+        "simulation",
+        "lab",
+        "viewer",
+        "animation",
+        "fdtd",
+        "fft poisson"
+      ],
+      "intro": "Interactive pages, animations, and computational intuition builders.",
+      "path_prefixes": [
+        "docs/lab.html",
+        "docs/visuals.html",
+        "docs/fft-poisson.html",
+        "codes/cpp/"
+      ],
+      "study_paths": [
+        "docs/visuals.html",
+        "docs/lab.html",
+        "docs/fft-poisson.html"
+      ],
+      "review_paths": [
+        "docs/repo-mindmap.html",
+        "codes/cpp/fft_poisson/README.md",
+        "codes/cpp/yee_fdtd/README.md"
+      ],
+      "hints": [
+        "Use visuals to test intuition, not to replace equations. Ask what invariant or boundary condition the animation is illustrating.",
+        "When a numerical result looks surprising, check domain, boundary conditions, and normalization before trusting the pattern.",
+        "If a simulation and an analytic result disagree, compare geometry and units first. Those mismatches are more common than physics failures."
+      ]
+    }
+  ]
+}

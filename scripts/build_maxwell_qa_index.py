@@ -42,6 +42,14 @@ LATEX_SECTION_PATTERNS = [
     r"\\subsubsection\*?\{([^{}]*)\}",
 ]
 
+LATEX_SECTION_COMMANDS = [
+    ("chapter", 1),
+    ("section", 2),
+    ("subsection", 3),
+    ("subsubsection", 4),
+    ("paragraph", 5),
+]
+
 LATEX_SIMPLE_COMMANDS = [
     "textbf",
     "textit",
@@ -65,6 +73,12 @@ def normalize_space(text: str) -> str:
 def split_paragraphs(text: str) -> List[str]:
     parts = re.split(r"\n\s*\n+", text)
     return [normalize_space(part) for part in parts if normalize_space(part)]
+
+
+def clean_heading_text(text: str) -> str:
+    text = strip_latex_wrappers(text)
+    text = clean_markdown(text)
+    return normalize_space(text)
 
 
 def clean_markdown(text: str) -> str:
@@ -117,6 +131,93 @@ def strip_latex_wrappers(text: str) -> str:
     text = text.replace("{", " ").replace("}", " ")
     text = text.replace("\\", " ")
     return text
+
+
+def extract_document_body(text: str) -> str:
+    document_match = re.search(r"\\begin\{document\}(.*)\\end\{document\}", text, flags=re.S)
+    if document_match:
+        return document_match.group(1)
+    return text
+
+
+def locator_from_stack(stack: List[dict]) -> str:
+    titles = [item["title"] for item in stack if item.get("title")]
+    return " > ".join(titles) if titles else "front matter"
+
+
+def latex_sectioned_records(path: Path) -> List[dict]:
+    raw_text = path.read_text(encoding="utf-8", errors="ignore")
+    body = extract_document_body(raw_text)
+    section_pattern = re.compile(
+        r"\\(chapter|section|subsection|subsubsection|paragraph)\*?(?:\[[^\]]*\])?\{([^{}]*)\}",
+        flags=re.S,
+    )
+    matches = list(section_pattern.finditer(body))
+    records: List[dict] = []
+
+    def append_segment(content: str, locator: str) -> None:
+        cleaned = strip_latex_wrappers(content)
+        paragraphs = split_paragraphs(cleaned)
+        if not paragraphs:
+            return
+        records.extend(chunk_records_from_paragraphs(paragraphs, locator))
+
+    if not matches:
+        paragraphs = split_paragraphs(strip_latex_wrappers(body))
+        return chunk_records_from_paragraphs(paragraphs, "front matter") if paragraphs else []
+
+    if matches[0].start() > 0:
+        append_segment(body[: matches[0].start()], "front matter")
+
+    stack: List[dict] = []
+    for index, match in enumerate(matches):
+        command = match.group(1)
+        title = clean_heading_text(match.group(2))
+        level = next((level for name, level in LATEX_SECTION_COMMANDS if name == command), 99)
+        while stack and stack[-1]["level"] >= level:
+            stack.pop()
+        stack.append({"level": level, "title": title})
+
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(body)
+        append_segment(body[start:end], locator_from_stack(stack))
+
+    return records
+
+
+def markdown_sectioned_records(path: Path) -> List[dict]:
+    raw_text = path.read_text(encoding="utf-8", errors="ignore")
+    heading_pattern = re.compile(r"^(#{1,6})\s+(.+?)\s*$", flags=re.M)
+    matches = list(heading_pattern.finditer(raw_text))
+    records: List[dict] = []
+
+    def append_segment(content: str, locator: str) -> None:
+        cleaned = clean_markdown(content)
+        paragraphs = split_paragraphs(cleaned)
+        if not paragraphs:
+            return
+        records.extend(chunk_records_from_paragraphs(paragraphs, locator))
+
+    if not matches:
+        paragraphs = split_paragraphs(clean_markdown(raw_text))
+        return chunk_records_from_paragraphs(paragraphs, "document") if paragraphs else []
+
+    if matches[0].start() > 0:
+        append_segment(raw_text[: matches[0].start()], "document")
+
+    stack: List[dict] = []
+    for index, match in enumerate(matches):
+        level = len(match.group(1))
+        title = clean_heading_text(match.group(2))
+        while stack and stack[-1]["level"] >= level:
+            stack.pop()
+        stack.append({"level": level, "title": title})
+
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(raw_text)
+        append_segment(raw_text[start:end], locator_from_stack(stack))
+
+    return records
 
 
 def humanize_title(path: Path) -> str:
@@ -344,10 +445,15 @@ def build_index() -> dict:
 
     for path in files:
         relative_path = path.relative_to(ROOT).as_posix()
-        if path.suffix.lower() == ".ipynb":
+        suffix = path.suffix.lower()
+        if suffix == ".ipynb":
             chunk_records = notebook_chunk_records(path)
-        elif path.suffix.lower() == ".pdf":
+        elif suffix == ".pdf":
             chunk_records = pdf_chunk_records(path)
+        elif suffix == ".tex":
+            chunk_records = latex_sectioned_records(path)
+        elif suffix == ".md":
+            chunk_records = markdown_sectioned_records(path)
         else:
             paragraphs = text_file_paragraphs(path)
             if not paragraphs:

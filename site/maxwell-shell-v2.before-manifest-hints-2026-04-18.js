@@ -7,18 +7,12 @@
     count: 0,
     entries: [],
     entryMap: {},
-    topicList: [],
-    topicMap: {},
-    topicsReady: false,
-    topicsPromise: null,
     qaChunks: [],
     qaReady: false,
     qaPromise: null,
     lastQuestion: "",
     lastResolvedQuestion: "",
     lastScope: null,
-    activeHintTopicId: "",
-    activeHintStep: 0,
     open: false,
     booted: false,
     history: [],
@@ -59,7 +53,7 @@
     '      <div class="maxwell-log" aria-live="polite"></div>',
     '      <form class="maxwell-form">',
     '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
-    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="study method of images, hint poisson, ask what is Laplace\'s equation">',
+    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="ask what is the method of images, find notes, open 1">',
     "      </form>",
     "    </div>",
     "  </div>",
@@ -93,12 +87,6 @@
     "problems",
     "formula",
     "scripts",
-    "visuals",
-    "topics",
-    "topic",
-    "study",
-    "review",
-    "hint",
     "clear",
     "close",
     "context",
@@ -124,8 +112,6 @@
     formulae: "formula",
     formulas: "formula",
     script: "scripts",
-    visual: "visuals",
-    hints: "hint",
     explain: "ask"
   };
 
@@ -247,197 +233,6 @@
         return b.norm.length - a.norm.length;
       });
   });
-
-  function normalizePath(path) {
-    return String(path || "").toLowerCase();
-  }
-
-  function isFormula(entry) {
-    return normalizePath(entry && entry.path).indexOf("formula sheet/") === 0;
-  }
-
-  function isProblem(entry) {
-    var path = normalizePath(entry && entry.path);
-    return (
-      path.indexOf("problems/") === 0 ||
-      path.indexOf("griffiths-problems/") === 0 ||
-      path.indexOf("jackson-problems/") === 0 ||
-      path.indexOf("overleaf_uploads/problems_project/") === 0
-    );
-  }
-
-  function isNote(entry) {
-    var path = normalizePath(entry && entry.path);
-    return path.indexOf("notes/") === 0 || path.indexOf("notes-diego/") === 0;
-  }
-
-  function isVisual(entry) {
-    var path = normalizePath(entry && entry.path);
-    return (
-      path.indexOf("docs/visuals.html") === 0 ||
-      path.indexOf("docs/lab.html") === 0 ||
-      path.indexOf("docs/charge-hunt.html") === 0 ||
-      path.indexOf("docs/fft-poisson.html") === 0 ||
-      path.indexOf("docs/repo-mindmap.html") === 0 ||
-      path.indexOf("codes/plots/") === 0 ||
-      path.indexOf("docs/assets/") === 0 ||
-      path.indexOf("codes/cpp/") === 0
-    );
-  }
-
-  function isOverleaf(entry) {
-    return normalizePath(entry && entry.path).indexOf("overleaf_uploads/") === 0;
-  }
-
-  function prepareTopics(payload) {
-    state.topicMap = {};
-    state.topicList = (payload.topics || []).map(function (topic) {
-      topic.aliases = topic.aliases || [];
-      topic.keywords = topic.keywords || [];
-      topic.path_prefixes = topic.path_prefixes || [];
-      topic.study_paths = topic.study_paths || [];
-      topic.review_paths = topic.review_paths || [];
-      topic.hints = topic.hints || [];
-      topic._labelNorm = normalize(topic.label || topic.id || "");
-      topic._aliasNorms = topic.aliases.map(function (alias) { return normalize(alias); });
-      topic._keywordNorms = topic.keywords.map(function (keyword) { return normalize(keyword); });
-      topic._pathPrefixes = topic.path_prefixes.map(function (prefix) { return normalizePath(prefix); });
-      topic._studyPaths = topic.study_paths.map(function (path) { return normalizePath(path); });
-      topic._reviewPaths = topic.review_paths.map(function (path) { return normalizePath(path); });
-      state.topicMap[topic.id] = topic;
-      return topic;
-    });
-    state.topicsReady = true;
-    return state.topicList;
-  }
-
-  function loadTopicsManifest() {
-    if (state.topicsReady) return Promise.resolve(state.topicList);
-    if (state.topicsPromise) return state.topicsPromise;
-
-    state.topicsPromise = fetch("./maxwell-topics.json")
-      .then(function (response) {
-        if (!response.ok) throw new Error("topics manifest fetch failed");
-        return response.json();
-      })
-      .then(function (payload) {
-        return prepareTopics(payload);
-      })
-      .catch(function () {
-        state.topicsPromise = null;
-        appendWarning("Maxwell could not load maxwell-topics.json.");
-        return [];
-      });
-
-    return state.topicsPromise;
-  }
-
-  function getTopic(topicId) {
-    return state.topicMap[topicId] || null;
-  }
-
-  function getTopicLabel(topicId) {
-    var topic = getTopic(topicId);
-    return topic ? topic.label : "";
-  }
-
-  function resolveTopic(query) {
-    var normalizedQuery = normalize(query);
-    if (!normalizedQuery) return null;
-
-    var matches = state.topicList
-      .map(function (topic) {
-        var score = 0;
-        if (topic._labelNorm === normalizedQuery) score += 120;
-        if (topic._aliasNorms.indexOf(normalizedQuery) !== -1) score += 150;
-        if (topic._labelNorm.indexOf(normalizedQuery) !== -1) score += 80;
-        topic._aliasNorms.forEach(function (alias) {
-          if (alias.indexOf(normalizedQuery) !== -1 || normalizedQuery.indexOf(alias) !== -1) score += 40;
-        });
-        return { topic: topic, score: score };
-      })
-      .filter(function (item) { return item.score > 0; })
-      .sort(function (a, b) { return b.score - a.score; });
-
-    return matches.length ? matches[0].topic : null;
-  }
-
-  function inferTopics(entry) {
-    var topics = [];
-    var path = normalizePath(entry.path);
-    var haystack = normalize(
-      [
-        entry.title,
-        entry.path,
-        entry.kind,
-        entry.group,
-        entry.description,
-        (entry.aliases || []).join(" ")
-      ].join(" ")
-    );
-
-    function addTopic(topicId) {
-      if (topics.indexOf(topicId) === -1 && getTopic(topicId)) topics.push(topicId);
-    }
-
-    state.topicList.forEach(function (topic) {
-      var matchedPrefix = topic._pathPrefixes.some(function (prefix) {
-        return prefix && (path === prefix || path.indexOf(prefix) === 0);
-      });
-      var matchedKeyword = topic._keywordNorms.some(function (keyword) {
-        return keyword && haystack.indexOf(keyword) !== -1;
-      });
-      var matchedAlias = topic._aliasNorms.some(function (alias) {
-        return alias && haystack.indexOf(alias) !== -1;
-      });
-
-      if (matchedPrefix || matchedKeyword || matchedAlias) addTopic(topic.id);
-    });
-
-    if (isVisual(entry)) addTopic("visuals");
-    if (entry.group === "Website" || entry.path === "README.md") addTopic("repo");
-    return topics;
-  }
-
-  function decorateEntry(entry) {
-    entry.priority = Number(entry.priority || 0);
-    entry._titleNorm = normalize(entry.title);
-    entry._pathNorm = normalize(entry.path);
-    entry._aliasesNormList = (entry.aliases || []).map(function (alias) {
-      return normalize(alias);
-    });
-    entry._aliasNorm = normalize((entry.aliases || []).join(" "));
-    entry._descriptionNorm = normalize(entry.description || "");
-    entry._topics = inferTopics(entry);
-    entry._primaryTopic = entry._topics[0] || "";
-    entry._topicNorm = normalize(
-      entry._topics
-        .map(function (topicId) { return getTopicLabel(topicId); })
-        .join(" ")
-    );
-    entry._searchNorm = normalize(
-      [
-        entry.title,
-        entry.path,
-        entry.kind,
-        entry.group,
-        entry.description,
-        entry._topicNorm,
-        (entry.aliases || []).join(" ")
-      ].join(" ")
-    );
-    return entry;
-  }
-
-  function topicCounts() {
-    var counts = {};
-    state.entries.forEach(function (entry) {
-      (entry._topics || []).forEach(function (topicId) {
-        counts[topicId] = (counts[topicId] || 0) + 1;
-      });
-    });
-    return counts;
-  }
 
   function uniqueStrings(values) {
     var seen = {};
@@ -647,7 +442,6 @@
     if (entry._titleNorm === normalizedQuery) score += internalNonPage ? 70 : 240;
     if (entry._pathNorm === normalizedQuery) score += 220;
     if (entry._aliasesNormList.indexOf(normalizedQuery) !== -1) score += 250;
-    if (entry._topicNorm === normalizedQuery) score += 110;
     if (entry._searchNorm.indexOf(normalizedQuery) !== -1) score += 90;
     if (entry._titleNorm.indexOf(normalizedQuery) !== -1) score += 120;
     if (entry._pathNorm.indexOf(normalizedQuery) !== -1) score += 105;
@@ -669,10 +463,6 @@
       }
       if (entry._descriptionNorm.indexOf(token) !== -1) {
         score += 10;
-        matched = true;
-      }
-      if (entry._topicNorm.indexOf(token) !== -1) {
-        score += 18;
         matched = true;
       }
 
@@ -830,10 +620,8 @@
     return uniqueStrings(
       [entry._titleNorm]
         .concat(entry._aliasesNormList)
-        .concat(entry._topicNorm ? [entry._topicNorm] : [])
         .concat(entry._titleNorm.split(" ").filter(function (token) { return token.length >= 4; }))
         .concat(entry._aliasNorm.split(" ").filter(function (token) { return token.length >= 4; }))
-        .concat(entry._topicNorm.split(" ").filter(function (token) { return token.length >= 4; }))
     );
   }
 
@@ -1543,8 +1331,8 @@
       normalized === "what do you do" ||
       normalized === "que puedes hacer"
     ) {
-      appendSystem("I can answer from local repo sources, show topic study paths, step through hint ladders, search the repo, and open matches.");
-      appendSystem("Try: study method of images, hint poisson, ask what is Laplace's equation, or from jackson boundary conditions.");
+      appendSystem("I can answer from local repo sources, list pages, notes, notebooks, formulas, scripts, search the repo, and open matches.");
+      appendSystem("Try: ask what is the method of images, from notes what is Poisson's equation, or from jackson boundary conditions.");
       return true;
     }
 
@@ -1617,216 +1405,6 @@
     );
   }
 
-  function scoreTopicEntry(entry, mode, topic) {
-    var score = entry.priority + 20;
-    var normalizedPath = normalizePath(entry.path);
-
-    if (entry._primaryTopic === topic.id) score += 50;
-    if ((entry._topics || []).indexOf(topic.id) !== -1) score += 30;
-    if (topic._studyPaths.indexOf(normalizedPath) !== -1) score += mode === "study" ? 140 : 45;
-    if (topic._reviewPaths.indexOf(normalizedPath) !== -1) score += mode === "review" ? 160 : 40;
-
-    if (mode === "study") {
-      if (entry.kind === "page") score += 55;
-      if (isNote(entry)) score += 46;
-      if (entry.kind === "notebook") score += 38;
-      if (isProblem(entry)) score += 22;
-      if (isFormula(entry)) score += 26;
-      if (isVisual(entry)) score += 20;
-    } else if (mode === "review") {
-      if (isFormula(entry)) score += 95;
-      if (isProblem(entry)) score += 78;
-      if (isNote(entry)) score += 36;
-      if (entry.kind === "pdf") score += 28;
-      if (entry.kind === "page") score += 16;
-      if (isVisual(entry)) score -= 8;
-    } else {
-      if (entry.kind === "page") score += 34;
-      if (isNote(entry)) score += 26;
-      if (entry.kind === "notebook") score += 24;
-      if (isFormula(entry)) score += 20;
-      if (isProblem(entry)) score += 18;
-      if (isVisual(entry)) score += 18;
-    }
-
-    if (topic.id === "visuals") {
-      if (isVisual(entry)) score += 70;
-      if (entry.kind === "image") score += 20;
-    }
-
-    if (topic.id === "repo") {
-      if (entry.group === "Website") score += 45;
-      if (entry.path === "README.md") score += 30;
-    }
-
-    if (isOverleaf(entry)) score -= 60;
-    return score;
-  }
-
-  function rankTopicEntries(topic, mode) {
-    var seen = {};
-    return state.entries
-      .filter(function (entry) {
-        return (entry._topics || []).indexOf(topic.id) !== -1;
-      })
-      .map(function (entry) {
-        return {
-          entry: entry,
-          score: scoreTopicEntry(entry, mode, topic)
-        };
-      })
-      .sort(function (a, b) {
-        if (b.score !== a.score) return b.score - a.score;
-        return a.entry.title.localeCompare(b.entry.title);
-      })
-      .filter(function (item) {
-        var key = normalize(item.entry.title + " " + item.entry.path);
-        if (seen[key]) return false;
-        seen[key] = true;
-        item.entry._score = item.score;
-        return true;
-      })
-      .map(function (item) { return item.entry; })
-      .slice(0, 8);
-  }
-
-  function showTopicCatalog() {
-    var counts = topicCounts();
-    var available = state.topicList
-      .map(function (topic) {
-        return { topic: topic, count: counts[topic.id] || 0 };
-      })
-      .filter(function (item) { return item.count > 0; })
-      .sort(function (a, b) { return b.count - a.count; });
-
-    if (!available.length) {
-      appendWarning("No topic manifest data is available yet.");
-      return;
-    }
-
-    appendSystem("Available topics:");
-    available.forEach(function (item) {
-      appendSystem("  " + item.topic.label + " (" + item.count + ")");
-    });
-    appendSystem("Use: topic <name>, study <name>, review <name>, or hint <name>.");
-  }
-
-  function showTopicView(topic, mode) {
-    var results = rankTopicEntries(topic, mode);
-    var titleMap = {
-      topic: topic.label + " resources",
-      study: "Study path for " + topic.label,
-      review: "Review stack for " + topic.label
-    };
-    var hintMap = {
-      topic: topic.intro,
-      study: "Start with notes and pages, then notebooks, then problems and formula sheets.",
-      review: "Prioritizing compact references, formula sheets, and problem material."
-    };
-
-    if (!results.length) {
-      appendWarning("No indexed files found for " + topic.label + ".");
-      return;
-    }
-
-    showResults(titleMap[mode], results, hintMap[mode]);
-  }
-
-  function showHintCatalog() {
-    var hintTopics = state.topicList.filter(function (topic) {
-      return topic.hints && topic.hints.length;
-    });
-
-    if (!hintTopics.length) {
-      appendWarning("No hint ladders are loaded.");
-      return;
-    }
-
-    appendSystem("Hint ladders:");
-    hintTopics.forEach(function (topic) {
-      appendSystem("  " + topic.label + " (" + topic.hints.length + " steps)");
-    });
-    appendSystem("Use hint <topic>, hint next, hint back, or hint reset.");
-  }
-
-  function showHintStep(topic, step) {
-    var total = (topic.hints || []).length;
-    var clampedStep = Math.max(0, Math.min(step, total - 1));
-    var topResults;
-
-    if (!total) {
-      appendWarning("No hint ladder exists for " + topic.label + ".");
-      return;
-    }
-
-    state.activeHintTopicId = topic.id;
-    state.activeHintStep = clampedStep;
-
-    appendSystem("Hint ladder for " + topic.label + " (" + (clampedStep + 1) + "/" + total + ").");
-    appendSystem("  " + topic.hints[clampedStep]);
-    appendSystem("Use hint next, hint back, or hint reset.");
-
-    if (clampedStep === 0) {
-      topResults = rankTopicEntries(topic, "review").slice(0, 3);
-      if (topResults.length) {
-        showResults(
-          "Helpful sources for " + topic.label + ".",
-          topResults,
-          "Use these only as guidance. The hint ladder stays non-spoiler."
-        );
-      }
-    }
-  }
-
-  function handleHintCommand(argument) {
-    var value = String(argument || "").trim();
-    var normalizedValue = normalize(value);
-    var activeTopic = getTopic(state.activeHintTopicId);
-
-    if (!value || normalizedValue === "list") {
-      if (activeTopic) {
-        showHintStep(activeTopic, state.activeHintStep);
-      } else {
-        showHintCatalog();
-      }
-      return;
-    }
-
-    if (normalizedValue === "next" || normalizedValue === "more") {
-      if (!activeTopic) {
-        appendWarning("No active hint ladder. Use hint <topic> first.");
-        return;
-      }
-      showHintStep(activeTopic, state.activeHintStep + 1);
-      return;
-    }
-
-    if (normalizedValue === "back" || normalizedValue === "prev" || normalizedValue === "previous") {
-      if (!activeTopic) {
-        appendWarning("No active hint ladder. Use hint <topic> first.");
-        return;
-      }
-      showHintStep(activeTopic, state.activeHintStep - 1);
-      return;
-    }
-
-    if (normalizedValue === "reset") {
-      if (!activeTopic) {
-        appendWarning("No active hint ladder. Use hint <topic> first.");
-        return;
-      }
-      showHintStep(activeTopic, 0);
-      return;
-    }
-
-    var topic = resolveTopic(value);
-    if (!topic) {
-      appendWarning('Unknown hint topic "' + value + '".');
-      return;
-    }
-    showHintStep(topic, 0);
-  }
-
   function clearConsole() {
     logNode.innerHTML = "";
     appendSystem("Console cleared. Maxwell standing by.");
@@ -1837,9 +1415,6 @@
       "Commands:",
       "hello | hi | hey | hola",
       "help",
-      "topics | topic <name>",
-      "study <name> | review <name>",
-      "hint <name> | hint next | hint reset",
       "ask <question>",
       "from <source> <question>",
       "context | clear context",
@@ -1864,7 +1439,7 @@
     } else {
       appendSystem("Repository index still loading...");
     }
-    appendSystem("Try: topics, study method of images, hint poisson, or ask what is Laplace's equation.");
+    appendSystem("Try: ask what is the method of images, from notes what is Poisson's equation, open lab");
   }
 
   function executeCommand(rawValue, fromShortcut) {
@@ -1878,10 +1453,6 @@
     var openMatch = normalized.match(/^(open|go|read)\s+(.+)$/);
     var findMatch = normalized.match(/^(find|search)\s+(.+)$/);
     var listMatch = normalized.match(/^list\s+(.+)$/);
-    var topicMatch = normalized.match(/^topic\s+(.+)$/);
-    var studyMatch = normalized.match(/^study\s+(.+)$/);
-    var reviewMatch = normalized.match(/^review\s+(.+)$/);
-    var hintMatch = raw.match(/^hint(?:\s+(.+))?$/i);
 
     if (handleSmallTalk(raw, normalized)) {
       return;
@@ -1906,46 +1477,6 @@
 
     if (normalized === "help") {
       showHelp();
-      return;
-    }
-
-    if (normalized === "topics") {
-      showTopicCatalog();
-      return;
-    }
-
-    if (topicMatch) {
-      var topic = resolveTopic(topicMatch[1]);
-      if (!topic) {
-        appendWarning('Unknown topic "' + topicMatch[1] + '".');
-        return;
-      }
-      showTopicView(topic, "topic");
-      return;
-    }
-
-    if (studyMatch) {
-      var studyTopic = resolveTopic(studyMatch[1]);
-      if (!studyTopic) {
-        appendWarning('Unknown topic "' + studyMatch[1] + '".');
-        return;
-      }
-      showTopicView(studyTopic, "study");
-      return;
-    }
-
-    if (reviewMatch) {
-      var reviewTopic = resolveTopic(reviewMatch[1]);
-      if (!reviewTopic) {
-        appendWarning('Unknown topic "' + reviewMatch[1] + '".');
-        return;
-      }
-      showTopicView(reviewTopic, "review");
-      return;
-    }
-
-    if (hintMatch) {
-      handleHintCommand(hintMatch[1] || "");
       return;
     }
 
@@ -1999,16 +1530,6 @@
         },
         "No notebooks found."
       );
-      return;
-    }
-
-    if (normalized === "visuals" || (listMatch && listMatch[1] === "visuals")) {
-      var visualsTopic = getTopic("visuals");
-      if (visualsTopic) {
-        showTopicView(visualsTopic, "topic");
-      } else {
-        appendWarning("Visual topic manifest is unavailable.");
-      }
       return;
     }
 
@@ -2120,7 +1641,24 @@
     state.context = payload.context || state.context;
     state.count = payload.count || 0;
     state.entries = (payload.entries || []).map(function (entry) {
-      decorateEntry(entry);
+      entry.priority = Number(entry.priority || 0);
+      entry._titleNorm = normalize(entry.title);
+      entry._pathNorm = normalize(entry.path);
+      entry._aliasesNormList = (entry.aliases || []).map(function (alias) {
+        return normalize(alias);
+      });
+      entry._aliasNorm = normalize((entry.aliases || []).join(" "));
+      entry._descriptionNorm = normalize(entry.description || "");
+      entry._searchNorm = normalize(
+        [
+          entry.title,
+          entry.path,
+          entry.kind,
+          entry.group,
+          entry.description,
+          (entry.aliases || []).join(" ")
+        ].join(" ")
+      );
       state.entryMap[entry.path] = entry;
       return entry;
     });
@@ -2141,20 +1679,14 @@
 
   function loadIndex() {
     appendSystem("Booting repository index...");
-    Promise.all([
-      fetch("./repo-index.json").then(function (response) {
+    fetch("./repo-index.json")
+      .then(function (response) {
         if (!response.ok) throw new Error("Index fetch failed.");
         return response.json();
-      }),
-      loadTopicsManifest()
-    ])
-      .then(function (values) {
-        var payload = values[0];
+      })
+      .then(function (payload) {
         prepareEntries(payload);
         appendSystem("Repository index synchronized. Indexed " + state.count + " files.");
-        if (state.topicList.length) {
-          appendSystem("Topic manifest ready. Loaded " + state.topicList.length + " topics.");
-        }
       })
       .catch(function () {
         appendWarning("Maxwell could not load repo-index.json.");
