@@ -11,6 +11,9 @@
     topicMap: {},
     topicsReady: false,
     topicsPromise: null,
+    coachProblems: [],
+    coachReady: false,
+    coachPromise: null,
     qaChunks: [],
     qaReady: false,
     qaPromise: null,
@@ -19,6 +22,7 @@
     lastScope: null,
     activeHintTopicId: "",
     activeHintStep: 0,
+    activeCoach: null,
     open: false,
     booted: false,
     history: [],
@@ -59,7 +63,7 @@
     '      <div class="maxwell-log" aria-live="polite"></div>',
     '      <form class="maxwell-form">',
     '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
-    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="study method of images, hint poisson, ask what is Laplace\'s equation">',
+    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="coach griffiths 3.8, strategy, hint next, ask what is Laplace\'s equation">',
     "      </form>",
     "    </div>",
     "  </div>",
@@ -99,6 +103,10 @@
     "study",
     "review",
     "hint",
+    "coach",
+    "strategy",
+    "equations",
+    "sources",
     "clear",
     "close",
     "context",
@@ -126,6 +134,8 @@
     script: "scripts",
     visual: "visuals",
     hints: "hint",
+    source: "sources",
+    solve: "coach",
     explain: "ask"
   };
 
@@ -330,6 +340,51 @@
       });
 
     return state.topicsPromise;
+  }
+
+  function prepareCoachProblems(payload) {
+    state.coachProblems = (payload.problems || []).map(function (problem) {
+      problem._idNorm = normalize(problem.problem_id || problem.id || "");
+      problem._titleNorm = normalize(problem.title || "");
+      problem._chapterNorm = normalize(problem.chapter_title || "");
+      problem._topicNorm = normalize(problem.topic_id || "");
+      problem._sourceNorm = normalize(problem.source || "");
+      problem._statementNorm = normalize(problem.statement || "");
+      problem._searchNorm = normalize(
+        [
+          problem.problem_id,
+          problem.title,
+          problem.chapter_title,
+          problem.topic_id,
+          problem.statement,
+          problem.source
+        ].join(" ")
+      );
+      return problem;
+    });
+    state.coachReady = true;
+    return state.coachProblems;
+  }
+
+  function loadCoachManifest() {
+    if (state.coachReady) return Promise.resolve(state.coachProblems);
+    if (state.coachPromise) return state.coachPromise;
+
+    state.coachPromise = fetch("./maxwell-problem-coach.json")
+      .then(function (response) {
+        if (!response.ok) throw new Error("coach manifest fetch failed");
+        return response.json();
+      })
+      .then(function (payload) {
+        return prepareCoachProblems(payload);
+      })
+      .catch(function () {
+        state.coachPromise = null;
+        appendWarning("Maxwell could not load maxwell-problem-coach.json.");
+        return [];
+      });
+
+    return state.coachPromise;
   }
 
   function getTopic(topicId) {
@@ -1543,8 +1598,8 @@
       normalized === "what do you do" ||
       normalized === "que puedes hacer"
     ) {
-      appendSystem("I can answer from local repo sources, show topic study paths, step through hint ladders, search the repo, and open matches.");
-      appendSystem("Try: study method of images, hint poisson, ask what is Laplace's equation, or from jackson boundary conditions.");
+      appendSystem("I can answer from local repo sources, show topic study paths, coach problems step by step, step through hint ladders, search the repo, and open matches.");
+      appendSystem("Try: coach griffiths 3.8, strategy, equations, hint next, or from jackson boundary conditions.");
       return true;
     }
 
@@ -1782,6 +1837,38 @@
     var value = String(argument || "").trim();
     var normalizedValue = normalize(value);
     var activeTopic = getTopic(state.activeHintTopicId);
+    var activeCoach = state.activeCoach;
+
+    if (
+      activeCoach &&
+      (
+        !value ||
+        normalizedValue === "list" ||
+        normalizedValue === "next" ||
+        normalizedValue === "more" ||
+        normalizedValue === "back" ||
+        normalizedValue === "prev" ||
+        normalizedValue === "previous" ||
+        normalizedValue === "reset"
+      )
+    ) {
+      if (!value || normalizedValue === "list") {
+        showCoachHintStep(activeCoach.hintStep || 0);
+        return;
+      }
+      if (normalizedValue === "next" || normalizedValue === "more") {
+        showCoachHintStep((activeCoach.hintStep || 0) + 1);
+        return;
+      }
+      if (normalizedValue === "back" || normalizedValue === "prev" || normalizedValue === "previous") {
+        showCoachHintStep((activeCoach.hintStep || 0) - 1);
+        return;
+      }
+      if (normalizedValue === "reset") {
+        showCoachHintStep(0);
+        return;
+      }
+    }
 
     if (!value || normalizedValue === "list") {
       if (activeTopic) {
@@ -1827,6 +1914,349 @@
     showHintStep(topic, 0);
   }
 
+  function scoreCoachProblem(problem, query) {
+    var rawQuery = String(query || "").trim();
+    var normalizedQuery = normalize(rawQuery);
+    var explicitId = rawQuery.match(/(\d+\.\d+)/);
+    var score = 0;
+    var matched = 0;
+
+    if (!normalizedQuery) return 0;
+    if (explicitId && explicitId[1] === problem.problem_id) score += 400;
+    if (problem._idNorm === normalizedQuery) score += 350;
+    if (problem._titleNorm === normalizedQuery) score += 300;
+    if (problem._searchNorm.indexOf(normalizedQuery) !== -1) score += 100;
+
+    tokenizeQuestion(rawQuery).forEach(function (token) {
+      var tokenMatched = false;
+      if (problem._idNorm.indexOf(token) !== -1) {
+        score += 120;
+        tokenMatched = true;
+      }
+      if (problem._titleNorm.indexOf(token) !== -1) {
+        score += 40;
+        tokenMatched = true;
+      }
+      if (problem._chapterNorm.indexOf(token) !== -1) {
+        score += 24;
+        tokenMatched = true;
+      }
+      if (problem._statementNorm.indexOf(token) !== -1) {
+        score += 18;
+        tokenMatched = true;
+      }
+      if (problem._topicNorm.indexOf(token) !== -1) {
+        score += 12;
+        tokenMatched = true;
+      }
+      if (tokenMatched) matched += 1;
+    });
+
+    if (!score && !matched) return 0;
+    return score;
+  }
+
+  function resolveCoachProblem(query) {
+    var results = state.coachProblems
+      .map(function (problem) {
+        return {
+          problem: problem,
+          score: scoreCoachProblem(problem, query)
+        };
+      })
+      .filter(function (item) { return item.score > 0; })
+      .sort(function (a, b) { return b.score - a.score; });
+
+    return results.length ? results[0].problem : null;
+  }
+
+  function methodHintFromTopic(problem, topic) {
+    var statement = String(problem.statement || "").toLowerCase();
+    if (topic && topic.id === "method-of-images") {
+      return "Choose the image configuration first, then verify the conducting boundary before computing any force or charge density.";
+    }
+    if (topic && topic.id === "green-functions") {
+      return "Identify the operator, the source term, and the boundary condition before writing the Green-function representation.";
+    }
+    if (topic && topic.id === "laplace") {
+      return "This is mainly a boundary-value problem: solve the source-free equation in the right coordinates and kill terms that violate the region geometry.";
+    }
+    if (topic && topic.id === "poisson") {
+      return "Write the source cleanly, solve for the potential with the stated boundary conditions, and only then differentiate if the field is requested.";
+    }
+    if (topic && topic.id === "multipole") {
+      return "Decide which moment is the first nonzero one at the chosen origin before expanding further.";
+    }
+    if (topic && topic.id === "dielectrics") {
+      return "Separate free charge, bound charge, and boundary conditions before choosing whether to work with E, V, D, or P.";
+    }
+    if (topic && topic.id === "magnetostatics") {
+      return "Choose the cleanest route among Biot-Savart, Ampere's law, vector potential, or magnetization currents before calculating.";
+    }
+    if (topic && topic.id === "radiation") {
+      return "Separate near-field intuition from propagation or conservation-law structure before deciding what to compute.";
+    }
+    if (/force|work|energy|torque|flux/.test(statement)) {
+      return "Solve the field or potential first; the requested force, work, torque, or flux should come only after the field description is under control.";
+    }
+    return "Start by classifying the geometry, the unknown, and the governing equation before writing any algebra.";
+  }
+
+  function buildCoachStrategy(problem, topic) {
+    var strategy = [];
+    strategy.push("Map the geometry and state exactly what the unknown is: field, potential, induced charge, force, energy, or flux.");
+    strategy.push(methodHintFromTopic(problem, topic));
+    strategy.push("Write the boundary conditions or symmetry constraints explicitly before solving.");
+    strategy.push("Once the intermediate field or potential is known, extract only the final quantity requested and check limiting behavior.");
+    return strategy;
+  }
+
+  function buildCoachHints(problem, topic) {
+    var hints = [];
+    hints.push("Do not compute yet. Sketch the geometry and label the source points, observation points, conductors, and symmetry axes.");
+    hints.push(methodHintFromTopic(problem, topic));
+    hints.push("Write down the exact boundary condition or constitutive relation that makes this problem different from a free-space calculation.");
+    hints.push("After the main field or potential is found, use that result to compute the requested derived quantity and check units or limits.");
+    return hints;
+  }
+
+  function collectEquationItems(matches, limit) {
+    var seen = {};
+    var items = [];
+
+    matches.forEach(function (chunk) {
+      String(chunk.text || "")
+        .split(/\n+/)
+        .forEach(function (line) {
+          var cleaned = normalizeAnswerText(line);
+          var key = normalize(cleaned);
+          if (!cleaned || cleaned.length < 10 || cleaned.length > 220) return;
+          if (seen[key]) return;
+          if (!/(=|\\nabla|∇|int|oint|sum|epsilon|varepsilon|rho|phi|mathbf|partial|delta)/i.test(cleaned)) return;
+          seen[key] = true;
+          items.push({
+            text: cleaned,
+            chunk: chunk
+          });
+        });
+    });
+
+    return items.slice(0, limit || 4);
+  }
+
+  function fallbackCoachEquations(problem, topic) {
+    var topicId = topic ? topic.id : "";
+    var map = {
+      "vector-analysis": [
+        "Use the relevant differential operator directly: gradient, divergence, curl, or Laplacian.",
+        "Apply the corresponding integral theorem only after the geometry and orientation are fixed."
+      ],
+      "electrostatics": [
+        "Coulomb/Gauss route: ∇·E = rho/epsilon_0,  ∇×E = 0.",
+        "Potential route: E = -∇V."
+      ],
+      "poisson": [
+        "Poisson equation: ∇^2 V = -rho/epsilon_0.",
+        "Electric field from potential: E = -∇V."
+      ],
+      "laplace": [
+        "Laplace equation: ∇^2 V = 0.",
+        "Use the coordinate system adapted to the boundary geometry."
+      ],
+      "method-of-images": [
+        "Superpose the real source with image sources so that the boundary condition is satisfied exactly.",
+        "If surface charge is requested, use sigma = -epsilon_0 (∂V/∂n)_outside on the conductor."
+      ],
+      "green-functions": [
+        "Green-function structure: solve the response to a point source with the correct boundary conditions.",
+        "Build the full solution by superposition over the source distribution."
+      ],
+      "multipole": [
+        "Far-field expansion: keep the first nonzero multipole moment.",
+        "Choose the origin carefully before evaluating monopole, dipole, or higher moments."
+      ],
+      "dielectrics": [
+        "Use D when free charge is the clean input and P when bound charge is the focus.",
+        "Interface condition: n·(D2-D1) = sigma_f."
+      ],
+      "magnetostatics": [
+        "Choose between Biot-Savart, Ampere's law, or bound-current methods.",
+        "In matter, relate B, H, and M with the appropriate constitutive description."
+      ],
+      "radiation": [
+        "Identify whether the question is about field transport, induction, energy, momentum, or radiation-zone behavior.",
+        "Use Maxwell's equations plus the relevant conservation law or retarded-field structure."
+      ]
+    };
+
+    return (map[topicId] || map.electrostatics).map(function (text) {
+      return { text: text, chunk: null };
+    });
+  }
+
+  function buildCoachEquations(problem, topic) {
+    var query = problem.statement + " " + (topic ? topic.label : "");
+    var matches = retrieveQaMatches(query, 8, null).filter(function (chunk) {
+      return chunk.path !== problem.path;
+    });
+    var equations = collectEquationItems(matches, 3);
+
+    if (!equations.length) {
+      equations = fallbackCoachEquations(problem, topic);
+    }
+
+    return {
+      equations: equations.slice(0, 3),
+      matches: matches
+    };
+  }
+
+  function buildCoachSourceEntries(problem, topic, matches) {
+    var entries = [];
+    var seen = {};
+
+    function pushEntry(entry) {
+      var key = entry.path + "::" + (entry.locator || "");
+      if (seen[key]) return;
+      seen[key] = true;
+      entries.push(entry);
+    }
+
+    pushEntry(makeSourceEntry(problem.path, problem.title, problem.locator, null, 1));
+
+    matches.slice(0, 2).forEach(function (chunk, index) {
+      pushEntry(makeSourceEntry(chunk.path, chunk.title, chunkLocator(chunk), chunk.page_start, index + 2));
+    });
+
+    if (topic) {
+      rankTopicEntries(topic, "review").slice(0, 2).forEach(function (entry) {
+        pushEntry(entry);
+      });
+    }
+
+    return entries.slice(0, 5);
+  }
+
+  function showCoachStrategy() {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+    appendSystem("Strategy:");
+    state.activeCoach.strategy.forEach(function (line, index) {
+      appendSystem("  " + (index + 1) + ". " + line);
+    });
+  }
+
+  function showCoachEquations() {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+    appendSystem("Key equations or relations:");
+    state.activeCoach.equations.forEach(function (item, index) {
+      appendSystem("  " + (index + 1) + ". " + item.text);
+    });
+  }
+
+  function showCoachSources() {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+    showResults(
+      'Coach sources for "' + state.activeCoach.problem.title + '".',
+      state.activeCoach.sources,
+      "Statement first, then nearby notes and compact review sources."
+    );
+  }
+
+  function showCoachHintStep(step) {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+
+    var hints = state.activeCoach.hints || [];
+    var total = hints.length;
+    var clampedStep = Math.max(0, Math.min(step, total - 1));
+    state.activeCoach.hintStep = clampedStep;
+    appendSystem(
+      "Problem hint for " +
+      state.activeCoach.problem.title +
+      " (" +
+      (clampedStep + 1) +
+      "/" +
+      total +
+      ")."
+    );
+    appendSystem("  " + hints[clampedStep]);
+    appendSystem("Use hint next, hint back, strategy, equations, or sources.");
+  }
+
+  function clearCoach() {
+    state.activeCoach = null;
+    appendSystem("Problem coach cleared.");
+  }
+
+  function handleCoachCommand(argument) {
+    var query = String(argument || "").trim();
+
+    if (normalize(query) === "clear") {
+      clearCoach();
+      return;
+    }
+
+    if (!query) {
+      if (!state.activeCoach) {
+        appendWarning("Use coach <problem>. Example: coach griffiths 3.8");
+        return;
+      }
+      appendSystem("Current coached problem: " + state.activeCoach.problem.title + ".");
+      showCoachStrategy();
+      return;
+    }
+
+    Promise.all([loadCoachManifest(), loadTopicsManifest(), loadQaIndex()])
+      .then(function () {
+        var problem = resolveCoachProblem(query);
+        var topic;
+        var coachData;
+
+        if (!problem) {
+          appendWarning('No coached problem match for "' + query + '".');
+          appendSystem("Try: coach 3.8, coach griffiths 5.12, or coach grounded conducting sphere.");
+          return;
+        }
+
+        topic = getTopic(problem.topic_id);
+        coachData = buildCoachEquations(problem, topic);
+
+        state.activeCoach = {
+          problem: problem,
+          topic: topic,
+          strategy: buildCoachStrategy(problem, topic),
+          equations: coachData.equations,
+          hints: buildCoachHints(problem, topic),
+          hintStep: 0,
+          sources: buildCoachSourceEntries(problem, topic, coachData.matches)
+        };
+
+        appendSystem("Coach mode: " + problem.title + ".");
+        appendSystem("Problem statement:");
+        appendSystem("  " + problem.statement);
+        if (topic) {
+          appendSystem("Topic: " + topic.label + ".");
+        }
+        showCoachStrategy();
+        showCoachEquations();
+        appendSystem("Use hint next, strategy, equations, sources, or coach clear.");
+      })
+      .catch(function () {
+        appendWarning("Problem coach is unavailable right now.");
+      });
+  }
+
   function clearConsole() {
     logNode.innerHTML = "";
     appendSystem("Console cleared. Maxwell standing by.");
@@ -1839,6 +2269,8 @@
       "help",
       "topics | topic <name>",
       "study <name> | review <name>",
+      "coach <problem> | coach clear",
+      "strategy | equations | sources",
       "hint <name> | hint next | hint reset",
       "ask <question>",
       "from <source> <question>",
@@ -1864,7 +2296,7 @@
     } else {
       appendSystem("Repository index still loading...");
     }
-    appendSystem("Try: topics, study method of images, hint poisson, or ask what is Laplace's equation.");
+    appendSystem("Try: coach griffiths 3.8, strategy, hint next, or ask what is Laplace's equation.");
   }
 
   function executeCommand(rawValue, fromShortcut) {
@@ -1881,6 +2313,7 @@
     var topicMatch = normalized.match(/^topic\s+(.+)$/);
     var studyMatch = normalized.match(/^study\s+(.+)$/);
     var reviewMatch = normalized.match(/^review\s+(.+)$/);
+    var coachMatch = raw.match(/^coach(?:\s+(.+))?$/i);
     var hintMatch = raw.match(/^hint(?:\s+(.+))?$/i);
 
     if (handleSmallTalk(raw, normalized)) {
@@ -1941,6 +2374,26 @@
         return;
       }
       showTopicView(reviewTopic, "review");
+      return;
+    }
+
+    if (coachMatch) {
+      handleCoachCommand(coachMatch[1] || "");
+      return;
+    }
+
+    if (normalized === "strategy") {
+      showCoachStrategy();
+      return;
+    }
+
+    if (normalized === "equations") {
+      showCoachEquations();
+      return;
+    }
+
+    if (normalized === "sources") {
+      showCoachSources();
       return;
     }
 
@@ -2146,7 +2599,8 @@
         if (!response.ok) throw new Error("Index fetch failed.");
         return response.json();
       }),
-      loadTopicsManifest()
+      loadTopicsManifest(),
+      loadCoachManifest()
     ])
       .then(function (values) {
         var payload = values[0];
@@ -2154,6 +2608,9 @@
         appendSystem("Repository index synchronized. Indexed " + state.count + " files.");
         if (state.topicList.length) {
           appendSystem("Topic manifest ready. Loaded " + state.topicList.length + " topics.");
+        }
+        if (state.coachProblems.length) {
+          appendSystem("Problem coach ready. Loaded " + state.coachProblems.length + " problems.");
         }
       })
       .catch(function () {
