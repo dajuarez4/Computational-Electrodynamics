@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maxwell Lecture Mode | Computational Electrodynamics</title>
+  <link rel="stylesheet" href="./styles.css?v=2026-04-18-v7">
+  <style>
+    .lecture-shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .lecture-sidebar {
+      display: grid;
+      gap: 1rem;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .lecture-card {
+      padding: 1rem;
+      border-radius: 24px;
+      background: rgba(255, 252, 247, 0.96);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .lecture-card h3,
+    .lecture-stage h2,
+    .lecture-stage h3 {
+      margin-top: 0;
+    }
+
+    .lesson-list,
+    .lecture-outline,
+    .resource-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .lesson-button,
+    .outline-button,
+    .resource-link {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(15, 94, 140, 0.18);
+      background: #fffdfa;
+      border-radius: 18px;
+      padding: 0.85rem 0.9rem;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .lesson-button:hover,
+    .outline-button:hover,
+    .resource-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(15, 94, 140, 0.38);
+      box-shadow: 0 10px 22px rgba(15, 94, 140, 0.08);
+    }
+
+    .lesson-button.active,
+    .outline-button.active {
+      background: linear-gradient(180deg, rgba(15, 94, 140, 0.1), rgba(15, 94, 140, 0.04));
+      border-color: rgba(15, 94, 140, 0.5);
+    }
+
+    .lesson-button__title,
+    .outline-button__title {
+      display: block;
+      font-weight: 700;
+    }
+
+    .lesson-button__meta,
+    .outline-button__meta,
+    .resource-link__meta,
+    .voice-help,
+    .lecture-note,
+    .status-line {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .lesson-badge-row,
+    .status-chip-row,
+    .lecture-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.55rem;
+    }
+
+    .lesson-pill,
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.28rem 0.65rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid rgba(15, 94, 140, 0.18);
+      background: rgba(15, 94, 140, 0.05);
+      color: var(--accent);
+    }
+
+    .status-chip.complete {
+      color: #17643d;
+      border-color: rgba(23, 100, 61, 0.22);
+      background: rgba(23, 100, 61, 0.08);
+    }
+
+    .lecture-voice-grid {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .lecture-control label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .lecture-control select,
+    .lecture-control input[type="range"] {
+      width: 100%;
+    }
+
+    .lecture-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .lecture-maxwell-card {
+      background:
+        linear-gradient(180deg, rgba(10, 25, 38, 0.98), rgba(11, 32, 48, 0.96));
+      color: #eff6fb;
+      border-color: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lecture-maxwell-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(98, 214, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(98, 214, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 12px, 18px 100%;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .lecture-maxwell-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lecture-ascii {
+      margin: 0 0 0.7rem 0;
+      color: #7bffe1;
+      font-size: 1rem;
+      line-height: 1.05;
+      white-space: pre;
+      font-family: "Courier New", monospace;
+    }
+
+    .lecture-stage-wrap {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .lecture-stage {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      padding: 1.35rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        radial-gradient(circle at top right, rgba(236, 187, 134, 0.12), transparent 30%),
+        linear-gradient(180deg, rgba(12, 29, 42, 0.98), rgba(9, 17, 25, 0.98));
+      box-shadow: 0 28px 54px rgba(11, 32, 48, 0.22);
+      color: #eff6fb;
+    }
+
+    .lecture-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(123, 255, 225, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(123, 255, 225, 0.03) 1px, transparent 1px);
+      background-size: 100% 14px, 22px 100%;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    .lecture-stage > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lecture-stage__top,
+    .lecture-status-bar,
+    .lecture-progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .lecture-stage .mini-label,
+    .lecture-stage .eyebrow {
+      color: #ffd7af;
+    }
+
+    .lecture-summary {
+      max-width: 70ch;
+      margin-top: 0.8rem;
+      color: #dbe7f2;
+      font-size: 1.05rem;
+    }
+
+    .lecture-media {
+      margin-top: 1rem;
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lecture-media img {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      background: #08121b;
+    }
+
+    .lecture-media__caption {
+      margin: 0;
+      padding: 0.8rem 0.95rem;
+      color: #ccdae7;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.95rem;
+    }
+
+    .equation-panel {
+      padding: 1.1rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fbff;
+    }
+
+    .equation-panel__math {
+      display: block;
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      line-height: 1.35;
+      font-family: "Times New Roman", Georgia, serif;
+    }
+
+    .equation-panel__caption {
+      margin: 0.8rem 0 0 0;
+      color: #ccdae7;
+    }
+
+    .lecture-stage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .lecture-block {
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lecture-block ul {
+      margin: 0.75rem 0 0 1rem;
+      padding: 0;
+    }
+
+    .lecture-block li + li {
+      margin-top: 0.45rem;
+    }
+
+    .lecture-script {
+      margin-top: 1rem;
+      border-radius: 22px;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lecture-script p,
+    .lecture-block p {
+      margin-bottom: 0;
+      color: #dbe7f2;
+    }
+
+    .lecture-controls {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 24px;
+      background: rgba(255, 252, 247, 0.96);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .lecture-control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .lecture-control-row .button {
+      min-width: 132px;
+    }
+
+    .lecture-progress {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(15, 94, 140, 0.12);
+      overflow: hidden;
+    }
+
+    .lecture-progress__bar {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0f5e8c, #ecbb86);
+      transition: width 180ms ease;
+    }
+
+    .lecture-answer {
+      margin-top: 0.85rem;
+      padding: 0.8rem 0.9rem;
+      border-radius: 16px;
+      background: rgba(236, 187, 134, 0.12);
+      border: 1px solid rgba(236, 187, 134, 0.2);
+      display: none;
+    }
+
+    .lecture-answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .lecture-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .lecture-sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .lecture-stage-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lecture-control-row .button {
+        min-width: 0;
+        flex: 1 1 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="corner-counter" href="https://hitscounter.dev/history?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2Fmaxwell-lecture.html" aria-label="Website views">
+    <img alt="Website views" src="https://hitscounter.dev/api/hit?url=https%3A%2F%2Fdajuarez4.github.io%2FComputational-Electrodynamics%2Fmaxwell-lecture.html&label=Views&icon=eye&color=%23198754&message=&style=flat&tz=America%2FDenver">
+  </a>
+  <div class="site-shell">
+    <header class="subhero">
+      <nav class="topbar">
+        <a class="brand" href="./index.html">Computational Electrodynamics</a>
+        <div class="nav-links">
+          <a href="./topics.html">Topics</a>
+          <a href="./notes.html">Notes</a>
+          <a href="./visuals.html">Visuals</a>
+          <a href="./maxwell-lecture.html">Lecture Mode</a>
+          <a href="./lab.html">Lab</a>
+          <a href="./index.html">Home</a>
+        </div>
+      </nav>
+      <div class="subhero-copy">
+        <p class="eyebrow">Student Tutor</p>
+        <h1>Maxwell Lecture Mode</h1>
+        <p class="lede">
+          A narrated lesson player built directly into the course site. Choose a topic, select a browser voice,
+          and let Maxwell walk through slides, visuals, equations, and pause points like a compact mini-lecture.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#lecturePlayer" id="jumpToLecture">Start a narrated lesson</a>
+          <a class="button secondary" href="./visuals.html">Open visuals</a>
+          <a class="button secondary" href="./topics.html">Back to topics</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="section" id="lecturePlayer">
+        <div class="section-heading">
+          <p class="eyebrow" style="color:#7a120e !important;">Lecture Player</p>
+          <h2>Short, voiced lessons built from the project materials</h2>
+        </div>
+
+        <div class="lecture-shell">
+          <aside class="lecture-sidebar">
+            <article class="lecture-card">
+              <p class="mini-label">Lessons</p>
+              <div class="lesson-list" id="lessonList"></div>
+            </article>
+
+            <article class="lecture-card">
+              <p class="mini-label">Current Outline</p>
+              <div class="lecture-outline" id="outlineList"></div>
+            </article>
+
+            <article class="lecture-card">
+              <p class="mini-label">Voice Controls</p>
+              <div class="lecture-voice-grid">
+                <div class="lecture-control">
+                  <label for="voiceSelect">Voice</label>
+                  <select id="voiceSelect"></select>
+                  <span class="voice-help">Uses the browser speech engine locally. Voice quality depends on the device and browser.</span>
+                </div>
+                <div class="lecture-control">
+                  <label for="rateRange">Narration speed</label>
+                  <input id="rateRange" type="range" min="0.8" max="1.25" step="0.05" value="1">
+                  <span class="voice-help" id="rateValue">1.00x</span>
+                </div>
+                <label class="lecture-checkbox">
+                  <input id="autoAdvance" type="checkbox" checked>
+                  Auto-advance after each narrated slide
+                </label>
+              </div>
+            </article>
+
+            <article class="lecture-card">
+              <p class="mini-label">Lesson Resources</p>
+              <div class="resource-list" id="resourceList"></div>
+            </article>
+
+            <article class="lecture-card lecture-maxwell-card">
+              <pre class="lecture-ascii">  __
+ /__\\
+(o_o)
+ /|∞|\\
+  | |
+ /   \\
+
+ Maxwell</pre>
+              <h3>Maxwell as a tutor</h3>
+              <p>
+                This mode is not just search. Maxwell presents the idea, pauses for a student check, and uses local voice
+                narration so the lesson can feel like a guided explanation instead of a static page.
+              </p>
+              <div class="lecture-pill-row">
+                <span class="lesson-pill">voice</span>
+                <span class="lesson-pill">slides</span>
+                <span class="lesson-pill">prompts</span>
+                <span class="lesson-pill">local only</span>
+              </div>
+            </article>
+          </aside>
+
+          <div class="lecture-stage-wrap">
+            <article class="lecture-stage">
+              <div class="lecture-stage__top">
+                <p class="mini-label" id="slideEyebrow">Lesson</p>
+                <div class="status-chip-row">
+                  <span class="status-chip" id="lessonStatus">Ready</span>
+                  <span class="status-chip" id="slideCounter">Slide 1 / 1</span>
+                </div>
+              </div>
+
+              <h2 id="slideTitle">Loading lesson...</h2>
+              <p class="lecture-summary" id="slideSummary"></p>
+
+              <div class="lecture-media" id="slideMedia"></div>
+
+              <div class="lecture-stage-grid">
+                <section class="lecture-block">
+                  <h3>Key moves</h3>
+                  <ul id="slideBullets"></ul>
+                </section>
+                <section class="lecture-block">
+                  <h3>Pause and think</h3>
+                  <p id="slidePrompt"></p>
+                  <div class="action-row">
+                    <button class="button secondary" id="revealGuideButton" type="button">Reveal guide</button>
+                  </div>
+                  <div class="lecture-answer" id="slideGuide"></div>
+                </section>
+              </div>
+
+              <section class="lecture-script">
+                <h3>Narration transcript</h3>
+                <p id="slideNarration"></p>
+              </section>
+            </article>
+
+            <article class="lecture-controls">
+              <div class="lecture-control-row">
+                <button class="button primary" id="startLessonButton" type="button">Start or resume</button>
+                <button class="button secondary" id="speakSlideButton" type="button">Speak slide</button>
+                <button class="button secondary" id="pauseButton" type="button">Pause</button>
+                <button class="button secondary" id="replayButton" type="button">Replay slide</button>
+                <button class="button secondary" id="prevButton" type="button">Previous</button>
+                <button class="button secondary" id="nextButton" type="button">Next</button>
+              </div>
+
+              <div class="lecture-progress-row">
+                <span class="status-line" id="playerStatus">Ready. Pick a lesson and press Start or resume.</span>
+                <span class="status-line" id="lessonMeta">0 slides</span>
+              </div>
+              <div class="lecture-progress" aria-hidden="true">
+                <div class="lecture-progress__bar" id="progressBar"></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Lecture Mode uses local browser speech synthesis so it stays deployable on GitHub Pages without external APIs.</p>
+    </footer>
+  </div>
+
+  <script src="./maxwell-shell-v2.js?v=2026-04-18-v2step12"></script>
+  <script src="./maxwell-lecture.js?v=2026-04-19-v2"></script>
+</body>
+</html>
