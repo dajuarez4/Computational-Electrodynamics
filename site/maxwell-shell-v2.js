@@ -63,7 +63,7 @@
     '      <div class="maxwell-log" aria-live="polite"></div>',
     '      <form class="maxwell-form">',
     '        <label class="maxwell-prompt" for="maxwellInput">maxwell@repo:~$</label>',
-    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="coach griffiths 3.8, strategy, hint next, ask what is Laplace\'s equation">',
+    '        <input id="maxwellInput" class="maxwell-input" type="text" autocomplete="off" spellcheck="false" placeholder="coach griffiths 3.8, first step, check my approach I will start with symmetry, ask what is Laplace\'s equation">',
     "      </form>",
     "    </div>",
     "  </div>",
@@ -105,6 +105,8 @@
     "hint",
     "coach",
     "strategy",
+    "first",
+    "mistakes",
     "equations",
     "sources",
     "clear",
@@ -1598,8 +1600,8 @@
       normalized === "what do you do" ||
       normalized === "que puedes hacer"
     ) {
-      appendSystem("I can answer from local repo sources, show topic study paths, coach problems step by step, step through hint ladders, search the repo, and open matches.");
-      appendSystem("Try: coach griffiths 3.8, strategy, equations, hint next, or from jackson boundary conditions.");
+      appendSystem("I can answer from local repo sources, show topic study paths, coach problems step by step, check your setup, step through hint ladders, search the repo, and open matches.");
+      appendSystem("Try: coach griffiths 3.8, first step, common mistakes, check my approach I will place the image charge first, or from jackson boundary conditions.");
       return true;
     }
 
@@ -2020,6 +2022,165 @@
     return hints;
   }
 
+  function buildCoachFirstStep(problem, topic) {
+    var statement = String(problem.statement || "").toLowerCase();
+    if (topic && topic.id === "method-of-images") {
+      return "Start by drawing the real source, the conductor, and the image configuration you expect to enforce the boundary condition.";
+    }
+    if (topic && topic.id === "green-functions") {
+      return "Start by identifying the differential operator, the source term, and the boundary condition the Green function must satisfy.";
+    }
+    if (topic && topic.id === "laplace") {
+      return "Start by writing the source-free equation in the coordinate system adapted to the geometry and listing the boundary data.";
+    }
+    if (topic && topic.id === "poisson") {
+      return "Start by writing the source density and the exact Poisson equation, together with the region and boundary conditions.";
+    }
+    if (topic && topic.id === "multipole") {
+      return "Start by choosing the expansion origin and deciding which multipole moment could be the first nonzero one.";
+    }
+    if (topic && topic.id === "dielectrics") {
+      return "Start by separating free charge, bound charge, and the interface conditions before deciding whether to use E, V, D, or P.";
+    }
+    if (topic && topic.id === "magnetostatics") {
+      return "Start by deciding whether symmetry suggests Ampere's law, Biot-Savart, or a bound-current description.";
+    }
+    if (/force|work|energy|torque/.test(statement)) {
+      return "Start by identifying the intermediate field or potential you need before trying to compute the requested force, work, energy, or torque.";
+    }
+    return "Start by sketching the geometry and stating the unknown quantity and governing equation explicitly.";
+  }
+
+  function buildCoachMistakes(problem, topic) {
+    var statement = String(problem.statement || "").toLowerCase();
+    var mistakes = [
+      "Jumping into algebra before the geometry, unknown, and boundary conditions are fully labeled.",
+      "Using a convenient formula without first checking that its symmetry assumptions actually hold.",
+      "Skipping a limiting-case or units check after the final expression is obtained."
+    ];
+
+    if (topic && topic.id === "method-of-images") {
+      mistakes = [
+        "Placing image charges inside the physical region instead of outside it.",
+        "Using image charges to compute the field but never checking the conductor boundary condition explicitly.",
+        "Forgetting that forces are computed on real charges only; image charges are mathematical devices, not physical sources."
+      ];
+    } else if (topic && topic.id === "poisson") {
+      mistakes = [
+        "Treating Poisson's equation alone as enough to determine the solution without boundary data.",
+        "Dropping the source term too early and accidentally solving Laplace's equation instead.",
+        "Differentiating for the field before the potential solution is consistent across all regions."
+      ];
+    } else if (topic && topic.id === "laplace") {
+      mistakes = [
+        "Keeping separated solutions that violate regularity or blow up in the region of interest.",
+        "Applying the wrong boundary condition on a conducting surface or symmetry plane.",
+        "Forgetting that uniqueness is the main check on whether the final form is physically acceptable."
+      ];
+    } else if (topic && topic.id === "multipole") {
+      mistakes = [
+        "Expanding about a bad origin and creating unnecessary lower multipole terms.",
+        "Keeping more terms than needed before identifying the first nonzero moment.",
+        "Using a far-field expansion outside its regime of validity."
+      ];
+    } else if (topic && topic.id === "dielectrics") {
+      mistakes = [
+        "Mixing free charge and bound charge into one undifferentiated source term.",
+        "Applying boundary conditions to the wrong field component at an interface.",
+        "Using D, E, and P interchangeably without fixing which quantity is primary in the problem."
+      ];
+    } else if (topic && topic.id === "magnetostatics") {
+      mistakes = [
+        "Starting from Biot-Savart when symmetry would make Ampere's law much cleaner.",
+        "Ignoring bound currents or magnetization when matter is present.",
+        "Computing a final force or energy before the magnetic field structure is pinned down."
+      ];
+    } else if (topic && topic.id === "radiation") {
+      mistakes = [
+        "Mixing near-field intuition with radiation-zone approximations.",
+        "Ignoring time dependence when the problem is really about induction or propagation.",
+        "Using conservation-law formulas without first identifying the relevant fields and region."
+      ];
+    } else if (/surface charge density|induced/.test(statement)) {
+      mistakes[1] = "Forgetting to compute the field derivative normal to the surface when the problem asks for induced charge density.";
+    }
+
+    return mistakes;
+  }
+
+  function coachApproachSignals(text, problem, topic) {
+    var normalizedText = normalize(text);
+    var positives = [];
+    var cautions = [];
+    var score = 0;
+
+    function hasAny(words) {
+      return words.some(function (word) {
+        return normalizedText.indexOf(normalize(word)) !== -1;
+      });
+    }
+
+    if (hasAny(["geometry", "sketch", "draw", "region", "boundary", "boundary condition", "symmetry"])) {
+      positives.push("You are grounding the setup in geometry or boundary conditions, which is usually the right opening move.");
+      score += 2;
+    }
+
+    if (hasAny(["potential", "field", "image", "green function", "gauss", "ampere", "biot savart", "laplace", "poisson"])) {
+      positives.push("You are naming a governing method or intermediate quantity rather than jumping directly to the final numeric target.");
+      score += 2;
+    }
+
+    if (hasAny(["force", "energy", "work", "torque"]) && !hasAny(["potential", "field", "image", "boundary", "symmetry"])) {
+      cautions.push("You are aiming at the final derived quantity immediately; first pin down the field or potential structure that produces it.");
+      score -= 2;
+    }
+
+    if (topic && topic.id === "method-of-images") {
+      if (hasAny(["image", "conducting", "grounded", "boundary"])) {
+        positives.push("That is consistent with an image-charge setup.");
+        score += 2;
+      } else {
+        cautions.push("For a method-of-images problem, your plan should explicitly mention the image configuration or the conductor boundary.");
+        score -= 2;
+      }
+      if (hasAny(["gauss"])) {
+        cautions.push("Gauss's law may help with checks, but it is usually not the main engine in an image-charge boundary problem.");
+        score -= 1;
+      }
+    }
+
+    if (topic && topic.id === "poisson" && !hasAny(["rho", "source", "charge density", "boundary", "poisson"])) {
+      cautions.push("For a Poisson problem, say what the source is and what boundary data close the problem.");
+      score -= 1;
+    }
+
+    if (topic && topic.id === "laplace" && hasAny(["charge density", "rho"]) && !hasAny(["source free", "laplace", "boundary"])) {
+      cautions.push("Be careful: Laplace problems are source-free in the region being solved.");
+      score -= 1;
+    }
+
+    if (topic && topic.id === "multipole" && !hasAny(["origin", "dipole", "quadrupole", "first nonzero"])) {
+      cautions.push("For a multipole problem, your plan should mention the expansion origin and the first nonzero moment.");
+      score -= 1;
+    }
+
+    if (topic && topic.id === "dielectrics" && !hasAny(["free charge", "bound charge", "d field", "polarization", "interface"])) {
+      cautions.push("For dielectrics, separate free and bound effects or mention the interface conditions explicitly.");
+      score -= 1;
+    }
+
+    if (topic && topic.id === "magnetostatics" && hasAny(["electric potential", "coulomb"])) {
+      cautions.push("That sounds like an electrostatics tool for a magnetic problem; check that your method matches the chapter physics.");
+      score -= 1;
+    }
+
+    return {
+      score: score,
+      positives: positives,
+      cautions: cautions
+    };
+  }
+
   function collectEquationItems(matches, limit) {
     var seen = {};
     var items = [];
@@ -2148,6 +2309,27 @@
     });
   }
 
+  function showCoachFirstStep() {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+    appendSystem("First step:");
+    appendSystem("  " + state.activeCoach.firstStep);
+    appendSystem("After that, use strategy or hint next if you want a little more structure.");
+  }
+
+  function showCoachMistakes() {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+    appendSystem("Common mistakes:");
+    state.activeCoach.mistakes.forEach(function (line, index) {
+      appendSystem("  " + (index + 1) + ". " + line);
+    });
+  }
+
   function showCoachEquations() {
     if (!state.activeCoach) {
       appendWarning("No active coached problem. Use coach <problem> first.");
@@ -2194,6 +2376,47 @@
     appendSystem("Use hint next, hint back, strategy, equations, or sources.");
   }
 
+  function checkCoachApproach(text) {
+    if (!state.activeCoach) {
+      appendWarning("No active coached problem. Use coach <problem> first.");
+      return;
+    }
+
+    var approach = String(text || "").trim();
+    var signals;
+
+    if (!approach || normalize(approach).split(" ").length < 3) {
+      appendWarning("Give me a short plan to check. Example: check my approach I will place the image charge first and enforce the boundary.");
+      return;
+    }
+
+    signals = coachApproachSignals(approach, state.activeCoach.problem, state.activeCoach.topic);
+
+    if (signals.score >= 3) {
+      appendSystem("Approach check: strong direction.");
+    } else if (signals.score >= 0) {
+      appendSystem("Approach check: partly right, but tighten the setup.");
+    } else {
+      appendSystem("Approach check: needs adjustment before you compute.");
+    }
+
+    if (signals.positives.length) {
+      signals.positives.slice(0, 2).forEach(function (line) {
+        appendSystem("  Good: " + line);
+      });
+    }
+
+    if (signals.cautions.length) {
+      signals.cautions.slice(0, 3).forEach(function (line) {
+        appendWarning("  Watch: " + line);
+      });
+    } else {
+      appendSystem("  No major red flags from the plan you gave.");
+    }
+
+    appendSystem("I am checking method, not giving the full solution.");
+  }
+
   function clearCoach() {
     state.activeCoach = null;
     appendSystem("Problem coach cleared.");
@@ -2235,8 +2458,10 @@
         state.activeCoach = {
           problem: problem,
           topic: topic,
+          firstStep: buildCoachFirstStep(problem, topic),
           strategy: buildCoachStrategy(problem, topic),
           equations: coachData.equations,
+          mistakes: buildCoachMistakes(problem, topic),
           hints: buildCoachHints(problem, topic),
           hintStep: 0,
           sources: buildCoachSourceEntries(problem, topic, coachData.matches)
@@ -2248,9 +2473,10 @@
         if (topic) {
           appendSystem("Topic: " + topic.label + ".");
         }
+        showCoachFirstStep();
         showCoachStrategy();
         showCoachEquations();
-        appendSystem("Use hint next, strategy, equations, sources, or coach clear.");
+        appendSystem("Use first step, common mistakes, check my approach <text>, hint next, strategy, equations, sources, or coach clear.");
       })
       .catch(function () {
         appendWarning("Problem coach is unavailable right now.");
@@ -2270,7 +2496,8 @@
       "topics | topic <name>",
       "study <name> | review <name>",
       "coach <problem> | coach clear",
-      "strategy | equations | sources",
+      "first step | strategy | equations | sources",
+      "common mistakes | check my approach <text>",
       "hint <name> | hint next | hint reset",
       "ask <question>",
       "from <source> <question>",
@@ -2296,7 +2523,7 @@
     } else {
       appendSystem("Repository index still loading...");
     }
-    appendSystem("Try: coach griffiths 3.8, strategy, hint next, or ask what is Laplace's equation.");
+    appendSystem("Try: coach griffiths 3.8, first step, common mistakes, or ask what is Laplace's equation.");
   }
 
   function executeCommand(rawValue, fromShortcut) {
@@ -2315,6 +2542,7 @@
     var reviewMatch = normalized.match(/^review\s+(.+)$/);
     var coachMatch = raw.match(/^coach(?:\s+(.+))?$/i);
     var hintMatch = raw.match(/^hint(?:\s+(.+))?$/i);
+    var checkApproachMatch = raw.match(/^(?:check my approach|check this approach|my approach is|does this make sense|is this approach ok(?:ay)?)(?:\s*[:,-]?\s*)(.+)$/i);
 
     if (handleSmallTalk(raw, normalized)) {
       return;
@@ -2379,6 +2607,32 @@
 
     if (coachMatch) {
       handleCoachCommand(coachMatch[1] || "");
+      return;
+    }
+
+    if (
+      normalized === "first step" ||
+      normalized === "what should i solve first" ||
+      normalized === "what should i do first" ||
+      normalized === "where should i start" ||
+      normalized === "how should i start" ||
+      normalized === "start me"
+    ) {
+      showCoachFirstStep();
+      return;
+    }
+
+    if (
+      normalized === "common mistakes" ||
+      normalized === "common mistake" ||
+      normalized === "mistakes"
+    ) {
+      showCoachMistakes();
+      return;
+    }
+
+    if (checkApproachMatch) {
+      checkCoachApproach(checkApproachMatch[1] || "");
       return;
     }
 
