@@ -8,7 +8,7 @@
   <style>
     .lecture-shell {
       display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
+      grid-template-columns: 320px minmax(0, 1fr) 420px;
       gap: 1rem;
       align-items: start;
     }
@@ -182,6 +182,15 @@
     .lecture-stage-wrap {
       display: grid;
       gap: 1rem;
+      min-width: 0;
+    }
+
+    .lecture-pdf-panel {
+      display: grid;
+      gap: 1rem;
+      position: sticky;
+      top: 1rem;
+      min-width: 0;
     }
 
     .lecture-stage {
@@ -315,6 +324,81 @@
       color: #dbe7f2;
     }
 
+    .lecture-script + .lecture-script {
+      margin-top: 1rem;
+    }
+
+    .lecture-source-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .lecture-source-head h3,
+    .lecture-source-head p {
+      margin: 0;
+    }
+
+    .lecture-source-meta,
+    .lecture-source-status {
+      color: #b8cad8;
+      font-size: 0.95rem;
+    }
+
+    .lecture-source-status {
+      margin-top: 0.75rem;
+    }
+
+    .lecture-source-output {
+      margin-top: 0.9rem;
+      border-radius: 18px;
+      padding: 0.95rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lecture-source-output p {
+      margin: 0;
+      color: #eff6fb;
+    }
+
+    .lecture-source-output ul {
+      margin: 0.8rem 0 0 1rem;
+      padding: 0;
+    }
+
+    .lecture-source-output li + li {
+      margin-top: 0.45rem;
+    }
+
+    .lecture-source-raw {
+      margin-top: 0.85rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.14);
+      overflow: hidden;
+    }
+
+    .lecture-source-raw summary {
+      cursor: pointer;
+      padding: 0.8rem 0.95rem;
+      font-weight: 700;
+      color: #eff6fb;
+    }
+
+    .lecture-source-raw pre {
+      margin: 0;
+      padding: 0 0.95rem 0.95rem 0.95rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #ccdae7;
+      font-family: "Courier New", monospace;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
     .lecture-controls {
       display: grid;
       gap: 1rem;
@@ -364,6 +448,88 @@
       display: block;
     }
 
+    .lecture-pdf-meta {
+      margin: 0.2rem 0 0 0;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .lecture-pdf-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.9rem;
+    }
+
+    .lecture-inline-button {
+      border: 1px solid rgba(15, 94, 140, 0.18);
+      background: #fffdfa;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.65rem 1rem;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .lecture-inline-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(15, 94, 140, 0.38);
+      box-shadow: 0 10px 22px rgba(15, 94, 140, 0.08);
+    }
+
+    .lecture-inline-button[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .lecture-pdf-frame-wrap {
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: var(--soft-shadow);
+      min-height: 720px;
+    }
+
+    .lecture-pdf-frame {
+      display: block;
+      width: 100%;
+      height: min(78vh, 980px);
+      border: 0;
+      background: #ffffff;
+    }
+
+    .lecture-pdf-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 260px;
+      padding: 1.2rem;
+      text-align: center;
+      color: var(--muted);
+      background: linear-gradient(180deg, rgba(15, 94, 140, 0.03), rgba(15, 94, 140, 0.01));
+    }
+
+    .lecture-pdf-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1280px) {
+      .lecture-shell {
+        grid-template-columns: 320px minmax(0, 1fr);
+      }
+
+      .lecture-pdf-panel {
+        grid-column: 1 / -1;
+        position: static;
+      }
+    }
+
     @media (max-width: 980px) {
       .lecture-shell {
         grid-template-columns: 1fr;
@@ -371,6 +537,10 @@
 
       .lecture-sidebar {
         position: static;
+      }
+
+      .lecture-pdf-panel {
+        grid-column: auto;
       }
     }
 
@@ -519,6 +689,24 @@
                 <h3>Narration transcript</h3>
                 <p id="slideNarration"></p>
               </section>
+
+              <section class="lecture-script">
+                <div class="lecture-source-head">
+                  <div>
+                    <h3>Explain From Source Text</h3>
+                    <p class="lecture-source-meta" id="sourceExplainMeta">Waiting for the matching PDF pages.</p>
+                  </div>
+                  <button class="button secondary" id="sourceExplainButton" type="button">Refresh explanation</button>
+                </div>
+                <p class="lecture-source-status" id="sourceExplainStatus">Lecture Mode can use the extracted PDF text for the current slide when the local index is available.</p>
+                <div class="lecture-source-output" id="sourceExplainOutput">
+                  <p>Select a lesson and slide to see a source-grounded explanation.</p>
+                </div>
+                <details class="lecture-source-raw" id="sourceRawWrap">
+                  <summary>Show extracted source text</summary>
+                  <pre id="sourceRawText">No extracted source text loaded yet.</pre>
+                </details>
+              </section>
             </article>
 
             <article class="lecture-controls">
@@ -540,6 +728,31 @@
               </div>
             </article>
           </div>
+
+          <aside class="lecture-pdf-panel">
+            <article class="lecture-card">
+              <p class="mini-label">Source Slide Deck</p>
+              <h3 id="pdfDeckTitle">No source deck selected</h3>
+              <p class="lecture-pdf-meta" id="pdfDeckMeta">When a lesson has a matching slide deck, it will appear here as an embedded reference panel.</p>
+              <div class="lecture-pdf-actions">
+                <button class="lecture-inline-button" id="pdfToggleButton" type="button">Hide panel</button>
+                <a class="button secondary" id="pdfOpenLink" href="#" target="_blank" rel="noreferrer">Open PDF</a>
+              </div>
+              <p class="lecture-pdf-note">If your browser does not render the PDF here, use the open button to view it in a new tab.</p>
+            </article>
+
+            <article class="lecture-card">
+              <div class="lecture-pdf-frame-wrap" id="pdfFrameWrap">
+                <iframe class="lecture-pdf-frame" id="pdfFrame" title="Embedded source slide deck"></iframe>
+                <div class="lecture-pdf-placeholder" id="pdfPlaceholder" hidden>
+                  <div>
+                    <strong>Embedded panel hidden.</strong>
+                    <p class="lecture-pdf-note">Use the toggle above to show the slide deck again.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </aside>
         </div>
       </section>
     </main>
@@ -550,6 +763,6 @@
   </div>
 
   <script src="./maxwell-shell-v2.js?v=2026-04-18-v2step12"></script>
-  <script src="./maxwell-lecture.js?v=2026-04-19-v2"></script>
+  <script src="./maxwell-lecture.js?v=2026-04-19-v4"></script>
 </body>
 </html>

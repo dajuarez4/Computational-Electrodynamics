@@ -21,6 +21,19 @@
   var progressBar = document.getElementById("progressBar");
   var playerStatus = document.getElementById("playerStatus");
   var lessonMeta = document.getElementById("lessonMeta");
+  var pdfDeckTitle = document.getElementById("pdfDeckTitle");
+  var pdfDeckMeta = document.getElementById("pdfDeckMeta");
+  var pdfToggleButton = document.getElementById("pdfToggleButton");
+  var pdfOpenLink = document.getElementById("pdfOpenLink");
+  var pdfFrameWrap = document.getElementById("pdfFrameWrap");
+  var pdfFrame = document.getElementById("pdfFrame");
+  var pdfPlaceholder = document.getElementById("pdfPlaceholder");
+  var sourceExplainMeta = document.getElementById("sourceExplainMeta");
+  var sourceExplainStatus = document.getElementById("sourceExplainStatus");
+  var sourceExplainOutput = document.getElementById("sourceExplainOutput");
+  var sourceExplainButton = document.getElementById("sourceExplainButton");
+  var sourceRawWrap = document.getElementById("sourceRawWrap");
+  var sourceRawText = document.getElementById("sourceRawText");
   var revealGuideButton = document.getElementById("revealGuideButton");
   var startLessonButton = document.getElementById("startLessonButton");
   var speakSlideButton = document.getElementById("speakSlideButton");
@@ -35,6 +48,12 @@
       title: "Method of Images: grounded sphere",
       subtitle: "Boundary conditions by construction",
       eyebrow: "Electrostatics lecture",
+      sourceDeck: {
+        href: "./slide-decks/laplace-unique-images.pdf",
+        qaPath: "slides/Laplaces eq, Uniqe and Images.pdf",
+        title: "Laplace, uniqueness, and images",
+        meta: "Original slide deck used as a companion while Maxwell narrates."
+      },
       resources: [
         { label: "Visuals page", href: "./visuals.html", meta: "Project visuals and animations" },
         { label: "Topics page", href: "./topics.html", meta: "Grouped study materials" },
@@ -44,6 +63,7 @@
         {
           eyebrow: "Grounded Sphere",
           title: "Read the problem as a boundary-value problem",
+          sourcePages: [9, 14],
           summary: "A point charge near a conductor is not mainly a force problem. First it is a potential problem with a strict boundary condition on the conducting surface.",
           mediaHtml: '<img src="./assets/method_of_images_grounded_sphere.gif" alt="Grounded sphere method of images animation"><p class="lecture-media__caption">The real charge moves, but the grounded sphere must stay at zero potential on its surface for every frame.</p>',
           bullets: [
@@ -58,6 +78,7 @@
         {
           eyebrow: "Grounded Sphere",
           title: "Replace the conductor with an image source",
+          sourcePages: [14],
           summary: "The image charge is not physical. It is a mathematical source placed so the superposed potential vanishes on the spherical boundary.",
           mediaHtml: '<div class="equation-panel"><span class="equation-panel__math">q′ = − q(a/R), &nbsp;&nbsp; b = a²/R</span><p class="equation-panel__caption">For a charge outside a grounded sphere of radius <em>a</em>, the image charge lies on the symmetry axis inside the sphere.</p></div>',
           bullets: [
@@ -72,6 +93,7 @@
         {
           eyebrow: "Grounded Sphere",
           title: "Uniqueness is what makes the trick legal",
+          sourcePages: [7, 8],
           summary: "The image construction works because the resulting potential already satisfies both the governing equation in the physical region and the correct boundary values.",
           mediaHtml: '<div class="equation-panel"><span class="equation-panel__math">∇²V = −ρ/ε₀ &nbsp; in the physical region, &nbsp;&nbsp; V = 0 &nbsp; on the sphere</span><p class="equation-panel__caption">Once those conditions are satisfied, the uniqueness theorem removes ambiguity.</p></div>',
           bullets: [
@@ -86,6 +108,7 @@
         {
           eyebrow: "Grounded Sphere",
           title: "Differentiate the potential to get induced charge",
+          sourcePages: [12, 14],
           summary: "Once the potential is correct, the field and induced surface charge follow systematically from normal derivatives at the conductor.",
           mediaHtml: '<div class="equation-panel"><span class="equation-panel__math">σ(θ) = −ε₀ (∂V/∂r) at r = a</span><p class="equation-panel__caption">The conductor responds by building exactly the surface charge needed to enforce the boundary.</p></div>',
           bullets: [
@@ -100,6 +123,7 @@
         {
           eyebrow: "Grounded Sphere",
           title: "What you should remember for homework",
+          sourcePages: [15],
           summary: "For method-of-images problems, students should think in a sequence: boundary, symmetry, image configuration, uniqueness, and only then derived quantities like force or energy.",
           mediaHtml: '<img src="./assets/method_of_images_grounded_sphere_preview.png" alt="Method of images grounded sphere preview"><p class="lecture-media__caption">A compact mental checklist: boundary first, image construction second, interpretation third.</p>',
           bullets: [
@@ -118,6 +142,12 @@
       title: "From Poisson to Laplace",
       subtitle: "How to read the potential equation correctly",
       eyebrow: "Electrostatics lecture",
+      sourceDeck: {
+        href: "./slide-decks/laplace-unique-images.pdf",
+        qaPath: "slides/Laplaces eq, Uniqe and Images.pdf",
+        title: "Laplace, uniqueness, and images",
+        meta: "This deck covers the Laplace-side material behind the current lesson."
+      },
       resources: [
         { label: "Poisson equation notes", href: "https://github.com/dajuarez4/Computational-Electrodynamics/blob/main/notes/Poisson_equation_notes.pdf", meta: "Project notes PDF" },
         { label: "Notes page", href: "./notes.html", meta: "Chapter and topic notes" },
@@ -127,6 +157,7 @@
         {
           eyebrow: "Poisson and Laplace",
           title: "Poisson's equation ties charge to curvature",
+          sourcePages: [3],
           summary: "The electrostatic potential is not arbitrary. Its local curvature is determined by the local charge density.",
           mediaHtml: '<div class="equation-panel"><span class="equation-panel__math">∇²V = −ρ/ε₀</span><p class="equation-panel__caption">This is the core field equation of electrostatics in potential form.</p></div>',
           bullets: [
@@ -141,6 +172,7 @@
         {
           eyebrow: "Poisson and Laplace",
           title: "Laplace's equation is the source-free limit",
+          sourcePages: [3, 5, 6],
           summary: "Where there is no charge in the region being solved, Poisson simplifies to Laplace, and the solutions become harmonic functions.",
           mediaHtml: '<div class="equation-panel"><span class="equation-panel__math">ρ = 0 &nbsp; ⇒ &nbsp; ∇²V = 0</span><p class="equation-panel__caption">Source-free regions are governed by Laplace equation behavior, even if charges exist somewhere else in the full problem.</p></div>',
           bullets: [
@@ -155,6 +187,7 @@
         {
           eyebrow: "Poisson and Laplace",
           title: "Geometry tells you how to solve, not just what to solve",
+          sourcePages: [4, 9],
           summary: "Once the equation is known, the next decision is geometric: what coordinates, boundaries, or symmetries make the problem separable or interpretable?",
           mediaHtml: '<img src="./assets/dirac_delta_v2_charge_hunt_heatmap.png" alt="Localized source heatmap"><p class="lecture-media__caption">The same equation can look very different depending on geometry, symmetry, and how the source is distributed.</p>',
           bullets: [
@@ -169,6 +202,7 @@
         {
           eyebrow: "Poisson and Laplace",
           title: "A homework decision tree you can actually use",
+          sourcePages: [9, 15],
           summary: "Read the source, identify the region, classify the boundary, and only then choose the tool: integration, separation of variables, Green's functions, or images.",
           mediaHtml: '<img src="./assets/mini_electrodynamics_lab_demo.gif" alt="Mini electrodynamics lab animation"><p class="lecture-media__caption">Interactive fields are helpful, but the method still comes from a disciplined decision tree.</p>',
           bullets: [
@@ -190,7 +224,67 @@
     voices: [],
     speaking: false,
     paused: false,
-    manualStop: false
+    manualStop: false,
+    pdfVisible: true,
+    qaChunkMap: null,
+    qaIndexPromise: null
+  };
+
+  var SOURCE_STOPWORDS = {
+    a: true,
+    about: true,
+    after: true,
+    again: true,
+    all: true,
+    also: true,
+    and: true,
+    any: true,
+    are: true,
+    around: true,
+    because: true,
+    been: true,
+    before: true,
+    being: true,
+    between: true,
+    both: true,
+    but: true,
+    can: true,
+    conductor: false,
+    current: false,
+    each: true,
+    equation: false,
+    field: false,
+    first: true,
+    for: true,
+    from: true,
+    have: true,
+    image: false,
+    into: true,
+    just: true,
+    lesson: true,
+    more: true,
+    near: true,
+    only: true,
+    page: true,
+    point: false,
+    potential: false,
+    problem: false,
+    slide: true,
+    source: true,
+    sphere: false,
+    that: true,
+    the: true,
+    their: true,
+    there: true,
+    these: true,
+    they: true,
+    this: true,
+    through: true,
+    what: true,
+    when: true,
+    where: true,
+    with: true,
+    your: true
   };
 
   function estimateMinutes(lesson) {
@@ -221,6 +315,7 @@
     var lesson = currentLesson();
 
     payload.lastLessonId = lesson.id;
+    payload.pdfVisible = state.pdfVisible;
     payload.lessons = payload.lessons || {};
     payload.lessons[lesson.id] = {
       slideIndex: state.slideIndex,
@@ -250,6 +345,243 @@
 
   function setButtonState() {
     pauseButton.textContent = state.paused ? "Resume" : "Pause";
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function uniqueNumbers(list) {
+    var seen = {};
+    return (list || []).filter(function (value) {
+      var num = Number(value);
+      if (!num || seen[num]) return false;
+      seen[num] = true;
+      return true;
+    }).sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  function formatPageRange(pages) {
+    var sorted = uniqueNumbers(pages);
+    var ranges = [];
+    var start;
+    var end;
+
+    if (!sorted.length) return "unmapped";
+
+    start = sorted[0];
+    end = sorted[0];
+
+    sorted.slice(1).forEach(function (page) {
+      if (page === end + 1) {
+        end = page;
+        return;
+      }
+
+      ranges.push(start === end ? String(start) : start + "-" + end);
+      start = page;
+      end = page;
+    });
+
+    ranges.push(start === end ? String(start) : start + "-" + end);
+    return ranges.join(", ");
+  }
+
+  function pageWord(pages) {
+    return uniqueNumbers(pages).length > 1 ? "pages" : "page";
+  }
+
+  function cleanSourceText(text) {
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/\s+([,.;:!?])/g, "$1")
+      .trim();
+  }
+
+  function keywordList(slide, lesson) {
+    var words = ((lesson.title || "") + " " + (slide.title || "") + " " + (slide.summary || "") + " " + (slide.eyebrow || ""))
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter(function (word) {
+        return word && word.length > 3 && !SOURCE_STOPWORDS[word];
+      });
+    var seen = {};
+
+    return words.filter(function (word) {
+      if (seen[word]) return false;
+      seen[word] = true;
+      return true;
+    });
+  }
+
+  function bestSourceSnippet(text, keywords) {
+    var clean = cleanSourceText(text);
+    var lower = clean.toLowerCase();
+    var start = 0;
+    var end;
+    var bestIndex = -1;
+
+    if (!clean) return "No extracted text was found for this source page.";
+
+    keywords.some(function (keyword) {
+      var index = lower.indexOf(keyword.toLowerCase());
+      if (index >= 0) {
+        bestIndex = index;
+        return true;
+      }
+      return false;
+    });
+
+    if (bestIndex > 0) {
+      start = Math.max(0, bestIndex - 70);
+      while (start < clean.length && start > 0 && clean.charAt(start) !== " ") {
+        start += 1;
+      }
+    }
+
+    end = Math.min(clean.length, start + 260);
+    if (end < clean.length) {
+      while (end > start + 180 && clean.charAt(end) !== " ") {
+        end -= 1;
+      }
+    }
+
+    return (start > 0 ? "... " : "") + clean.slice(start, end).trim() + (end < clean.length ? " ..." : "");
+  }
+
+  function sourceChunksForSlide(lesson, slide) {
+    var deck = lesson.sourceDeck || {};
+
+    if (!deck.qaPath || !slide.sourcePages || !slide.sourcePages.length || !state.qaChunkMap) {
+      return [];
+    }
+
+    return uniqueNumbers(slide.sourcePages).map(function (page) {
+      return state.qaChunkMap[deck.qaPath + "::" + page];
+    }).filter(Boolean);
+  }
+
+  function renderSourceExplanation() {
+    var lesson = currentLesson();
+    var slide = currentSlide();
+    var deck = lesson.sourceDeck || {};
+    var pages = uniqueNumbers(slide.sourcePages);
+    var chunks;
+    var keywords;
+    var html;
+
+    if (!deck.qaPath || !pages.length) {
+      sourceExplainMeta.textContent = "This slide does not have a mapped source page yet.";
+      sourceExplainStatus.textContent = "Add source page numbers to the lesson data to ground this slide in the extracted PDF text.";
+      sourceExplainOutput.innerHTML = "<p>The current slide is still using only the lesson summary and narration.</p>";
+      sourceRawText.textContent = "No source-page mapping for this slide.";
+      if (sourceRawWrap) sourceRawWrap.open = false;
+      return;
+    }
+
+    sourceExplainMeta.textContent = "Using extracted text from " + pageWord(pages) + " " + formatPageRange(pages) + " of " + deck.title + ".";
+
+    if (!state.qaChunkMap) {
+      sourceExplainStatus.textContent = state.qaIndexPromise
+        ? "Loading the local PDF text index for this slide."
+        : "Loading the local PDF text index.";
+      sourceExplainOutput.innerHTML = "<p>Waiting for the extracted PDF text so Maxwell can explain this slide from the source pages directly.</p>";
+      sourceRawText.textContent = "Loading extracted source text...";
+
+      if (!state.qaIndexPromise) {
+        loadKnowledgeIndex();
+      }
+      return;
+    }
+
+    chunks = sourceChunksForSlide(lesson, slide);
+    keywords = keywordList(slide, lesson);
+
+    if (!chunks.length) {
+      sourceExplainStatus.textContent = "The local PDF index loaded, but no extracted text was found for the mapped page range.";
+      sourceExplainOutput.innerHTML = "<p>Try remapping the slide to the correct PDF page or rebuilding the local knowledge index.</p>";
+      sourceRawText.textContent = "No extracted PDF text found for pages " + formatPageRange(pages) + ".";
+      return;
+    }
+
+    html = [
+      "<p><strong>Matched source excerpts.</strong> These snippets come directly from the extracted PDF text tied to this slide.</p>",
+      "<ul>"
+    ];
+
+    chunks.forEach(function (chunk) {
+      html.push(
+        "<li><strong>" + escapeHtml(chunk.locator || ("p. " + chunk.page_start)) + ":</strong> " +
+        escapeHtml(bestSourceSnippet(chunk.text, keywords)) + "</li>"
+      );
+    });
+
+    html.push("</ul>");
+    html.push("<p><strong>Slide focus:</strong> " + escapeHtml(slide.summary) + "</p>");
+
+    sourceExplainOutput.innerHTML = html.join("");
+    sourceExplainStatus.textContent = "Source-grounded explanation ready.";
+    sourceRawText.textContent = chunks.map(function (chunk) {
+      return "[" + (chunk.locator || ("p. " + chunk.page_start)) + "]\n" + cleanSourceText(chunk.text);
+    }).join("\n\n");
+  }
+
+  function loadKnowledgeIndex() {
+    if (state.qaChunkMap) {
+      return Promise.resolve(state.qaChunkMap);
+    }
+
+    if (state.qaIndexPromise) {
+      return state.qaIndexPromise;
+    }
+
+    if (sourceExplainButton) {
+      sourceExplainButton.disabled = true;
+    }
+
+    state.qaIndexPromise = fetch("./maxwell-qa-index.json")
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        return response.json();
+      })
+      .then(function (payload) {
+        var map = {};
+
+        (payload.chunks || []).forEach(function (chunk) {
+          if (chunk.path && chunk.page_start) {
+            map[chunk.path + "::" + chunk.page_start] = chunk;
+          }
+        });
+
+        state.qaChunkMap = map;
+        sourceExplainStatus.textContent = "Local PDF text index ready. Source explanations are now grounded in the extracted pages.";
+        return map;
+      })
+      .catch(function (error) {
+        state.qaIndexPromise = null;
+        sourceExplainStatus.textContent = "Could not load the local PDF text index for Lecture Mode (" + error.message + ").";
+        sourceExplainOutput.innerHTML = "<p>Lecture Mode is still usable, but the source-text explainer is unavailable until the local index loads correctly.</p>";
+        sourceRawText.textContent = "PDF extraction index failed to load.";
+        return null;
+      })
+      .finally(function () {
+        if (sourceExplainButton) {
+          sourceExplainButton.disabled = false;
+        }
+        renderSourceExplanation();
+      });
+
+    return state.qaIndexPromise;
   }
 
   function renderLessonList() {
@@ -315,6 +647,52 @@
     });
   }
 
+  function renderPdfPanel() {
+    var lesson = currentLesson();
+    var deck = lesson.sourceDeck;
+    var slide = currentSlide();
+    var pages = uniqueNumbers(slide.sourcePages);
+    var firstPage = pages.length ? pages[0] : null;
+    var targetSrc;
+    var openHref;
+
+    if (!deck) {
+      pdfDeckTitle.textContent = "No source deck yet";
+      pdfDeckMeta.textContent = "This lesson does not have a published slide PDF yet.";
+      pdfOpenLink.href = "#";
+      pdfOpenLink.setAttribute("aria-disabled", "true");
+      pdfOpenLink.style.pointerEvents = "none";
+      pdfToggleButton.disabled = true;
+      pdfFrame.removeAttribute("src");
+      pdfFrame.hidden = true;
+      pdfPlaceholder.hidden = false;
+      pdfPlaceholder.innerHTML = "<div><strong>No PDF available.</strong><p class=\"lecture-pdf-note\">Add a matching slide deck later and it will appear here automatically.</p></div>";
+      return;
+    }
+
+    pdfDeckTitle.textContent = deck.title;
+    pdfDeckMeta.textContent = deck.meta + (firstPage ? " Current slide focus: " + pageWord(pages) + " " + formatPageRange(pages) + "." : "");
+    openHref = deck.href + (firstPage ? "#page=" + firstPage : "");
+    pdfOpenLink.href = openHref;
+    pdfOpenLink.removeAttribute("aria-disabled");
+    pdfOpenLink.style.pointerEvents = "";
+    pdfToggleButton.disabled = false;
+    pdfToggleButton.textContent = state.pdfVisible ? "Hide panel" : "Show panel";
+
+    if (state.pdfVisible) {
+      targetSrc = deck.href + (firstPage ? "#page=" + firstPage + "&view=FitH" : "#view=FitH");
+      if (pdfFrame.getAttribute("src") !== targetSrc) {
+        pdfFrame.setAttribute("src", targetSrc);
+      }
+      pdfFrame.hidden = false;
+      pdfPlaceholder.hidden = true;
+    } else {
+      pdfFrame.hidden = true;
+      pdfPlaceholder.hidden = false;
+      pdfPlaceholder.innerHTML = "<div><strong>Embedded panel hidden.</strong><p class=\"lecture-pdf-note\">Use the toggle above to show the source deck again, or open the PDF in a new tab.</p></div>";
+    }
+  }
+
   function renderSlide() {
     var lesson = currentLesson();
     var slide = currentSlide();
@@ -342,6 +720,8 @@
     renderLessonList();
     renderOutline();
     renderResources();
+    renderPdfPanel();
+    renderSourceExplanation();
     saveState();
   }
 
@@ -501,6 +881,12 @@
     revealGuideButton.textContent = slideGuide.classList.contains("visible") ? "Hide guide" : "Reveal guide";
   }
 
+  function togglePdfPanel() {
+    state.pdfVisible = !state.pdfVisible;
+    renderPdfPanel();
+    saveState();
+  }
+
   function boot() {
     var saved = loadSavedState();
     var lastLessonIndex = lessons.findIndex(function (lesson) {
@@ -519,8 +905,13 @@
       state.slideIndex = getLessonProgress(lessons[lastLessonIndex]).slideIndex;
     }
 
+    if (typeof saved.pdfVisible === "boolean") {
+      state.pdfVisible = saved.pdfVisible;
+    }
+
     renderSlide();
     setStatus("Ready. Pick a lesson and press Start or resume.");
+    loadKnowledgeIndex();
   }
 
   if (rateRange) {
@@ -529,6 +920,17 @@
 
   if (revealGuideButton) {
     revealGuideButton.addEventListener("click", revealGuide);
+  }
+
+  if (pdfToggleButton) {
+    pdfToggleButton.addEventListener("click", togglePdfPanel);
+  }
+
+  if (sourceExplainButton) {
+    sourceExplainButton.addEventListener("click", function () {
+      sourceExplainStatus.textContent = "Refreshing the explanation from the extracted PDF text.";
+      renderSourceExplanation();
+    });
   }
 
   if (startLessonButton) {
