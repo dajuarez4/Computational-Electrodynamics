@@ -25,6 +25,12 @@
   var pdfDeckMeta = document.getElementById("pdfDeckMeta");
   var pdfToggleButton = document.getElementById("pdfToggleButton");
   var pdfOpenLink = document.getElementById("pdfOpenLink");
+  var pdfPrevPageButton = document.getElementById("pdfPrevPageButton");
+  var pdfPageInput = document.getElementById("pdfPageInput");
+  var pdfGoPageButton = document.getElementById("pdfGoPageButton");
+  var pdfNextPageButton = document.getElementById("pdfNextPageButton");
+  var pdfFollowSlideButton = document.getElementById("pdfFollowSlideButton");
+  var pdfPageStatus = document.getElementById("pdfPageStatus");
   var pdfFrameWrap = document.getElementById("pdfFrameWrap");
   var pdfFrame = document.getElementById("pdfFrame");
   var pdfPlaceholder = document.getElementById("pdfPlaceholder");
@@ -226,8 +232,10 @@
     paused: false,
     manualStop: false,
     pdfVisible: true,
+    pdfPageOverride: null,
     qaChunkMap: null,
-    qaIndexPromise: null
+    qaIndexPromise: null,
+    qaPageCountMap: null
   };
 
   var SOURCE_STOPWORDS = {
@@ -300,6 +308,18 @@
 
   function currentSlide() {
     return currentLesson().slides[state.slideIndex];
+  }
+
+  function slideMappedPages() {
+    return uniqueNumbers(currentSlide().sourcePages);
+  }
+
+  function activeSourcePages() {
+    if (typeof state.pdfPageOverride === "number" && state.pdfPageOverride > 0) {
+      return [state.pdfPageOverride];
+    }
+
+    return slideMappedPages();
   }
 
   function loadSavedState() {
@@ -398,6 +418,28 @@
     return uniqueNumbers(pages).length > 1 ? "pages" : "page";
   }
 
+  function getDeckPageCount(deck) {
+    if (!deck || !deck.qaPath || !state.qaPageCountMap) return null;
+    return state.qaPageCountMap[deck.qaPath] || null;
+  }
+
+  function clampPageNumber(page, deck) {
+    var count = getDeckPageCount(deck);
+    var parsed = Number(page);
+
+    if (!parsed || parsed < 1) {
+      parsed = 1;
+    }
+
+    parsed = Math.floor(parsed);
+
+    if (count) {
+      parsed = Math.min(parsed, count);
+    }
+
+    return parsed;
+  }
+
   function cleanSourceText(text) {
     return String(text || "")
       .replace(/\s+/g, " ")
@@ -457,14 +499,14 @@
     return (start > 0 ? "... " : "") + clean.slice(start, end).trim() + (end < clean.length ? " ..." : "");
   }
 
-  function sourceChunksForSlide(lesson, slide) {
+  function sourceChunksForPages(lesson, pages) {
     var deck = lesson.sourceDeck || {};
 
-    if (!deck.qaPath || !slide.sourcePages || !slide.sourcePages.length || !state.qaChunkMap) {
+    if (!deck.qaPath || !pages || !pages.length || !state.qaChunkMap) {
       return [];
     }
 
-    return uniqueNumbers(slide.sourcePages).map(function (page) {
+    return uniqueNumbers(pages).map(function (page) {
       return state.qaChunkMap[deck.qaPath + "::" + page];
     }).filter(Boolean);
   }
@@ -473,7 +515,8 @@
     var lesson = currentLesson();
     var slide = currentSlide();
     var deck = lesson.sourceDeck || {};
-    var pages = uniqueNumbers(slide.sourcePages);
+    var pages = activeSourcePages();
+    var manualMode = typeof state.pdfPageOverride === "number" && state.pdfPageOverride > 0;
     var chunks;
     var keywords;
     var html;
@@ -487,7 +530,10 @@
       return;
     }
 
-    sourceExplainMeta.textContent = "Using extracted text from " + pageWord(pages) + " " + formatPageRange(pages) + " of " + deck.title + ".";
+    sourceExplainButton.textContent = manualMode ? "Explain selected page" : "Refresh explanation";
+    sourceExplainMeta.textContent = manualMode
+      ? "Using extracted text from selected page " + formatPageRange(pages) + " of " + deck.title + "."
+      : "Using extracted text from " + pageWord(pages) + " " + formatPageRange(pages) + " of " + deck.title + ".";
 
     if (!state.qaChunkMap) {
       sourceExplainStatus.textContent = state.qaIndexPromise
@@ -502,7 +548,7 @@
       return;
     }
 
-    chunks = sourceChunksForSlide(lesson, slide);
+    chunks = sourceChunksForPages(lesson, pages);
     keywords = keywordList(slide, lesson);
 
     if (!chunks.length) {
@@ -525,10 +571,15 @@
     });
 
     html.push("</ul>");
+    if (manualMode) {
+      html.push("<p><strong>Mode:</strong> Manual page mode is active, so Maxwell is explaining the page you selected in the source deck.</p>");
+    }
     html.push("<p><strong>Slide focus:</strong> " + escapeHtml(slide.summary) + "</p>");
 
     sourceExplainOutput.innerHTML = html.join("");
-    sourceExplainStatus.textContent = "Source-grounded explanation ready.";
+    sourceExplainStatus.textContent = manualMode
+      ? "Source-grounded explanation for the selected PDF page is ready."
+      : "Source-grounded explanation ready.";
     sourceRawText.textContent = chunks.map(function (chunk) {
       return "[" + (chunk.locator || ("p. " + chunk.page_start)) + "]\n" + cleanSourceText(chunk.text);
     }).join("\n\n");
@@ -556,14 +607,17 @@
       })
       .then(function (payload) {
         var map = {};
+        var counts = {};
 
         (payload.chunks || []).forEach(function (chunk) {
           if (chunk.path && chunk.page_start) {
             map[chunk.path + "::" + chunk.page_start] = chunk;
+            counts[chunk.path] = Math.max(counts[chunk.path] || 0, Number(chunk.page_start) || 0);
           }
         });
 
         state.qaChunkMap = map;
+        state.qaPageCountMap = counts;
         sourceExplainStatus.textContent = "Local PDF text index ready. Source explanations are now grounded in the extracted pages.";
         return map;
       })
@@ -578,6 +632,7 @@
         if (sourceExplainButton) {
           sourceExplainButton.disabled = false;
         }
+        renderPdfPanel();
         renderSourceExplanation();
       });
 
@@ -650,9 +705,11 @@
   function renderPdfPanel() {
     var lesson = currentLesson();
     var deck = lesson.sourceDeck;
-    var slide = currentSlide();
-    var pages = uniqueNumbers(slide.sourcePages);
+    var mappedPages = slideMappedPages();
+    var pages = activeSourcePages();
+    var manualMode = typeof state.pdfPageOverride === "number" && state.pdfPageOverride > 0;
     var firstPage = pages.length ? pages[0] : null;
+    var deckPageCount = getDeckPageCount(deck);
     var targetSrc;
     var openHref;
 
@@ -663,6 +720,13 @@
       pdfOpenLink.setAttribute("aria-disabled", "true");
       pdfOpenLink.style.pointerEvents = "none";
       pdfToggleButton.disabled = true;
+      pdfPrevPageButton.disabled = true;
+      pdfGoPageButton.disabled = true;
+      pdfNextPageButton.disabled = true;
+      pdfFollowSlideButton.disabled = true;
+      pdfPageInput.disabled = true;
+      pdfPageInput.value = "1";
+      pdfPageStatus.textContent = "No PDF deck is attached to this lesson.";
       pdfFrame.removeAttribute("src");
       pdfFrame.hidden = true;
       pdfPlaceholder.hidden = false;
@@ -671,13 +735,29 @@
     }
 
     pdfDeckTitle.textContent = deck.title;
-    pdfDeckMeta.textContent = deck.meta + (firstPage ? " Current slide focus: " + pageWord(pages) + " " + formatPageRange(pages) + "." : "");
+    pdfDeckMeta.textContent = deck.meta + (firstPage ? " Current view: " + pageWord(pages) + " " + formatPageRange(pages) + "." : "");
     openHref = deck.href + (firstPage ? "#page=" + firstPage : "");
     pdfOpenLink.href = openHref;
     pdfOpenLink.removeAttribute("aria-disabled");
     pdfOpenLink.style.pointerEvents = "";
     pdfToggleButton.disabled = false;
     pdfToggleButton.textContent = state.pdfVisible ? "Hide panel" : "Show panel";
+    pdfPageInput.disabled = false;
+    pdfPageInput.value = String(firstPage || 1);
+    if (deckPageCount) {
+      pdfPageInput.max = String(deckPageCount);
+    } else {
+      pdfPageInput.removeAttribute("max");
+    }
+    pdfPrevPageButton.disabled = !firstPage || firstPage <= 1;
+    pdfGoPageButton.disabled = false;
+    pdfNextPageButton.disabled = !firstPage || (deckPageCount ? firstPage >= deckPageCount : false);
+    pdfFollowSlideButton.disabled = !manualMode;
+    pdfPageStatus.textContent = manualMode
+      ? "Manual page mode: page " + firstPage + (deckPageCount ? " of " + deckPageCount : "") + ". Use slide pages to return to the lesson mapping."
+      : (mappedPages.length
+        ? "Following slide-mapped " + pageWord(mappedPages) + " " + formatPageRange(mappedPages) + "."
+        : "No source pages are mapped for this slide.");
 
     if (state.pdfVisible) {
       targetSrc = deck.href + (firstPage ? "#page=" + firstPage + "&view=FitH" : "#view=FitH");
@@ -690,6 +770,29 @@
       pdfFrame.hidden = true;
       pdfPlaceholder.hidden = false;
       pdfPlaceholder.innerHTML = "<div><strong>Embedded panel hidden.</strong><p class=\"lecture-pdf-note\">Use the toggle above to show the source deck again, or open the PDF in a new tab.</p></div>";
+    }
+  }
+
+  function setManualPdfPage(page) {
+    var deck = currentLesson().sourceDeck;
+
+    if (!deck) return;
+
+    state.pdfPageOverride = clampPageNumber(page, deck);
+    renderPdfPanel();
+    renderSourceExplanation();
+    setStatus("Showing source deck page " + state.pdfPageOverride + ".");
+  }
+
+  function clearManualPdfPage(silent) {
+    if (state.pdfPageOverride === null) return;
+
+    state.pdfPageOverride = null;
+    renderPdfPanel();
+    renderSourceExplanation();
+
+    if (!silent) {
+      setStatus("Returned to the slide-mapped source pages.");
     }
   }
 
@@ -834,6 +937,7 @@
     var nextIndex = Math.max(0, Math.min(index, lesson.slides.length - 1));
 
     cancelSpeech();
+    state.pdfPageOverride = null;
     state.slideIndex = nextIndex;
     renderSlide();
     if (speak) speakSlide();
@@ -845,6 +949,7 @@
 
     cancelSpeech();
     state.lessonIndex = index;
+    state.pdfPageOverride = null;
     state.slideIndex = restoreProgress ? progress.slideIndex : 0;
     renderSlide();
     setStatus("Loaded " + lesson.title + ". Press Start or resume to hear Maxwell narrate the deck.");
@@ -924,6 +1029,38 @@
 
   if (pdfToggleButton) {
     pdfToggleButton.addEventListener("click", togglePdfPanel);
+  }
+
+  if (pdfPrevPageButton) {
+    pdfPrevPageButton.addEventListener("click", function () {
+      setManualPdfPage((activeSourcePages()[0] || 1) - 1);
+    });
+  }
+
+  if (pdfGoPageButton) {
+    pdfGoPageButton.addEventListener("click", function () {
+      setManualPdfPage(pdfPageInput.value);
+    });
+  }
+
+  if (pdfPageInput) {
+    pdfPageInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        setManualPdfPage(pdfPageInput.value);
+      }
+    });
+  }
+
+  if (pdfNextPageButton) {
+    pdfNextPageButton.addEventListener("click", function () {
+      setManualPdfPage((activeSourcePages()[0] || 1) + 1);
+    });
+  }
+
+  if (pdfFollowSlideButton) {
+    pdfFollowSlideButton.addEventListener("click", function () {
+      clearManualPdfPage(false);
+    });
   }
 
   if (sourceExplainButton) {

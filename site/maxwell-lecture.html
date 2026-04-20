@@ -419,6 +419,29 @@
       min-width: 132px;
     }
 
+    .lecture-controls .button.secondary,
+    .lecture-card:not(.lecture-maxwell-card) .button.secondary {
+      background: #fffdfa;
+      color: var(--ink);
+      border: 1px solid rgba(15, 94, 140, 0.18);
+      box-shadow: 0 10px 22px rgba(15, 94, 140, 0.06);
+    }
+
+    .lecture-controls .button.secondary:hover,
+    .lecture-card:not(.lecture-maxwell-card) .button.secondary:hover {
+      background: #f7efe3;
+      border-color: rgba(15, 94, 140, 0.38);
+    }
+
+    .lecture-controls .button.secondary[disabled],
+    .lecture-card:not(.lecture-maxwell-card) .button.secondary[disabled],
+    .lecture-card:not(.lecture-maxwell-card) .button.secondary[aria-disabled="true"] {
+      background: rgba(15, 94, 140, 0.08);
+      color: rgba(22, 32, 42, 0.48);
+      border-color: rgba(15, 94, 140, 0.12);
+      box-shadow: none;
+    }
+
     .lecture-progress {
       width: 100%;
       height: 12px;
@@ -517,6 +540,36 @@
       margin: 0;
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    .lecture-page-controls {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.95rem;
+    }
+
+    .lecture-page-controls__row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .lecture-page-input {
+      width: 84px;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 94, 140, 0.18);
+      background: #fffdfa;
+      color: var(--ink);
+      padding: 0.65rem 0.75rem;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .lecture-page-status {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
     @media (max-width: 1280px) {
@@ -738,6 +791,18 @@
                 <button class="lecture-inline-button" id="pdfToggleButton" type="button">Hide panel</button>
                 <a class="button secondary" id="pdfOpenLink" href="#" target="_blank" rel="noreferrer">Open PDF</a>
               </div>
+              <div class="lecture-page-controls">
+                <div class="lecture-page-controls__row">
+                  <button class="lecture-inline-button" id="pdfPrevPageButton" type="button">Prev page</button>
+                  <input class="lecture-page-input" id="pdfPageInput" type="number" min="1" step="1" value="1" inputmode="numeric" aria-label="PDF page number">
+                  <button class="lecture-inline-button" id="pdfGoPageButton" type="button">Go</button>
+                  <button class="lecture-inline-button" id="pdfNextPageButton" type="button">Next page</button>
+                </div>
+                <div class="lecture-page-controls__row">
+                  <button class="lecture-inline-button" id="pdfFollowSlideButton" type="button">Use slide pages</button>
+                  <p class="lecture-page-status" id="pdfPageStatus">Following the slide-mapped source pages.</p>
+                </div>
+              </div>
               <p class="lecture-pdf-note">If your browser does not render the PDF here, use the open button to view it in a new tab.</p>
             </article>
 
@@ -763,6 +828,6 @@
   </div>
 
   <script src="./maxwell-shell-v2.js?v=2026-04-18-v2step12"></script>
-  <script src="./maxwell-lecture.js?v=2026-04-19-v4"></script>
+  <script src="./maxwell-lecture.js?v=2026-04-19-v5"></script>
 </body>
 </html>
