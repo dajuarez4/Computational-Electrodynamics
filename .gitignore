@@ -1,0 +1,4 @@
+codes/amrex/fft_poisson_benchmark/build/
+plt_amrex_fft_poisson_benchmark/
+amrex_compare/fft_poisson_benchmark_amrex/
+amrex_compare/fft_poisson_benchmark.npz
