@@ -1,0 +1,322 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[unicode]{hyperref}
+
+\title{AMReX FFT Poisson Benchmark Notes}
+\author{Diego Juarez}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Purpose}
+This note explains the physics problem and the computational workflow behind the AMReX benchmark located in
+\texttt{codes/amrex/fft\_poisson\_benchmark}. The goal of that mini-app is not to show off adaptive mesh refinement yet. The goal is narrower and cleaner: reproduce the same manufactured periodic Poisson problem already solved by the repository's standalone C++ FFT code, but now through AMReX's \texttt{FFT::Poisson} interface so that the result can be compared in a controlled way inside the notebook
+\texttt{notebooks/AMReX Comparison - 3D FFT Poisson Benchmark.ipynb}.
+
+\section{Physics Problem}
+The electrostatic potential $\Phi(\mathbf r)$ satisfies Poisson's equation
+\[
+\nabla^2 \Phi = -\frac{\rho}{\varepsilon_0}.
+\]
+For this benchmark we do not start from a difficult physical charge distribution and hope the solver is right. Instead, we use a manufactured solution: choose an exact potential first, then derive the source term from it. That way the numerical answer can be checked point-by-point.
+
+The exact periodic potential is chosen as
+\[
+\Phi_{\text{exact}}(x,y,z)
+=
+\cos\!\left(\frac{2\pi x}{L_x}\right)
+\cos\!\left(\frac{2\pi y}{L_y}\right)
+\cos\!\left(\frac{2\pi z}{L_z}\right).
+\]
+Applying the Laplacian gives
+\[
+\nabla^2 \Phi_{\text{exact}}
+=
+-\left[
+\left(\frac{2\pi}{L_x}\right)^2
++
+\left(\frac{2\pi}{L_y}\right)^2
++
+\left(\frac{2\pi}{L_z}\right)^2
+\right]\Phi_{\text{exact}}.
+\]
+Therefore the matching charge density is
+\[
+\rho(x,y,z)
+=
+\varepsilon_0
+\left[
+\left(\frac{2\pi}{L_x}\right)^2
++
+\left(\frac{2\pi}{L_y}\right)^2
++
+\left(\frac{2\pi}{L_z}\right)^2
+\right]
+\Phi_{\text{exact}}(x,y,z).
+\]
+
+\subsection*{Why this benchmark is useful}
+This choice is useful for three reasons.
+\begin{itemize}
+\item The fields are smooth, periodic, and analytic.
+\item The exact answer is known everywhere in the domain, so error norms are meaningful.
+\item The Fourier solver is operating in the setting where it should perform especially well: a rectangular periodic box.
+\end{itemize}
+
+\section{Periodic Compatibility and the Zero Mode}
+On a periodic domain, Poisson's equation is not solvable for an arbitrary source. Integrating over the domain volume $V$ gives
+\[
+\int_V \nabla^2 \Phi\, dV
+=
+-\frac{1}{\varepsilon_0}\int_V \rho\, dV.
+\]
+The left-hand side vanishes for a periodic potential, so the source must satisfy
+\[
+\int_V \rho\, dV = 0.
+\]
+Equivalently, the spatial mean of $\rho$ must be zero. In Fourier language, the $k=0$ mode of the right-hand side must vanish.
+
+For the manufactured cosine benchmark the exact continuous mean is already zero. In the code, the discrete right-hand side is still mean-corrected before the solve. That is a practical numerical safeguard: the FFT-based periodic Poisson solve should not be asked to invert the constant mode.
+
+\section{Fourier-Space View}
+The periodic Poisson solve is easiest to understand in Fourier space. If
+\[
+\nabla^2 \Phi = -\frac{\rho}{\varepsilon_0},
+\]
+then for each nonzero wavevector $\mathbf k$,
+\[
+-|\mathbf k|^2 \hat{\Phi}(\mathbf k)
+=
+-\frac{\hat{\rho}(\mathbf k)}{\varepsilon_0},
+\]
+so
+\[
+\hat{\Phi}(\mathbf k)
+=
+\frac{\hat{\rho}(\mathbf k)}{\varepsilon_0 |\mathbf k|^2},
+\qquad
+\mathbf k \neq 0.
+\]
+The constant mode is not inverted. Physically, that reflects the fact that a periodic Poisson problem determines the potential only up to an additive constant and requires zero net charge in the box.
+
+\section{Discrete Interpretation in This Repository}
+There are two closely related solvers in the repository.
+\begin{itemize}
+\item The existing standalone solver in \texttt{codes/cpp/fft\_poisson/fft\_poisson\_3d.cpp}.
+\item The AMReX mini-app in \texttt{codes/amrex/fft\_poisson\_benchmark/main.cpp}.
+\end{itemize}
+
+They solve the same analytic benchmark, but they do not have to use the same sample locations internally. This matters.
+
+\subsection*{Why the notebook cares about sample coordinates}
+The AMReX mini-app writes the coordinate arrays \texttt{x.npy}, \texttt{y.npy}, and \texttt{z.npy} together with the field arrays. The notebook then evaluates the exact manufactured solution on those same sample locations before computing errors.
+
+That avoids a common comparison mistake: subtracting values that come from different discretization conventions such as nodal samples versus cell-centered samples. If the sample locations differ, a direct subtraction can make a correct solver look wrong.
+
+\section{AMReX Data Structures and Their Physical Meaning}
+The main AMReX objects in the mini-app correspond directly to parts of the mathematical problem.
+
+\subsection*{\texttt{Geometry}}
+The \texttt{Geometry} object defines the rectangular physical domain, the domain extents $(L_x,L_y,L_z)$, and the fact that all three directions are periodic. This is the mathematical box on which the benchmark is posed.
+
+\subsection*{\texttt{BoxArray}}
+The \texttt{BoxArray} defines how the logical grid is tiled into rectangular boxes. For this first-pass benchmark, it is kept simple so the comparison/export path stays easy to reason about.
+
+\subsection*{\texttt{DistributionMapping}}
+This tells AMReX how the boxes are assigned to ranks. For a clean first correctness comparison, the exporter currently assumes a serial run with a single local box.
+
+\subsection*{\texttt{MultiFab}}
+The \texttt{MultiFab} fields hold the discrete arrays:
+\begin{itemize}
+\item \texttt{rho}: charge density,
+\item \texttt{rhs}: the right-hand side of Poisson's equation,
+\item \texttt{phi}: the numerical potential,
+\item \texttt{phi\_exact}: the exact manufactured potential sampled on the AMReX grid,
+\item \texttt{error}: the difference \texttt{phi - phi\_exact}.
+\end{itemize}
+
+\subsection*{\texttt{FFT::Poisson}}
+This is the AMReX solver wrapper that performs the periodic Poisson solve. Conceptually it is doing the Fourier-space inversion discussed above, but wrapped in AMReX's data structures.
+
+\section{Step-by-Step Computational Workflow}
+The mini-app follows a simple sequence.
+
+\subsection*{1. Read input parameters}
+The app reads values from \texttt{codes/amrex/fft\_poisson\_benchmark/inputs}. These include the number of cells per direction, the domain lengths, $\varepsilon_0$, the output plotfile name, and the compare-array directory.
+
+\subsection*{2. Build the periodic domain}
+The code constructs a cubic index-space domain with \texttt{n\_cell} cells in each direction and marks all directions as periodic.
+
+\subsection*{3. Fill the manufactured fields}
+At each AMReX sample point, the code evaluates $\Phi_{\text{exact}}$ and the matching $\rho$. Then it forms the Poisson right-hand side as
+\[
+\texttt{rhs} = -\rho/\varepsilon_0.
+\]
+
+\subsection*{4. Remove the discrete mean of the right-hand side}
+Even though the benchmark is analytically mean-free, the code subtracts the discrete mean of the right-hand side. That keeps the FFT solve compatible with periodic Poisson theory at the discrete level.
+
+\subsection*{5. Solve for the numerical potential}
+AMReX's \texttt{FFT::Poisson} object computes the discrete periodic solution \texttt{phi}.
+
+\subsection*{6. Compute the pointwise error}
+The code forms
+\[
+\texttt{error} = \texttt{phi} - \texttt{phi\_exact}.
+\]
+That error field is written out along with the potential and source.
+
+\subsection*{7. Write outputs for two consumers}
+The app writes:
+\begin{itemize}
+\item an AMReX plotfile for visualization and inspection,
+\item raw NumPy arrays for notebook-based comparison.
+\end{itemize}
+
+The Python helper script
+\texttt{scripts/package\_amrex\_compare\_npz.py}
+then packages those arrays into
+\texttt{amrex\_compare/fft\_poisson\_benchmark.npz},
+which the notebook loads automatically if it exists.
+
+\section{How to Build and Run It}
+You must run the commands from the repository root:
+\begin{verbatim}
+/Users/dajuarez4/Computational-Electrodynamics-
+\end{verbatim}
+not from a subdirectory such as \texttt{Jackson-problems/}.
+
+The AMReX CMake package must already exist somewhere on your machine. The build system needs access to
+\begin{verbatim}
+AMReXConfig.cmake
+\end{verbatim}
+either through the AMReX install prefix or directly through the package directory.
+
+A standard configure-and-build sequence is:
+\begin{verbatim}
+cmake -S codes/amrex/fft_poisson_benchmark \
+  -B codes/amrex/fft_poisson_benchmark/build \
+  -DAMReX_ROOT=/absolute/path/to/amrex-install
+
+cmake --build codes/amrex/fft_poisson_benchmark/build -j
+\end{verbatim}
+
+If you know the exact package directory, this also works:
+\begin{verbatim}
+cmake -S codes/amrex/fft_poisson_benchmark \
+  -B codes/amrex/fft_poisson_benchmark/build \
+  -DAMReX_DIR=/absolute/path/to/amrex-install/lib/cmake/AMReX
+\end{verbatim}
+
+Then run:
+\begin{verbatim}
+./codes/amrex/fft_poisson_benchmark/build/amrex_fft_poisson_benchmark \
+  codes/amrex/fft_poisson_benchmark/inputs
+\end{verbatim}
+
+Then package the notebook input:
+\begin{verbatim}
+python3 scripts/package_amrex_compare_npz.py \
+  --input-dir amrex_compare/fft_poisson_benchmark_amrex \
+  --output amrex_compare/fft_poisson_benchmark.npz
+\end{verbatim}
+
+\subsection*{A concrete local install layout}
+If AMReX is not installed yet, a clean concrete layout on this machine would be:
+\begin{verbatim}
+AMReX source:   /Users/dajuarez4/src/amrex
+AMReX install:  /Users/dajuarez4/.local/amrex
+\end{verbatim}
+
+Then the AMReX library itself can be installed with:
+\begin{verbatim}
+git clone https://github.com/AMReX-Codes/amrex.git /Users/dajuarez4/src/amrex
+
+cmake -S /Users/dajuarez4/src/amrex \
+  -B /Users/dajuarez4/src/amrex/build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/Users/dajuarez4/.local/amrex \
+  -DAMReX_MPI=NO \
+  -DAMReX_OMP=NO \
+  -DAMReX_FORTRAN=NO \
+  -DAMReX_FFT=YES
+
+cmake --build /Users/dajuarez4/src/amrex/build -j
+cmake --install /Users/dajuarez4/src/amrex/build
+\end{verbatim}
+
+After that, the benchmark in this repository should be configured with
+\begin{verbatim}
+-DAMReX_ROOT=/Users/dajuarez4/.local/amrex
+\end{verbatim}
+or
+\begin{verbatim}
+-DAMReX_DIR=/Users/dajuarez4/.local/amrex/lib/cmake/AMReX
+\end{verbatim}
+
+For CPU FFT builds, note that AMReX uses FFTW. If the AMReX configuration step complains about FFTW, that dependency still needs to be installed before retrying the AMReX build.
+
+\section{Interpreting the Errors You Hit}
+Your terminal output showed three different issues, and each one has a different cause.
+
+\subsection*{1. Wrong working directory}
+When CMake looked for
+\begin{verbatim}
+/Users/dajuarez4/Computational-Electrodynamics-/Jackson-problems/codes/amrex/fft_poisson_benchmark
+\end{verbatim}
+it meant the command was launched from inside \texttt{Jackson-problems/}. The relative path \texttt{codes/amrex/fft\_poisson\_benchmark} only works from the repository root.
+
+\subsection*{2. AMReX is not installed or not discoverable}
+The error
+\begin{verbatim}
+Could not find a package configuration file provided by "AMReX"
+\end{verbatim}
+means CMake could not locate \texttt{AMReXConfig.cmake}. The most common reasons are:
+\begin{itemize}
+\item AMReX is not installed yet.
+\item The path passed through \texttt{AMReX\_ROOT} is still the literal placeholder \texttt{/path/to/amrex/install}.
+\item The package exists, but CMake was not pointed at the correct install prefix or package directory.
+\end{itemize}
+
+\subsection*{3. Packaging was attempted before the solver produced arrays}
+The Python error about missing
+\begin{verbatim}
+amrex_compare/fft_poisson_benchmark_amrex/phi.npy
+\end{verbatim}
+is downstream. It does not indicate a packaging bug. It indicates that the AMReX executable never ran successfully, so there was nothing to package.
+
+\section{What to Check on Your Machine}
+Before rebuilding, verify that an AMReX package file actually exists somewhere. On macOS or Linux, one practical search is:
+\begin{verbatim}
+find /some/search/root -name AMReXConfig.cmake 2>/dev/null
+\end{verbatim}
+If you find something like
+\begin{verbatim}
+/absolute/path/to/amrex-install/lib/cmake/AMReX/AMReXConfig.cmake
+\end{verbatim}
+then either of the following should be valid:
+\begin{verbatim}
+-DAMReX_ROOT=/absolute/path/to/amrex-install
+\end{verbatim}
+or
+\begin{verbatim}
+-DAMReX_DIR=/absolute/path/to/amrex-install/lib/cmake/AMReX
+\end{verbatim}
+
+\section{Why This Comparison Is Worth Doing}
+The AMReX version is useful even though the current benchmark is simple.
+\begin{itemize}
+\item It establishes a correct periodic Poisson workflow inside AMReX.
+\item It gives a direct apples-to-apples comparison against the existing FFT solver.
+\item It creates a foundation for harder problems later: multi-level grids, different source terms, field diagnostics, and eventually problems where AMReX's mesh and parallel infrastructure matter more than a bare FFT code.
+\end{itemize}
+
+\section*{Summary}
+The benchmark solves a periodic Poisson problem with a manufactured analytic answer, removes the incompatible zero mode, computes the numerical potential with AMReX's FFT-based Poisson solver, and exports data for notebook comparison. Your current blocker is not the physics and not the notebook. The blocker is simply that CMake cannot yet see a real AMReX installation on your machine.
+
+\end{document}
