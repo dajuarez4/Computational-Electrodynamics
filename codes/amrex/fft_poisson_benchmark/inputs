@@ -1,0 +1,6 @@
+benchmark.n_cell = 64
+benchmark.max_grid_size = 64
+benchmark.lengths = 1.0 1.0 1.0
+benchmark.eps0 = 1.0
+benchmark.plotfile = plt_amrex_fft_poisson_benchmark
+benchmark.compare_dir = amrex_compare/fft_poisson_benchmark_amrex
