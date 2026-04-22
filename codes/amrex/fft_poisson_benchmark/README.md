@@ -155,6 +155,12 @@ If the packaging script says `Missing required array: .../phi.npy`, the AMReX ex
 - The notebook uses those coordinates to evaluate the exact solution at the same sample locations before computing errors.
 - The direct `.npy` export path is currently aimed at a serial run with one box and host-accessible data. If you later move this mini-app to multi-rank or device-only GPU memory, the exporter is the first place to generalize.
 
+## Results
+
+![Results for python and cpp solvers](./codes/plots/benchmark_comparison_py_c++.png)
+![Amrex Solver](./codes/plots/benchmark_comparison_amrex.png)
+
+
 ## Primary AMReX references:
 
 Weiqun Zhang, Ann Almgren, Vince Beckner, John Bell, Johannes Blaschke, Cy Chan, Marcus Day, Brian Friesen, Kevin Gott, Daniel Graves, Max Katz, Andrew Myers, Tan Nguyen, Andrew Nonaka, Michele Rosso, Samuel Williams, and Michael Zingale, "AMReX: a framework for block-structured adaptive mesh refinement," *Journal of Open Source Software* 4(37), 1370, 2019. DOI: `10.21105/joss.01370`
@@ -162,3 +168,4 @@ Weiqun Zhang, Ann Almgren, Vince Beckner, John Bell, Johannes Blaschke, Cy Chan,
 - Official AMReX repository: https://github.com/AMReX-Codes/amrex
 - Official AMReX documentation: https://amrex-codes.github.io/amrex/docs_html/Introduction.html
 - JOSS article DOI: https://doi.org/10.21105/joss.01370
+
