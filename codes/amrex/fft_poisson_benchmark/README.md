@@ -157,8 +157,14 @@ If the packaging script says `Missing required array: .../phi.npy`, the AMReX ex
 
 ## Results
 
-![Results for python and cpp solvers](./codes/plots/benchmark_comparison_py_c++.png)
-![Amrex Solver](./codes/plots/benchmark_comparison_amrex.png)
+The notebook produces two result figures for this benchmark:
+
+- the continuous manufactured solution compared against the notebook-side Python FFT solve and the repository's standalone C++ FFT solve,
+- the AMReX `FFT::Poisson` solution compared against the exact field evaluated on the AMReX sample points.
+
+![Python and C++ benchmark comparison](../../../codes/plots/benchmark_comparison_py_c%2B%2B.png)
+
+![AMReX benchmark comparison](../../../codes/plots/benchmark_comparison_amrex.png)
 
 
 ## Primary AMReX references:
@@ -168,4 +174,3 @@ Weiqun Zhang, Ann Almgren, Vince Beckner, John Bell, Johannes Blaschke, Cy Chan,
 - Official AMReX repository: https://github.com/AMReX-Codes/amrex
 - Official AMReX documentation: https://amrex-codes.github.io/amrex/docs_html/Introduction.html
 - JOSS article DOI: https://doi.org/10.21105/joss.01370
-
