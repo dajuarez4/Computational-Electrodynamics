@@ -155,31 +155,9 @@ If the packaging script says `Missing required array: .../phi.npy`, the AMReX ex
 - The notebook uses those coordinates to evaluate the exact solution at the same sample locations before computing errors.
 - The direct `.npy` export path is currently aimed at a serial run with one box and host-accessible data. If you later move this mini-app to multi-rank or device-only GPU memory, the exporter is the first place to generalize.
 
-## AMReX Citation
-
-If you use this benchmark in a report, notebook, class project, or publication, cite AMReX using the official citation given by the upstream AMReX project:
+## Primary AMReX references:
 
 Weiqun Zhang, Ann Almgren, Vince Beckner, John Bell, Johannes Blaschke, Cy Chan, Marcus Day, Brian Friesen, Kevin Gott, Daniel Graves, Max Katz, Andrew Myers, Tan Nguyen, Andrew Nonaka, Michele Rosso, Samuel Williams, and Michael Zingale, "AMReX: a framework for block-structured adaptive mesh refinement," *Journal of Open Source Software* 4(37), 1370, 2019. DOI: `10.21105/joss.01370`
-
-BibTeX:
-
-```bibtex
-@article{AMReX_JOSS,
-  doi = {10.21105/joss.01370},
-  url = {https://doi.org/10.21105/joss.01370},
-  year = {2019},
-  month = may,
-  publisher = {The Open Journal},
-  volume = {4},
-  number = {37},
-  pages = {1370},
-  author = {Weiqun Zhang and Ann Almgren and Vince Beckner and John Bell and Johannes Blaschke and Cy Chan and Marcus Day and Brian Friesen and Kevin Gott and Daniel Graves and Max Katz and Andrew Myers and Tan Nguyen and Andrew Nonaka and Michele Rosso and Samuel Williams and Michael Zingale},
-  title = {{AMReX}: a framework for block-structured adaptive mesh refinement},
-  journal = {Journal of Open Source Software}
-}
-```
-
-Primary AMReX references:
 
 - Official AMReX repository: https://github.com/AMReX-Codes/amrex
 - Official AMReX documentation: https://amrex-codes.github.io/amrex/docs_html/Introduction.html
