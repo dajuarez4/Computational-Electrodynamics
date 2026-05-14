@@ -1,5 +1,6 @@
 # Computational-Electrodynamics-
 
+
 This repository is a graduate-level study of electrodynamics based on *Classical Electrodynamics by J. D. Jackson*, combining rigorous theoretical derivations with computational implementations and visualizations.
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
