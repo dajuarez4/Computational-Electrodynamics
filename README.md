@@ -9,6 +9,7 @@ This repository is a graduate-level study of electrodynamics based on *Classical
 ![Status](https://img.shields.io/badge/Status-In%20Progress-green)
 ---
 
+
 ## Website
 
 - Live site: [dajuarez4.github.io/Computational-Electrodynamics](https://dajuarez4.github.io/Computational-Electrodynamics/)
